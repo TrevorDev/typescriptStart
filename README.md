@@ -14,8 +14,6 @@ The way I like to use typescript keeps changing so I wanted to make this repo to
 - Open app.ts in atom
 - Build project with F6
 ```
-npm install tsd -g
 npm install
-tsd install
 node app.js
 ```

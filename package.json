@@ -1,5 +1,5 @@
 {
-  "name": "typescript-start",
+  "name": "typescript-webstart",
   "version": "1.0.0",
   "description": "The way I like to use typescript keeps changing so I wanted to make this repo to show how I get started\r - Typescript\r - Async/Await syntax\r - ES6",
   "main": "app.js",
@@ -10,16 +10,10 @@
     "type": "git",
     "url": "git+https://github.com/TrevorDev/typescriptStart.git"
   },
-  "keywords": [
-    "typescript"
-  ],
   "author": "Trevor Baron",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/TrevorDev/typescriptStart/issues"
   },
-  "homepage": "https://github.com/TrevorDev/typescriptStart#readme",
-  "dependencies": {
-    "babel-polyfill": "^6.2.0"
-  }
+  "homepage": "https://github.com/TrevorDev/typescriptStart#readme"
 }
