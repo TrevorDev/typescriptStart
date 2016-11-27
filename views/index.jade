@@ -1,0 +1,15 @@
+doctype html
+html
+  head
+    title WebSite
+    link(rel="icon" href="/public/img/favicon.ico" type="image/x-icon")
+    link(rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css")
+    link(rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css")
+    style.
+      [v-cloak] {
+        display: none;
+      }
+  body
+    #content(v-cloak)
+      H1 {{text}}
+      script(src="/browserify/index/logic.js")
