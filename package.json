@@ -26,6 +26,7 @@
     "@types/request": "0.0.31",
     "@types/request-promise": "^3.0.32",
     "@types/sequelize": "^4.0.36",
+    "@types/three": "0.0.26",
     "@types/vue": "^1.0.30",
     "body-parser": "^1.15.2",
     "browserify": "^13.1.0",
@@ -36,6 +37,7 @@
     "request": "^2.75.0",
     "request-promise": "^4.1.1",
     "sequelize": "^3.24.3",
+    "three": "^0.82.1",
     "vue": "^1.0.27"
   }
 }
