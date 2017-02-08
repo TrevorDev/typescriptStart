@@ -63,7 +63,7 @@ var ViveController = function ( id ) {
 
 	this.getButtonPressedState = function ( button ) {
 		if ( button === 'trigger' ) return triggerPressed;
-		if ( button === 'menu' ) return menuIsPressed;
+		if ( button === 'menu' ) return menuPressed;
 	};
 
 	this.update = function () {
@@ -117,11 +117,12 @@ var ViveController = function ( id ) {
 
 			}
 
+			menuPressed = ""
 			if ( menuIsPressed !== gamepad.buttons[ 3 ].pressed ) {
 
 				menuIsPressed = gamepad.buttons[ 3 ].pressed;
 				scope.dispatchEvent( { type: menuIsPressed ? 'menudown' : 'menuup' } );
-
+				menuPressed = menuIsPressed ? "down" : "up";
 			}
 
 		} else {

@@ -5,10 +5,10 @@ import Stage from "../../../objects/stage";
 import MATERIALS from "../../../libs/materials"
 import OBJLoader from "../../../threeExtensions/OBJLoader"
 import ViveController from "../../../threeExtensions/ViveController"
+import OBJExporter from "../../../threeExtensions/OBJExporter"
 import THREE = require("three")
 
 var main = async ()=>{
-  console.log("start")
   var container = document.getElementById('container')
   var stage = Stage.create(container)
 
@@ -16,68 +16,41 @@ var main = async ()=>{
   var ambiant = new THREE.AmbientLight(0xFFFFFF, 0.1);
   stage.scene.add(ambiant);
 
-  // var light = new THREE.PointLight( 0xFFFFFF, 1, 30 );
-  // light.position.set( 0, 10, 0 );
-  // var lightGeo = new THREE.SphereBufferGeometry( 0.1, 32, 15 );
-  // var lightMesh = new THREE.Mesh( lightGeo, MATERIALS.DEFAULT )
-  // lightMesh.castShadow = true;
-	// lightMesh.receiveShadow = true;
-  // lightMesh.position.set( 0, 0.2, 0 );
-  // stage.scene.add( lightMesh );
+  var point1 = new THREE.PointLight()
+  point1.position.y += 3
+  point1.position.z += 3
+  stage.scene.add(point1);
+
+  var point2 = new THREE.PointLight()
+  point2.position.y += 0
+  point2.position.x += 2
+  stage.scene.add(point2);
+  // var light = new THREE.PointLight( 0xFFFFFF, 10, 10000 );
+  // light.position.set( 20, 50, -200 );
+  // var lightGeo = new THREE.SphereBufferGeometry( 20, 32, 15 );
+  // var lightMesh = new THREE.Mesh( lightGeo, MATERIALS.MOON )
+  // light.add( lightMesh );
   // light.castShadow = true;
   // stage.scene.add( light );
 
-  var light = new THREE.PointLight( 0xFFFFFF, 10, 10000 );
-  light.position.set( 20, 50, -200 );
-  var lightGeo = new THREE.SphereBufferGeometry( 20, 32, 15 );
-  var lightMesh = new THREE.Mesh( lightGeo, MATERIALS.MOON )
-  light.add( lightMesh );
-  light.castShadow = true;
-  stage.scene.add( light );
-
-
+  //skybox
   var skyGeo = new THREE.SphereBufferGeometry( 450000, 32, 15 );
   var skyMesh = new THREE.Mesh( skyGeo, MATERIALS.SKY );
   stage.scene.add( skyMesh );
-  // var geometry = new THREE.BoxGeometry( 200, 200, 200 );
-  // var mesh = new THREE.Mesh( geometry, MATERIALS.DEFAULT )
-  // stage.scene.add( mesh );
-  //
-  // var planeGeom = new THREE.PlaneGeometry(2, 2, 50, 50)
-  // var planeMesh = new THREE.Mesh( planeGeom, MATERIALS.DEFAULT )
-  // planeMesh.receiveShadow = true;
-  // planeMesh.position.y = 0;
 
-  // var planeGeom = new THREE.PlaneGeometry(1000, 1000, 50, 50)
-  // var planeMesh = new THREE.Mesh( planeGeom, MATERIALS.WATER )
-  // planeMesh.position.y = -4;
-  //
-  // // var geom:any = planeMesh.geometry
-  // // console.log(geom.vertices[3])
-  // // geom.vertices[20].z += 3000
-  // planeMesh.rotateX(-Math.PI/2)
-  // stage.scene.add( planeMesh );
-
-
-
+  //island
   var island = new THREE.Object3D()
-
   var islandGroundGeo = new THREE.SphereGeometry( 5,5,5, 0, Math.PI, 0, Math.PI );
   var islandGround = new THREE.Mesh( islandGroundGeo, MATERIALS.DEFAULT );
   islandGround.rotation.x = -Math.PI/2
   islandGround.scale.z = 0.5
-  //island.position.x += 1000;
   island.castShadow = true;
-
-
   var treeGeo = new THREE.BoxGeometry( 0.3, 6, 0.3 );
   var treeMesh = new THREE.Mesh( treeGeo, MATERIALS.DEFAULT )
   treeMesh.position.y = 3
-
   var leafGeo = new THREE.BoxGeometry( 2, 2, 2 );
   var leafMesh = new THREE.Mesh( leafGeo, MATERIALS.LEAF )
   leafMesh.position.y = 3
-  //leafMesh.position.x = 1
   treeMesh.add(leafMesh)
   island.add(treeMesh)
   island.add(islandGround)
@@ -86,23 +59,29 @@ var main = async ()=>{
   island.position.x = 20;
   stage.scene.add( island );
 
-
+  //image
+  // new THREE.TextureLoader().load('http://i.imgur.com/EifdOn0.jpg', function(map){
+  //   var material = new THREE.SpriteMaterial( { map: map, color: 0xffffff, fog: true } );
+  //   var sprite = new THREE.Sprite( material );
+  //   stage.scene.add( sprite );
+  // })
 
   //origin
-  var originGeo = new THREE.BoxGeometry( 0.1, 0.1, 0.1 );
+  var originGeo = new THREE.BoxGeometry( 0.01, 0.01, 0.01 );
   var originMesh = new THREE.Mesh( originGeo, MATERIALS.DEFAULT )
   stage.scene.add( originMesh );
+  var creation = {
+    cubes: {}
+  }
+  var lastKey = ""
 
-
+  //controllers
   var controller1 = new ViveController( 0 );
   controller1.standingMatrix = stage.VRControls.getStandingMatrix();
   stage.scene.add( controller1 );
-
   var controller2 = new ViveController( 1 );
   controller2.standingMatrix = stage.VRControls.getStandingMatrix();
   stage.scene.add( controller2 );
-
-
   var loader = new OBJLoader(undefined);
 	loader.setPath( '/public/models/' );
   var realCont:any
@@ -116,99 +95,97 @@ var main = async ()=>{
     realCont = object.clone()
 		controller2.add( realCont );
 	} );
+  var tipGeo = new THREE.BoxGeometry( 0.01, 0.01, 0.01 );
+  var tipMesh = new THREE.Mesh( tipGeo, MATERIALS.DEFAULT )
+  tipMesh.position.z = -0.3
+  controller2.add(tipMesh)
+  //FOR DEBUGGING, auto start vr
+  setTimeout(()=>{stage.VREffect.requestPresent()},100)
 
+  //main loop
   stage.startRender((delta, time)=>{
-    stage.renderer.toneMappingExposure = Math.pow( 0.5, 5.0 );
-    island.rotation.x = Math.sin(time/3000)*0.1
-    island.rotation.z = Math.sin(time/5000)*0.05
-    //MATERIALS.WATER.uniforms.inverseCameraView.value = stage.camera.matrixWorld
-    MATERIALS.update(delta)
     controller1.update();
 		controller2.update();
 
-    // if(controller1.getButtonState("trigger")){
-    //
-    // }
-
+    //rotate origin when controller1 is pressed
     if(controller1.getButtonPressedState("trigger") == "down"){
-      console.log("hit")
-      var tempMatrix = new THREE.Matrix4();
-      tempMatrix.getInverse( controller1.matrixWorld );
-      originMesh.matrix.premultiply( tempMatrix );
-      originMesh.matrix.decompose( originMesh.position, originMesh.quaternion, originMesh.scale );
-      controller1.add(originMesh)
+      THREE.SceneUtils.attach(originMesh, stage.scene, controller1)
     }else if(controller1.getButtonPressedState("trigger") == "up"){
-			originMesh.matrix.premultiply( controller1.matrixWorld );
-			originMesh.matrix.decompose( originMesh.position, originMesh.quaternion, originMesh.scale );
-			stage.scene.add( originMesh );
+			THREE.SceneUtils.detach(originMesh, controller1, stage.scene)
     }
 
-    //originMesh.position.y += 0.001;
+    //create cube
+    if(controller2.getButtonState("trigger")){
+      var sizeOfCube = 0.1;
+      var controllerPosRelativeToOriginMesh:THREE.Vector3 = tipMesh.getWorldPosition().sub(originMesh.getWorldPosition());
 
-    if(controller2.getButtonPressedState("trigger") == "down"){
-      var vector = new THREE.Vector3();
-      vector.setFromMatrixPosition( controller2.matrixWorld );
-      console.log(vector)
-
-
-      var size = 0.1;
-      var posChange:THREE.Vector3 = vector.clone().sub(originMesh.position);// - new Vector3(size / 2, size / 2, size / 2));
-
+      //get axis of originMesh
       var matrix = new THREE.Matrix4();
-      matrix.extractRotation( originMesh.matrix );
+      matrix.extractRotation( originMesh.matrixWorld );
       var forward = (new THREE.Vector3( 0, 0, 1 )).applyMatrix4(matrix)
-
       var right = (new THREE.Vector3( 1, 0, 0 )).applyMatrix4(matrix)
-
       var up = (new THREE.Vector3( 0, 1, 0 )).applyMatrix4(matrix)
 
-
-
       var newPos = new THREE.Vector3(
-        Math.floor( // devide by size, floor and multiply by size to position on grid
+        Math.floor( // devide by sizeOfCube, floor and multiply by sizeOfCube to position on grid
             (
-                posChange.dot(right) // get vector on the x axis
-                + (size / 2) // add half the size to make point relative to corner of cube
-            ) / size
-        ) * size,
+                controllerPosRelativeToOriginMesh.dot(right) // get vector on the x axis
+                + (sizeOfCube / 2) // add half the sizeOfCube to make point relative to corner of cube
+            ) / sizeOfCube
+        ) * sizeOfCube,
         //do same as above for other vectors
-        Math.floor((posChange.dot(up) + (size / 2)) / size) * size, Math.floor((posChange.dot(forward) + (size / 2)) / size) * size
+        Math.floor((controllerPosRelativeToOriginMesh.dot(up) + (sizeOfCube / 2)) / sizeOfCube) * sizeOfCube,
+        Math.floor((controllerPosRelativeToOriginMesh.dot(forward) + (sizeOfCube / 2)) / sizeOfCube) * sizeOfCube
       );
 
+      var key = newPos.x+","+newPos.y+","+newPos.z
+      if(key != lastKey){
+        if(creation.cubes[key]){
+          var old = creation.cubes[key]
+          originMesh.remove(old)
+          delete creation.cubes[key]
+        }else{
+          var newGeo = new THREE.BoxGeometry( 0.1, 0.1, 0.1 );
+          var newMesh = new THREE.Mesh( newGeo, MATERIALS.DEFAULT )
+          var added = right.multiplyScalar(newPos.x).add(up.multiplyScalar(newPos.y)).add(forward.multiplyScalar(newPos.z))
+          newMesh.position.copy(originMesh.getWorldPosition().clone().add(added))
+          newMesh.rotation.setFromRotationMatrix(originMesh.matrixWorld)
+          //update matrixworld required when attaching to another object after modifying newmesh.pos/rot as they dont update newmesh.matrixWorld
+          newMesh.updateMatrixWorld(true);
 
-      // console.log(controller2.position.clone())
-      // console.log(controller2.getGamepad().pose.position)
-      var newGeo = new THREE.BoxGeometry( 0.1, 0.1, 0.1 );
-      var newMesh = new THREE.Mesh( newGeo, MATERIALS.DEFAULT )
-      //origin.transform.position + (newPos.x * origin.transform.right) + (newPos.y * origin.transform.up) + (newPos.z * origin.transform.forward);
-      var added = right.multiplyScalar(newPos.x).add(up.multiplyScalar(newPos.y)).add(forward.multiplyScalar(newPos.z))
-      newMesh.position.copy(originMesh.position.clone().add(added))
-      newMesh.rotation.setFromRotationMatrix(originMesh.matrix)
-
-
-
-      //newMesh. originMesh.rotation.clone();
-      stage.scene.add( newMesh );
-
-      // var tempMatrix = new THREE.Matrix4();
-      // tempMatrix.getInverse( originMesh.matrixWorld );
-      // newMesh.matrix.premultiply( tempMatrix );
-      // newMesh.matrix.decompose( newMesh.position, newMesh.quaternion, newMesh.scale );
-
-      //TODO, do i need this?
-      newMesh.updateMatrixWorld(true);
-      originMesh.updateMatrixWorld(true);
-      THREE.SceneUtils.attach(newMesh, stage.scene, originMesh)
-
-      // var tempMatrix = new THREE.Matrix4();
-      // tempMatrix.getInverse( originMesh.matrixWorld );
-      // newMesh.matrix.premultiply( tempMatrix );
-      // newMesh.matrix.decompose( newMesh.position, newMesh.quaternion, newMesh.scale );
-      // controller1.add(newMesh)
-      //
-      // originMesh.add(newMesh)
+          THREE.SceneUtils.attach(newMesh, stage.scene, originMesh)
+          creation.cubes[key] = newMesh
+        }
+        lastKey = key
+      }
     }
 
+    if(controller2.getButtonPressedState("menu") == "down"){
+      for(var key in creation.cubes){
+        originMesh.remove(creation.cubes[key])
+        delete creation.cubes[key]
+      }
+    }
+
+    if(controller1.getButtonPressedState("menu") == "down"){
+      var dl = (filename, text)=>{
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
+
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
+      }
+      console.log("clicked menu");
+      var exporter = new OBJExporter();
+      var parsed = exporter.parse(originMesh);
+      console.log(parsed)
+      dl('test.obj', parsed)
+    }
   })
 }
 $(document).ready(()=>{

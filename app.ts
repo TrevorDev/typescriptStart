@@ -9,6 +9,9 @@ var main = async ()=>{
   app.get('/',async function(req, res) {
 		res.render('index')
 	});
+  app.get('/play',async function(req, res) {
+		res.render('play')
+	});
 
   app.get('/browserify/*', function(req, res) {
 		//TODO: cache this in production or generate all files beforehand
