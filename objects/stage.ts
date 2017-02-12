@@ -8,35 +8,49 @@ class Stage {
   scene:THREE.Scene;
   camera:THREE.PerspectiveCamera;
   renderer:THREE.WebGLRenderer;
+  enableVR:boolean;
   VREffect:any;
   VRControls:any;
-  constructor(){
-
+  constructor(options?){
+    if(options && options.enableVR){
+      this.enableVR = true
+    }else{
+      this.enableVR = false
+    }
   }
 
   startRender(renderLoop){
     var render = ()=>{
       //TODO, may want to add composer
-      //this.renderer.render( this.scene, this.camera )
-      this.VREffect.render( this.scene, this.camera );
+      if(this.enableVR){
+        this.VREffect.render( this.scene, this.camera );
+      }else{
+        this.renderer.render( this.scene, this.camera )
+      }
+
     }
     var last = Date.now()
     var curTime = 0
     var animate = ()=>{
-      this.VREffect.requestAnimationFrame( animate )
+      if(this.enableVR){
+        this.VREffect.requestAnimationFrame( animate )
+        this.VRControls.update();
+      }else{
+        window.requestAnimationFrame(animate);
+      }
       var now = Date.now()
       var delta = now - last
       last = now
       curTime += delta
-      this.VRControls.update();
+
       renderLoop(delta, curTime)
 			render();
     }
     animate()
   }
 
-  static create(container){
-    var ret = new Stage();
+  static create(container, options?){
+    var ret = new Stage(options);
     ret.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 3500000 );
   	ret.camera.position.z = 100;
 
@@ -51,15 +65,16 @@ class Stage {
 		ret.renderer.gammaOutput = true;
 
 
-    //VR
-    ret.VREffect = new VREffect( ret.renderer, ()=>{console.log("vr error")} );
-    if ( WEBVR.isAvailable() === true ) {
-      document.body.appendChild( WEBVR.getButton( ret.VREffect ) );
+    if(ret.enableVR){
+      //VR
+      ret.VREffect = new VREffect( ret.renderer, ()=>{console.log("vr error")} );
+      if ( WEBVR.isAvailable() === true ) {
+        document.body.appendChild( WEBVR.getButton( ret.VREffect ) );
+      }
+
+      ret.VRControls = new VRControls( ret.camera , ()=>{console.log("control err")});
+      ret.VRControls.standing = true;
     }
-
-    ret.VRControls = new VRControls( ret.camera , ()=>{console.log("control err")});
-    ret.VRControls.standing = true;
-
     container.appendChild( ret.renderer.domElement );
     window.addEventListener( 'resize', onWindowResize, false );
 

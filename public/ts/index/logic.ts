@@ -10,7 +10,7 @@ import THREE = require("three")
 
 var main = async ()=>{
   var container = document.getElementById('container')
-  var stage = Stage.create(container)
+  var stage = Stage.create(container, {enableVR: true})
 
   //lighting
   var ambiant = new THREE.AmbientLight(0xFFFFFF, 0.1);
@@ -115,8 +115,11 @@ var main = async ()=>{
     }
 
     //create cube
+    if(controller2.getButtonPressedState("trigger") == "down"){
+      lastKey = ""
+    }
     if(controller2.getButtonState("trigger")){
-      var sizeOfCube = 0.1;
+      var sizeOfCube = 0.05;
       var controllerPosRelativeToOriginMesh:THREE.Vector3 = tipMesh.getWorldPosition().sub(originMesh.getWorldPosition());
 
       //get axis of originMesh
@@ -145,7 +148,7 @@ var main = async ()=>{
           originMesh.remove(old)
           delete creation.cubes[key]
         }else{
-          var newGeo = new THREE.BoxGeometry( 0.1, 0.1, 0.1 );
+          var newGeo = new THREE.BoxGeometry( sizeOfCube, sizeOfCube, sizeOfCube );
           var newMesh = new THREE.Mesh( newGeo, MATERIALS.DEFAULT )
           var added = right.multiplyScalar(newPos.x).add(up.multiplyScalar(newPos.y)).add(forward.multiplyScalar(newPos.z))
           newMesh.position.copy(originMesh.getWorldPosition().clone().add(added))
