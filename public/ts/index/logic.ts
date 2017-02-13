@@ -2,6 +2,7 @@ import $ = require("jquery")
 import Vue = require("vue");
 
 import Stage from "../../../objects/stage";
+import GridObject from "../../../objects/gridObject";
 import MATERIALS from "../../../libs/materials"
 import OBJLoader from "../../../threeExtensions/OBJLoader"
 import ViveController from "../../../threeExtensions/ViveController"
@@ -145,7 +146,7 @@ var main = async ()=>{
       if(key != lastKey){
         if(creation.cubes[key]){
           var old = creation.cubes[key]
-          originMesh.remove(old)
+          originMesh.remove(old.mesh)
           delete creation.cubes[key]
         }else{
           var newGeo = new THREE.BoxGeometry( sizeOfCube, sizeOfCube, sizeOfCube );
@@ -157,7 +158,7 @@ var main = async ()=>{
           newMesh.updateMatrixWorld(true);
 
           THREE.SceneUtils.attach(newMesh, stage.scene, originMesh)
-          creation.cubes[key] = newMesh
+          creation.cubes[key] = new GridObject(newMesh, newPos.clone().divideScalar(sizeOfCube), "block")
         }
         lastKey = key
       }
@@ -165,7 +166,7 @@ var main = async ()=>{
 
     if(controller2.getButtonPressedState("menu") == "down"){
       for(var key in creation.cubes){
-        originMesh.remove(creation.cubes[key])
+        originMesh.remove(creation.cubes[key].mesh)
         delete creation.cubes[key]
       }
     }
@@ -184,10 +185,16 @@ var main = async ()=>{
         document.body.removeChild(element);
       }
       console.log("clicked menu");
-      var exporter = new OBJExporter();
-      var parsed = exporter.parse(originMesh);
-      console.log(parsed)
-      dl('test.obj', parsed)
+      // var exporter = new OBJExporter();
+      // var parsed = exporter.parse(originMesh);
+      // console.log(parsed)
+      // dl('test.obj', parsed)
+      var json = {objects:[]}
+      for(var key in creation.cubes){
+        json.objects.push(creation.cubes[key].getJson())
+      }
+
+      dl('level.json', JSON.stringify(json))
     }
   })
 }

@@ -6,6 +6,7 @@ import Controller from "../../../objects/controller";
 import Character from "../../../objects/character"
 import Block from "../../../objects/block"
 import MATERIALS from "../../../libs/materials"
+import request = require("request")
 import THREE = require("three")
 
 var main = async ()=>{
@@ -66,28 +67,39 @@ var main = async ()=>{
 	var player = new Character(controller);
   stage.scene.add(player.body)
 
+  var resp = await $.get("/public/levels/1.json")
+  console.log(resp)
+
   //walls
   var blocks: Block[] = []
-  blocks[0] = new Block(10,10,10)
-  blocks[0].body.position.y = -0.5
-  blocks[0].update()
-  stage.scene.add(blocks[0].body)
+  var bSize = 3;
+  resp.objects.forEach((c)=>{
+
+    var newB = new Block(bSize,bSize,bSize)
+    newB.body.position.x = c.gridPos.x * bSize
+    newB.body.position.y = c.gridPos.y * bSize
+    newB.body.position.z = c.gridPos.z * bSize
+    newB.update()
+    stage.scene.add(newB.body)
+    blocks.push(newB)
+  })
+
 
   //main loop
   stage.startRender((delta, time)=>{
     player.update()
-    blocks.forEach((block)=>{
-      var collision = player.collider.intersect(block.collider)
+    blocks.forEach((block, i)=>{
+      var collision = player.collider.clone().intersect(block.collider)
       if(!collision.isEmpty()){
+        console.log("hit")
         var overlap = collision.max.clone().sub(collision.min)
         if(overlap.x <= overlap.y && overlap.x <= overlap.z){
-
-          player.body.position.x += (collision.max.x != player.collider.max.x ? -overlap.x  : overlap.x)
+          player.body.position.x += (collision.max.x == player.collider.max.x ? -overlap.x  : overlap.x)
         }else if(overlap.y <= overlap.x && overlap.y <= overlap.z){
-          player.body.position.y += (collision.max.y != player.collider.max.y ? -overlap.y  : overlap.y)
+          player.body.position.y += (collision.max.y == player.collider.max.y ? -overlap.y  : overlap.y)
           player.spd.y=0;
         }else if(overlap.z <= overlap.y && overlap.z <= overlap.x){
-          player.body.position.z += (collision.max.z != player.collider.max.z ? -overlap.z  : overlap.z)
+          player.body.position.z += (collision.max.z == player.collider.max.z ? -overlap.z  : overlap.z)
         }
 
       }
