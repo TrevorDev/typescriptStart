@@ -14,8 +14,8 @@ var main = async () => {
     document.body.appendChild(localVideo)
 
     var remoteVideo = document.createElement('video');
-    remoteVideo.width = 100;
-    remoteVideo.height = 100;
+    // remoteVideo.width = 100;
+    // remoteVideo.height = 100;
     remoteVideo.autoplay = true
     document.body.appendChild(remoteVideo)
 
