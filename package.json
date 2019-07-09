@@ -1,19 +1,29 @@
 {
-  "name": "typescript-webstart",
+  "name": "typescriptstart",
   "version": "1.0.0",
-  "description": "The way I like to use typescript keeps changing so I wanted to make this repo to show how I get started\r - Typescript\r - Async/Await syntax\r - ES6",
-  "main": "app.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "webpack --watch --mode=development --info-verbosity=verbose"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TrevorDev/typescriptStart.git"
   },
-  "author": "Trevor Baron",
+  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/TrevorDev/typescriptStart/issues"
   },
-  "homepage": "https://github.com/TrevorDev/typescriptStart#readme"
+  "homepage": "https://github.com/TrevorDev/typescriptStart#readme",
+  "dependencies": {
+    "@types/express": "^4.17.0",
+    "@types/socket.io": "^2.1.2",
+    "express": "^4.17.1",
+    "nodemon-webpack-plugin": "^4.0.8",
+    "socket.io": "^2.2.0",
+    "ts-loader": "^6.0.4",
+    "typescript": "^3.5.3",
+    "webpack-node-externals": "^1.7.2"
+  }
 }
