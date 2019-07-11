@@ -3,6 +3,8 @@ import * as http from "http"
 import * as fs from "fs"
 import * as sio from "socket.io";
 import * as https from "https"
+
+import * as robot from "robotjs"
 var port = 3000;
 
 // Basic express webserver
@@ -22,4 +24,15 @@ io.on('connection', (socket) => {
     socket.on("message", (e)=>{
         socket.broadcast.send("message", e)
     })
-})
+
+    socket.on("robot", (e)=>{
+        if(e.action == "mouseMove"){
+            var screenSize = robot.getScreenSize();
+            robot.moveMouse(screenSize.width*e.x,screenSize.height*e.y)
+        }else if(e.action == "mouseDown"){
+            robot.mouseToggle("down")
+        }else if(e.action == "mouseUp"){
+            robot.mouseToggle("up")
+        }
+    })
+});
