@@ -3,27 +3,26 @@ import { Stage } from "../stage/stage";
 import { XRController } from "./xrController";
 
 export class InputManager {
-    private _controllers:Array<XRController> = []
+    controllers:Array<XRController> = []
     constructor(private stage:Stage){
-        this.leftXRController
-        this.rightXRController
+        this.controllers[0] = new XRController(this.stage, this.stage.camera, true)
+        this.controllers[1] = new XRController(this.stage, (this.stage.renderer.vr as any).getController(0))
+        this.controllers[2] = new XRController(this.stage, (this.stage.renderer.vr as any).getController(1))
+    
     }
     
+    get mouseXRController(){
+        return this.controllers[0];
+    }
     get leftXRController(){
-        if(!this._controllers[0]){
-            this._controllers[0] = new XRController(this.stage, (this.stage.renderer.vr as any).getController(0))
-        }
-        return this._controllers[0];
+        return this.controllers[1];
     }
     get rightXRController(){
-        if(!this._controllers[1]){
-            this._controllers[1] = new XRController(this.stage, (this.stage.renderer.vr as any).getController(1))
-        }
-        return this._controllers[1];
+        return this.controllers[2];
     }
 
     update(){
-        this._controllers.forEach((c)=>{
+        this.controllers.forEach((c)=>{
             c.update()
         })
     }

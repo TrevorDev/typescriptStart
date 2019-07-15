@@ -2,24 +2,44 @@ import { Stage } from "./stage/stage";
 import { SceneObjectCreator } from "./stage/sceneObjectCreator";
 import { InputManager } from "./input/inputManager";
 import THREE = require("three");
+import { AppContainer } from "./app/appContainer";
+import { AppManager } from "./app/appManager";
+import { App } from "./app/app";
 
 export class NiftyOS {
 	globalStage:Stage
+	inputManager:InputManager;
+	appManager:AppManager
 	constructor(divContainer:HTMLDivElement){
 		this.globalStage = new Stage(divContainer)
 		
+		// Setup world
 		SceneObjectCreator.createDefaultLights(this.globalStage.scene)
 		SceneObjectCreator.createFloor(this.globalStage.scene)
-		var b=SceneObjectCreator.createBox(this.globalStage.scene)
-		b.position.z = -10
-		var inputManager = new InputManager(this.globalStage)
-		
+		// var b=SceneObjectCreator.createBox(this.globalStage.scene)
+		// b.position.z = -10
+
+		this.inputManager = new InputManager(this.globalStage)
+		this.inputManager.controllers.forEach((c)=>{
+			c.onMove.add(()=>{
+
+			})
+		})
+
+		this.appManager = new AppManager(this.globalStage, this.inputManager)
+
+		this.appManager.createApp()
+
+		// Main render loop
 		this.globalStage.startRenderLoop(()=>{
-			inputManager.update()	
+			this.inputManager.update()	
+			this.appManager.update()
 		})
 
 		console.log("NiftyOS v0.0.1")
 	}
+
+
 }
 
 // import Stage from "./stage/stage"
