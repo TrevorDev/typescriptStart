@@ -11,7 +11,7 @@ export class AppManager{
     constructor(private globalStage:Stage, private inputManager:InputManager){
 
     }
-    update(){
+    update(delta:number, curTime:number){
 
     }
 

@@ -42,7 +42,7 @@ export class Stage {
         // }
     }
 
-    startRenderLoop(onBeforeRender:Function){
+    startRenderLoop(onBeforeRender:(delta:number, curTime:number)=>void){
         // Render on every frame
         // var animate = ()=> {
         //     requestAnimationFrame( animate )
@@ -50,8 +50,11 @@ export class Stage {
         //     this.renderer.render( this.scene, this.camera )
         // }
         // animate()
-        this.renderer.setAnimationLoop(()=>{
-            onBeforeRender();
+        var lastTime = 0;
+        this.renderer.setAnimationLoop((curTime:number)=>{
+            var delta = curTime - lastTime
+            lastTime = curTime
+            onBeforeRender(delta, curTime);
             this.renderer.render( this.scene, this.camera )
         })
 

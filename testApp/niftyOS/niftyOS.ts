@@ -7,9 +7,14 @@ import { AppManager } from "./app/appManager";
 import { App } from "./app/app";
 
 export class NiftyOS {
-	globalStage:Stage
-	inputManager:InputManager;
-	appManager:AppManager
+	static GetOS(){
+		var global = window as any;
+    	return global._niftyOS as NiftyOS;
+	}
+
+	private globalStage:Stage
+	private inputManager:InputManager;
+	private appManager:AppManager
 	constructor(divContainer:HTMLDivElement){
 		this.globalStage = new Stage(divContainer)
 		
@@ -28,15 +33,32 @@ export class NiftyOS {
 
 		this.appManager = new AppManager(this.globalStage, this.inputManager)
 
-		this.appManager.createApp()
+		//this.appManager.createApp()
 
+		
 		// Main render loop
-		this.globalStage.startRenderLoop(()=>{
-			this.inputManager.update()	
-			this.appManager.update()
+		this.globalStage.startRenderLoop((delta, curTime)=>{
+			this.inputManager.update(delta, curTime)	
+			this.appManager.update(delta, curTime)
 		})
 
+		this.setGlobal()
 		console.log("NiftyOS v0.0.1")
+
+		require("../niftyOS/testApps/showCase")
+	}
+
+	private setGlobal(){
+		var global = window as any;
+    	global._niftyOS = this
+	}
+
+	createApp(){
+		var container = this.appManager.createApp()
+		return container.app
+	}
+	getInputManager(){
+		return this.inputManager
 	}
 
 

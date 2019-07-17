@@ -13,6 +13,9 @@ app.use("/public", express.static("public"))
 app.get('/', function (req, res) {
     res.sendFile(process.cwd() + "/public/index.html")
 })
+app.get('/screenCapture', function (req, res) {
+    res.sendFile(process.cwd() + "/public/screenCapture.html")
+})
 
 // var server = http.createServer(app)
 // server.listen(port)

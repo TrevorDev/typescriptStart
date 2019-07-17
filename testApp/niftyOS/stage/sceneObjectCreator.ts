@@ -32,9 +32,9 @@ export class SceneObjectCreator {
 		return ground
 	}
 	
-	static createBox(scene: THREE.Object3D){
+	static createBox(scene: THREE.Object3D, x = 1, y =1,z=1){
 
-		var boxGeo = new THREE.BoxGeometry(1, 1, 1)
+		var boxGeo = new THREE.BoxGeometry(x,y,z)
 		var box = new THREE.Mesh(boxGeo, DefaultMaterials.DEFAULT )
 
 		scene.add( box );

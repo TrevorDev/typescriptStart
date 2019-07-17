@@ -13,7 +13,7 @@ class XRButtonState {
         return this._value
     }
     setValue(val:number){
-        console.log(val+" "+this._value)
+        //console.log(val+" "+this._value)
         if(val >= this._downThreshold && this._value < this._downThreshold){
             this._value = val
             this.onDown.notifyObservers(this)
@@ -66,13 +66,18 @@ export class XRController {
 
         if(isMouse){
             var tmpMat = new THREE.Matrix4()
+            var tmpVec = new THREE.Vector3()
             var mouse = new THREE.Vector2();
             document.addEventListener("pointermove", (e)=>{
                 mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
                 mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
                 this.raycaster.setFromCamera( mouse, stage.camera );
-                tmpMat.lookAt(this.raycaster.ray.origin, this.raycaster.ray.direction, this.stage.camera.up)
+                tmpVec.copy(this.raycaster.ray.origin)
+                tmpVec.add(this.raycaster.ray.direction)
+                tmpMat.lookAt(this.raycaster.ray.origin, tmpVec, this.stage.camera.up)
+                tmpMat.setPosition(this.raycaster.ray.origin)
                 MathHelper.decomposeMatrixToObject(tmpMat, this.pointer)
+                MathHelper.decomposeMatrixToObject(tmpMat, this.grip)
             })
             document.addEventListener("pointerdown", (e)=>{
                 this.primaryButton.setValue(1);

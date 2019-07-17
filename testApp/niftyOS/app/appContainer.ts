@@ -6,18 +6,24 @@ import { Dragable } from "../ui/draggable";
 import { InputManager } from "../input/inputManager";
 
 export class AppContainer{
+    app:App
     constructor(private globalStage:Stage, private inputManager:InputManager){
+        var containerSpace = new THREE.Group()
+        containerSpace.position.z = -5
+        containerSpace.position.y = 1
+        globalStage.scene.add(containerSpace)
+
         var appSpace = new THREE.Group();
-        var app = new App(appSpace)
-
+        this.app = new App(appSpace)
+        containerSpace.add(appSpace)
+        
         var taskBar = SceneObjectCreator.createBox(globalStage.scene)
-        //appSpace.position
-        taskBar.add(appSpace)
-        appSpace.position.y = 2
+        var taskBarSize = 0.1
+        taskBar.scale.setScalar(taskBarSize)
+        taskBar.position.y -= taskBarSize/2
+        containerSpace.add(taskBar)
 
-        taskBar.position.z = -3
-
-        Dragable.MakeDragable(taskBar, this.inputManager)
+        Dragable.MakeDragable(containerSpace, this.inputManager, taskBar)
     }
 
     update(){

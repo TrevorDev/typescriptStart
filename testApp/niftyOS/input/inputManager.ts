@@ -21,7 +21,7 @@ export class InputManager {
         return this.controllers[2];
     }
 
-    update(){
+    update(delta:number, curTime:number){
         this.controllers.forEach((c)=>{
             c.update()
         })

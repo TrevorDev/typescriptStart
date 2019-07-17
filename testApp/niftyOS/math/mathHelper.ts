@@ -31,7 +31,7 @@ export class MathHelper {
         this.tmpEuler.set(x,y,z)
         this.tmpMatrix.identity()
         this.tmpQuaternion.setFromEuler(this.tmpEuler)
-        this.tmpMatrix.setRotationFromQuaternion(this.tmpQuaternion)
+        this.tmpMatrix.makeRotationFromQuaternion(this.tmpQuaternion)
         matrix.multiply(this.tmpMatrix)
     }
 
