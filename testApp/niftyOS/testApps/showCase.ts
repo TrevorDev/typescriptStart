@@ -17,34 +17,38 @@ var main = async()=>{
     localVideo.width = 800;
     //localVideo.height = 600;
     localVideo.autoplay = true
+    localVideo.muted = true
     document.body.appendChild(localVideo)
 
     var screenGeom = new THREE.PlaneGeometry( 1920/1080, 1 );
-    
-    var screenMat = new THREE.MeshLambertMaterial(  );
+    var videoTexture = new THREE.VideoTexture(localVideo)
+    var screenMat = new THREE.MeshLambertMaterial( {map: videoTexture} );
     var screen = new THREE.Mesh( screenGeom, screenMat );
     screen.position.y = 1.3
     app.scene.add(screen)
 
     var peer = new WebRTCPeer(socket)
-    peer.createConnection()
-    // Create desktop stream
-    var tracks:Array<MediaStreamTrack> = []
-    peer.connection.ontrack = (event) => {
-        console.log(event.track.kind)
-        tracks.push(event.track)
-        localVideo.srcObject = new MediaStream(tracks);
-        
-        var videoTexture = new THREE.VideoTexture(localVideo)
-        var screenMat = new THREE.MeshLambertMaterial( {map: videoTexture} );
-        localVideo.onplaying = ()=>{
-            console.log("JFKLKSDJFKLJSDKFOJ")
-        }
-        localVideo.autoplay = true
-        screen.material = screenMat
-    }
-    //peer.setVideoElement(localVideo)
+    peer.setVideoElement(localVideo)
     peer.makeCall()
+
+    // peer.createConnection()
+    // // Create desktop stream
+    // var tracks:Array<MediaStreamTrack> = []
+    // peer.connection.ontrack = (event) => {
+    //     console.log(event.track.kind)
+    //     tracks.push(event.track)
+    //     localVideo.srcObject = new MediaStream(tracks);
+        
+    //     var videoTexture = new THREE.VideoTexture(localVideo)
+    //     var screenMat = new THREE.MeshLambertMaterial( {map: videoTexture} );
+    //     localVideo.onplaying = ()=>{
+    //         console.log("JFKLKSDJFKLJSDKFOJ")
+    //     }
+    //     localVideo.autoplay = true
+    //     screen.material = screenMat
+    // }
+    // //peer.setVideoElement(localVideo)
+    // peer.makeCall()
 
     input.controllers.forEach((c)=>{
         c.primaryButton.onDown.add(()=>{

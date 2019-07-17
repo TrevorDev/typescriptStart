@@ -9,6 +9,9 @@ var main = async()=>{
     var localVideo = document.createElement('video');
     localVideo.width = 800;
     localVideo.autoplay = true
+    // FUCK ALL OF THIS
+    // THIS AND SETTING MUTE TO FALSE IN WEBRTC ARE NEEDED
+    // ALSO THIS WILL STILL FAIL UNLESS CHROME://FLAGS autoplay settings are all set to allow
     localVideo.muted = true
     document.body.appendChild(localVideo)
 
