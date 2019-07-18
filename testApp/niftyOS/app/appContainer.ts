@@ -9,8 +9,8 @@ export class AppContainer{
     app:App
     constructor(private globalStage:Stage, private inputManager:InputManager){
         var containerSpace = new THREE.Group()
-        containerSpace.position.z = -5
-        containerSpace.position.y = 1
+        containerSpace.position.z = -3
+        containerSpace.position.y = 1.2
         globalStage.scene.add(containerSpace)
 
         var appSpace = new THREE.Group();

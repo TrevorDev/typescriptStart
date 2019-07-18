@@ -46,6 +46,7 @@ export class NiftyOS {
 		console.log("NiftyOS v0.0.1")
 
 		require("../niftyOS/testApps/showCase")
+		require("../niftyOS/testApps/targetShooting")
 	}
 
 	private setGlobal(){

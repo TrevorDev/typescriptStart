@@ -59,9 +59,9 @@ export class XRController {
         ray.scale.y = 0.001
         this.pointer.add(ray)
 
-        var box = SceneObjectCreator.createBox(stage.scene)
-        box.scale.set(0.1,0.1,0.1)
-        this.grip.add(box)
+        // var box = SceneObjectCreator.createBox(stage.scene)
+        // box.scale.set(0.1,0.1,0.1)
+        // this.grip.add(box)
         //this.grip.matrixAutoUpdate = false
 
         if(isMouse){

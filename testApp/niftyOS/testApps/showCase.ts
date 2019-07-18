@@ -9,47 +9,29 @@ var main = async()=>{
     var os = NiftyOS.GetOS()
     var input = os.getInputManager()
     var app = os.createApp()
-    
-    
 
     // Create video element
     var localVideo = document.createElement('video');
     localVideo.width = 800;
-    //localVideo.height = 600;
     localVideo.autoplay = true
     localVideo.muted = true
     document.body.appendChild(localVideo)
 
+    // Setup screen
     var screenGeom = new THREE.PlaneGeometry( 1920/1080, 1 );
     var videoTexture = new THREE.VideoTexture(localVideo)
     var screenMat = new THREE.MeshLambertMaterial( {map: videoTexture} );
     var screen = new THREE.Mesh( screenGeom, screenMat );
-    screen.position.y = 1.3
+    screen.scale.setScalar(2)
+    screen.position.y = 1
     app.scene.add(screen)
 
+    // Connect to desktop streaming peer
     var peer = new WebRTCPeer(socket)
     peer.setVideoElement(localVideo)
     peer.makeCall()
 
-    // peer.createConnection()
-    // // Create desktop stream
-    // var tracks:Array<MediaStreamTrack> = []
-    // peer.connection.ontrack = (event) => {
-    //     console.log(event.track.kind)
-    //     tracks.push(event.track)
-    //     localVideo.srcObject = new MediaStream(tracks);
-        
-    //     var videoTexture = new THREE.VideoTexture(localVideo)
-    //     var screenMat = new THREE.MeshLambertMaterial( {map: videoTexture} );
-    //     localVideo.onplaying = ()=>{
-    //         console.log("JFKLKSDJFKLJSDKFOJ")
-    //     }
-    //     localVideo.autoplay = true
-    //     screen.material = screenMat
-    // }
-    // //peer.setVideoElement(localVideo)
-    // peer.makeCall()
-
+    // On trigger move/click desktop mouse
     input.controllers.forEach((c)=>{
         c.primaryButton.onDown.add(()=>{
             var hit = c.raycaster.intersectObject(screen)
