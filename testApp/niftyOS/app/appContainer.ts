@@ -4,9 +4,11 @@ import { Stage } from "../stage/stage";
 import { SceneObjectCreator } from "../stage/sceneObjectCreator";
 import { Dragable } from "../ui/draggable";
 import { InputManager } from "../input/inputManager";
+import { Raycaster } from "three";
 
 export class AppContainer{
     app:App
+    taskBar:THREE.Object3D
     constructor(private globalStage:Stage, private inputManager:InputManager){
         var containerSpace = new THREE.Group()
         containerSpace.position.z = -3
@@ -17,16 +19,16 @@ export class AppContainer{
         this.app = new App(appSpace)
         containerSpace.add(appSpace)
         
-        var taskBar = SceneObjectCreator.createBox(globalStage.scene)
+        this.taskBar = SceneObjectCreator.createBox(globalStage.scene)
         var taskBarSize = 0.1
-        taskBar.scale.setScalar(taskBarSize)
-        taskBar.position.y -= taskBarSize/2
-        containerSpace.add(taskBar)
+        this.taskBar.scale.setScalar(taskBarSize)
+        this.taskBar.position.y -= taskBarSize/2
+        containerSpace.add(this.taskBar)
 
-        Dragable.MakeDragable(containerSpace, this.inputManager, taskBar)
+        Dragable.MakeDragable(containerSpace, this.inputManager, this.taskBar)
     }
 
-    update(){
-
+    update(delta:number, curTime:number){
+        this.app.update(delta, curTime)
     }
 }

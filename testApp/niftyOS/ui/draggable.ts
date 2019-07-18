@@ -10,8 +10,10 @@ export class Dragable {
         input.controllers.forEach((c)=>{
             c.primaryButton.onDown.add(()=>{
                 if(!selected){
-                    var i = c.raycaster.intersectObject(dragObject)
-                    if(i[0]){
+                    //var i = c.raycaster.intersectObject(dragObject)
+                    // console.log(c.hoveredIntersection)
+                    // console.log(dragObject)
+                    if(c.hoveredIntersection && c.hoveredIntersection.object == dragObject){
                         selected = true
                         var oldParent = obj.parent!
                         MathHelper.addAsChildKeepWorldMatrix(obj, c.pointer)

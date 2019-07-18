@@ -38,7 +38,28 @@ export class NiftyOS {
 		
 		// Main render loop
 		this.globalStage.startRenderLoop((delta, curTime)=>{
-			this.inputManager.update(delta, curTime)	
+			this.inputManager.update(delta, curTime)
+
+			this.inputManager.controllers.forEach((controller)=>{
+				var closestHit = {distance: Infinity} as THREE.Intersection
+				var isTaskBar = false
+				this.appManager.appContainers.forEach((container)=>{
+					var hit = controller.raycaster.intersectObject(container.taskBar)
+					if(hit[0] && hit[0].distance < closestHit.distance){
+						closestHit = hit[0]
+						isTaskBar = true
+						controller.hoveredApp = container.app
+					}
+					hit = container.app.castRay(controller.raycaster)
+					if(hit[0] && hit[0].distance < closestHit.distance){
+						closestHit = hit[0]
+						isTaskBar = false
+						controller.hoveredApp = container.app
+					}
+				})
+				controller.hoveredIntersection = closestHit.distance < Infinity ? closestHit : null
+			})
+
 			this.appManager.update(delta, curTime)
 		})
 

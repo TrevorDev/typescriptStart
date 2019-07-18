@@ -12,7 +12,9 @@ export class AppManager{
 
     }
     update(delta:number, curTime:number){
-
+        this.appContainers.forEach((c)=>{
+            c.update(delta, curTime)
+        })
     }
 
     createApp(){

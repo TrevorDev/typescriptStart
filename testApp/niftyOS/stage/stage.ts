@@ -40,7 +40,7 @@ export class Stage {
         // TODO handle resize here or when requested
         // window.onresize = ()=>{
         // }
-        this.renderer.setClearColor(0x3596bd)
+        //this.renderer.setClearColor(0x3596bd)
     }
 
     startRenderLoop(onBeforeRender:(delta:number, curTime:number)=>void){

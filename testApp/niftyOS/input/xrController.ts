@@ -3,6 +3,9 @@ import { Stage } from "../stage/stage";
 import { SceneObjectCreator } from "../stage/sceneObjectCreator";
 import { Observable } from "../events/observable";
 import { MathHelper } from "../math/mathHelper";
+import { Nullable } from "../types/common";
+import { AppContainer } from "../app/appContainer";
+import { App } from "../app/app";
 
 class XRButtonState {
     private _value = 0
@@ -42,6 +45,9 @@ export class XRController {
     primaryButton = new XRButtonState()
 
     onMove = new Observable<XRController>()
+
+    hoveredApp:Nullable<App> = null
+    hoveredIntersection:Nullable<THREE.Intersection> = null
     
     constructor(private stage:Stage, private poseObject:THREE.Object3D, private isMouse=false){
         this.id = XRController.ID_COUNTER++
