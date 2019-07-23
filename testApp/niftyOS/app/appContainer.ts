@@ -9,23 +9,24 @@ import { Raycaster } from "three";
 export class AppContainer{
     app:App
     taskBar:THREE.Object3D
+    containerSpace:THREE.Group
     constructor(private globalStage:Stage, private inputManager:InputManager){
-        var containerSpace = new THREE.Group()
-        containerSpace.position.z = -3
-        containerSpace.position.y = 1.2
-        globalStage.scene.add(containerSpace)
+        this.containerSpace = new THREE.Group()
+        this.containerSpace.position.z = -3
+        this.containerSpace.position.y = 1.2
+        globalStage.scene.add(this.containerSpace)
 
         var appSpace = new THREE.Group();
         this.app = new App(appSpace)
-        containerSpace.add(appSpace)
+        this.containerSpace.add(appSpace)
         
         this.taskBar = SceneObjectCreator.createBox(globalStage.scene)
         var taskBarSize = 0.1
         this.taskBar.scale.setScalar(taskBarSize)
         this.taskBar.position.y -= taskBarSize/2
-        containerSpace.add(this.taskBar)
+        this.containerSpace.add(this.taskBar)
 
-        Dragable.MakeDragable(containerSpace, this.inputManager, this.taskBar)
+        Dragable.MakeDragable(this.containerSpace, this.inputManager, this.taskBar)
     }
 
     update(delta:number, curTime:number){

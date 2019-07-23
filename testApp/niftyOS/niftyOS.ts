@@ -66,8 +66,9 @@ export class NiftyOS {
 		this.setGlobal()
 		console.log("NiftyOS v0.0.1")
 
-		require("../niftyOS/testApps/showCase")
-		require("../niftyOS/testApps/targetShooting")
+		// require("../niftyOS/testApps/showCase")
+		// require("../niftyOS/testApps/targetShooting")
+		require("../niftyOS/testApps/clock")
 	}
 
 	private setGlobal(){
@@ -75,8 +76,12 @@ export class NiftyOS {
     	global._niftyOS = this
 	}
 
+	appPos = 0
+
 	createApp(){
 		var container = this.appManager.createApp()
+		container.containerSpace.position.x = this.appPos
+		this.appPos++
 		return container.app
 	}
 	getInputManager(){

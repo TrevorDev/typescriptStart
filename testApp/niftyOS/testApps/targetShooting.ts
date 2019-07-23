@@ -26,6 +26,7 @@ var main = async()=>{
     var bullets = new Array<Bullet>()
     for(var i =0;i<8;i++){
         bullets.push(new Bullet(app.scene))
+        bullets[i].mesh.visible = false
     }
 
    
@@ -41,6 +42,7 @@ var main = async()=>{
                 tmpMatrix.multiplyMatrices(tmpMatrix, c.pointer.matrixWorld)
                 tmpMatrix.decompose(bullet.mesh.position, bullet.mesh.quaternion, bullet.mesh.scale)
                 bullet.mesh.scale.setScalar(0.1)
+                bullet.mesh.visible = true 
 
                 MathHelper.getForwardFromMatrix(tmpMatrix, bullet.vel)
             }
