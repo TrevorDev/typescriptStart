@@ -22,50 +22,65 @@ var main = async()=>{
     var os = NiftyOS.GetOS()
     var input = os.getInputManager()
     var app = os.createApp()
-    
-    // Get time
-    var time = new Date()
-    var clockTime = time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
 
+    // Create canvas element to draw text to
     var canEl = document.createElement('canvas')
+    canEl.width = 512*2
+    canEl.height = 128*2
+    var ctx = canEl.getContext("2d")!
 
-    // Generate texture
-    var el = document.createElement('div');
-    var domString = '<div style="font-size: 5em;"><div>Time: '+clockTime+'</div></div>';
-    el.innerHTML =  domString;
-    document.body.appendChild(el);   
-    document.body.appendChild(canEl);   
-    debugger
-
-    var ctx:any = canEl.getContext('2d');
-    // ctx.beginPath();
-    // ctx.arc(75,75,50,0,Math.PI*2,true); // Outer circle
-    // ctx.moveTo(110,75);
-    // ctx.arc(75,75,35,0,Math.PI,false);   // Mouth (clockwise)
-    // ctx.moveTo(65,65);
-    // ctx.arc(60,65,5,0,Math.PI*2,true);  // Left eye
-    // ctx.moveTo(95,65);
-    // ctx.arc(90,65,5,0,Math.PI*2,true);  // Right eye
-    // ctx.stroke();
-    await (html2canvas as any)(el.firstChild,{width: 512, height:512, canvas: ctx, allowTaint: true})
-    
     // Debug overlay canvas
-    // document.body.appendChild(c)
-    canEl.style.position = "absolute"
-    canEl.style.zIndex = "20"
-    canEl.style.top = "0px"
-    //canvas.style.backgroundColor = "red"
+    // document.body.appendChild(canEl)
+    // canEl.style.position = "absolute"
+    // canEl.style.zIndex = "20"
+    // canEl.style.top = "0px"
 
+    // Create texture from the canvas
     var texture = new THREE.CanvasTexture(canEl)
     texture.needsUpdate = true
-    // Setup screen
-    var screenGeom = new THREE.PlaneGeometry( 1, 1 );
-    //var videoTexture = new THREE.VideoTexture(localVideo)
+
+    // Setup mesh to render text to
+    var screenGeom = new THREE.PlaneGeometry( 1, 128/512 );
     var screenMat = new THREE.MeshLambertMaterial( {map: texture} );
+    screenMat.transparent = true
     var screen = new THREE.Mesh( screenGeom, screenMat );
-    // screen.scale.setScalar(2)
-    screen.position.y = 1
+    screen.position.y = 0.2
     app.scene.add(screen)
+
+    
+
+    var frameArray = new Array<number>()
+    var frameIndex = 0
+    var frameSum = 0
+    var framesToWatch = 120
+    app.update = (delta)=>{
+        if(frameArray.length < framesToWatch){
+            frameArray.push(delta)
+            frameSum+=delta
+        }else{
+            frameSum -= frameArray[frameIndex]
+            frameSum += delta
+            frameArray[frameIndex] = delta
+            frameIndex = (frameIndex+1)%framesToWatch
+        }
+
+        // Get time
+        var time = new Date()
+        var clockTime = time.toLocaleTimeString()//time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
+
+        // Draw text
+        var size = 50*2
+        ctx.fillStyle = '#020808';
+        //ctx.fillRect(0,0,canEl.width,canEl.height)
+        ctx.clearRect(0,0,canEl.width,canEl.height)
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = size+'px serif';
+        var dim = ctx.measureText("M")
+        ctx.fillText(""+clockTime, 10, dim.width);
+        ctx.fillText("FPS: "+(Math.floor(10000/(frameSum/frameArray.length))/10).toFixed(1), 10, dim.width*2+10);
+        texture.needsUpdate = true
+    }
+  
     
     
 }

@@ -1,7 +1,8 @@
 import { Stage } from "./stage/stage";
 import { SceneObjectCreator } from "./stage/sceneObjectCreator";
 import { InputManager } from "./input/inputManager";
-import THREE = require("three");
+import * as THREE from "three"
+import * as GLTFLoader from "three-gltf-loader"
 import { AppContainer } from "./app/appContainer";
 import { AppManager } from "./app/appManager";
 import { App } from "./app/app";
@@ -20,7 +21,7 @@ export class NiftyOS {
 		
 		// Setup world
 		SceneObjectCreator.createDefaultLights(this.globalStage.scene)
-		SceneObjectCreator.createFloor(this.globalStage.scene)
+		//SceneObjectCreator.createFloor(this.globalStage.scene)
 		// var b=SceneObjectCreator.createBox(this.globalStage.scene)
 		// b.position.z = -10
 
@@ -64,10 +65,40 @@ export class NiftyOS {
 		})
 
 		this.setGlobal()
+
+		console.log(GLTFLoader)
+		const loader = new (GLTFLoader as any)();
+		loader.load(
+			'/public/gltf/world.glb',
+			( gltf:any ) => {
+				// called when the resource is loaded
+				this.globalStage.scene.add( gltf.scene );
+				
+				
+				(gltf.scene as THREE.Object3D).scale.setScalar(32);
+				(gltf.scene as THREE.Object3D).position.y = -3;
+				(gltf.scene as THREE.Object3D).position.z = -24;
+				(gltf.scene as THREE.Object3D).position.x = -1;
+				(gltf.scene as THREE.Object3D).rotateOnAxis(new THREE.Vector3(0,1,0), Math.PI);
+				document.onkeydown = ()=>{
+					
+					(gltf.scene as THREE.Object3D).position.x--
+				}
+			},
+			( xhr:any ) => {
+				// called while loading is progressing
+				console.log( `${( xhr.loaded / xhr.total * 100 )}% loaded` );
+			},
+			( error:any ) => {
+				// called when loading has errors
+				console.error( 'An error happened', error );
+			},
+		);
+
 		console.log("NiftyOS v0.0.1")
 
-		// require("../niftyOS/testApps/showCase")
-		// require("../niftyOS/testApps/targetShooting")
+		require("../niftyOS/testApps/showCase")
+		require("../niftyOS/testApps/targetShooting")
 		require("../niftyOS/testApps/clock")
 	}
 

@@ -4,18 +4,19 @@ import { DefaultMaterials } from "./defaultMaterials";
 export class SceneObjectCreator {
     static createDefaultLights(scene: THREE.Object3D){
         var lights = {
-			ambiant: new THREE.AmbientLight(0xFFFFFF, 0.1),
+			ambiant: new THREE.AmbientLight(0xFFFFFF, 0.4),
 			point1: new THREE.PointLight(),
 			point2: new THREE.PointLight()
 		}
 		scene.add(lights.ambiant);
 
-		lights.point1.position.y += 3
-		lights.point1.position.z += 3
+		lights.point1.position.y += 50
+		lights.point1.position.z += 50
 		scene.add(lights.point1);
 
 		lights.point2.position.y += 0
 		lights.point2.position.x += 2
+		lights.point2.intensity *= 0.1
         scene.add(lights.point2);
         
 		return lights
