@@ -107,7 +107,7 @@ export class NiftyOS {
     	global._niftyOS = this
 	}
 
-	appPos = 0
+	appPos = -2
 
 	createApp(){
 		var container = this.appManager.createApp()

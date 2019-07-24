@@ -4,6 +4,7 @@ export class WebRTCPeer {
     uuid = createUUID()
     connection:RTCPeerConnection
     connectionCreated = new Observable<WebRTCPeer>()
+    trackAdded = new Observable<WebRTCPeer>()
     constructor(private socket:SocketIO.Socket){
         this.createConnection()
 
@@ -75,11 +76,12 @@ export class WebRTCPeer {
             //tracks.push(event.track)
             //setTimeout(() => {
                 element.srcObject = event.streams[0];
-                element.onloadedmetadata = function(e) {
+                element.onloadedmetadata = (e)=> {
                     console.log("load")
                     try{
                         element.play();
                         element.muted = false
+                        this.trackAdded.notifyObservers(this)
                     }catch(e){
                         console.log(e)
                     }

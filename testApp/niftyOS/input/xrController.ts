@@ -58,12 +58,16 @@ export class XRController {
         stage.scene.add(this.grip)
         stage.scene.add(this.pointer)
 
-        var ray = SceneObjectCreator.createRay(stage.scene)
-        ray.scale.setScalar(0.1)
-        ray.scale.z = 100
-        ray.scale.x = 0.001
-        ray.scale.y = 0.001
-        this.pointer.add(ray)
+        if(!this.isMouse){
+            var ray = SceneObjectCreator.createRay(stage.scene)
+            ray.scale.setScalar(0.1)
+            ray.scale.z = 100
+            ray.scale.x = 0.001
+            ray.scale.y = 0.001
+        
+            this.pointer.add(ray)
+        }
+        
 
         // var box = SceneObjectCreator.createBox(stage.scene)
         // box.scale.set(0.1,0.1,0.1)

@@ -8,13 +8,35 @@ class Bullet {
     vel:THREE.Vector3
     constructor(scene:THREE.Group){
         this.vel = new THREE.Vector3()
-        this.mesh = SceneObjectCreator.createBox(scene)
+
+        var geo = new THREE.SphereGeometry(1, 16, 16)
+        var mat = new THREE.MeshLambertMaterial({
+            //map: new THREE.TextureLoader().load('/public/img/target.png')
+        })
+		var mesh = new THREE.Mesh(geo, mat )
+        mesh.scale.setScalar(0.01)
+		scene.add( mesh );
+
+
+        this.mesh = mesh
+    }
+}
+
+class Target {
+    mesh:THREE.Mesh
+    constructor(scene:THREE.Group){
+        var geo = new THREE.SphereGeometry(1, 16, 16)
+        var mat = new THREE.MeshLambertMaterial({
+            map: new THREE.TextureLoader().load('/public/img/target.png')
+        })
+		var mesh = new THREE.Mesh(geo, mat )
+		scene.add( mesh );
+        this.mesh = mesh
         this.mesh.scale.setScalar(0.1)
     }
-
-    // update(){
-    //     this.mesh.position.add(this.vel)
-    // }
+    move(){
+        this.mesh.position.set(Math.random()*2-1,Math.random()*2, 0)
+    }
 }
 
 var main = async()=>{
@@ -29,6 +51,11 @@ var main = async()=>{
         bullets[i].mesh.visible = false
     }
 
+    var targets = new Array<Target>()
+    for(var i =0;i<3;i++){
+        targets.push(new Target(app.scene))
+        targets[i].move()
+    }
    
 
     // On trigger move/click desktop mouse
@@ -41,7 +68,7 @@ var main = async()=>{
                 tmpMatrix.getInverse(app.scene.matrixWorld)
                 tmpMatrix.multiplyMatrices(tmpMatrix, c.pointer.matrixWorld)
                 tmpMatrix.decompose(bullet.mesh.position, bullet.mesh.quaternion, bullet.mesh.scale)
-                bullet.mesh.scale.setScalar(0.1)
+                bullet.mesh.scale.setScalar(0.01)
                 bullet.mesh.visible = true 
 
                 MathHelper.getForwardFromMatrix(tmpMatrix, bullet.vel)
@@ -49,10 +76,19 @@ var main = async()=>{
         })
     })
 
-    //var tmpVec = new THREE.Vector3()
+    var tmpVec = new THREE.Vector3()
     app.update = (delta)=>{
         bullets.forEach((b)=>{
             b.mesh.position.addScaledVector(b.vel, delta/300)
+
+            targets.forEach((t)=>{
+                tmpVec.copy(t.mesh.position)
+                tmpVec.sub(b.mesh.position)
+                if(tmpVec.length() < 0.1){
+                    t.move()
+                    b.mesh.visible = false
+                }
+            })
         })
     }
     

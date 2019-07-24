@@ -22,7 +22,7 @@ var main = async()=>{
         localVideo.muted = true
         //
         var media:MediaStream = await (navigator.mediaDevices as any)
-        .getDisplayMedia({ video: {width:1920/2, height:1080/2}, audio: true })
+        .getDisplayMedia({ video: {width:1920/4, height:1080/4}, audio: true })
         localVideo.srcObject = media;
         peer.addTracks(media)
         
