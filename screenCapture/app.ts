@@ -1,7 +1,6 @@
 import { WebRTCPeer } from "./WebRTCPeer";
-
-declare var io: any;
-var socket: SocketIO.Socket = io();
+import io from 'socket.io-client';
+var socket = io() as any as SocketIO.Socket;
 
 var isHub = window.location.search.length > 2;
 var main = async()=>{

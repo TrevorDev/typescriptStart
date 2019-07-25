@@ -2,7 +2,7 @@ import { Stage } from "./stage/stage";
 import { SceneObjectCreator } from "./stage/sceneObjectCreator";
 import { InputManager } from "./input/inputManager";
 import * as THREE from "three"
-import * as GLTFLoader from "three-gltf-loader"
+import GLTFLoader from "three-gltf-loader"
 import { AppContainer } from "./app/appContainer";
 import { AppManager } from "./app/appManager";
 import { App } from "./app/app";
@@ -66,7 +66,6 @@ export class NiftyOS {
 
 		this.setGlobal()
 
-		console.log(GLTFLoader)
 		const loader = new (GLTFLoader as any)();
 		loader.load(
 			'/public/gltf/world.glb',
@@ -87,7 +86,7 @@ export class NiftyOS {
 			},
 			( xhr:any ) => {
 				// called while loading is progressing
-				console.log( `${( xhr.loaded / xhr.total * 100 )}% loaded` );
+				//console.log( `${( xhr.loaded / xhr.total * 100 )}% loaded` );
 			},
 			( error:any ) => {
 				// called when loading has errors

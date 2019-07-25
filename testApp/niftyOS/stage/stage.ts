@@ -26,6 +26,7 @@ export class Stage {
         this.canvas.width = width
         this.canvas.height = height
         divElement.appendChild(this.canvas)
+        console.warn = function(){};
         var tmp = console.log
         console.log = ()=>{}
         this.renderer = new THREE.WebGLRenderer({canvas: this.canvas, antialias: true})

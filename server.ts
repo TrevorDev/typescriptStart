@@ -1,7 +1,7 @@
-import * as express from "express"
+import express from "express"
 import * as http from "http"
 import * as fs from "fs"
-import * as sio from "socket.io";
+import sio from "socket.io";
 import * as https from "https"
 
 import * as robot from "robotjs"

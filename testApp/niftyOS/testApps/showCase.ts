@@ -3,9 +3,9 @@ import { SceneObjectCreator } from "../stage/sceneObjectCreator";
 import THREE = require("three");
 import { WebRTCPeer } from "../../../screenCapture/WebRTCPeer";
 import { Nullable } from "../types/common";
+import io from 'socket.io-client';
 
-declare var io: any;
-var socket: SocketIO.Socket = io();
+var socket: any = io();
 var main = async()=>{
     var os = NiftyOS.GetOS()
     var input = os.getInputManager()
