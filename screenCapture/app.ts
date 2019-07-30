@@ -1,4 +1,4 @@
-import { WebRTCPeer } from "./WebRTCPeer";
+import { WebRTCPeer } from "./webRTCPeer";
 import io from 'socket.io-client';
 var socket = io() as any as SocketIO.Socket;
 

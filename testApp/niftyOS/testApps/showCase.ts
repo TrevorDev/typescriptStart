@@ -1,7 +1,7 @@
 import { NiftyOS } from "../niftyOS";
 import { SceneObjectCreator } from "../stage/sceneObjectCreator";
 import THREE = require("three");
-import { WebRTCPeer } from "../../../screenCapture/WebRTCPeer";
+import { WebRTCPeer } from "../../../screenCapture/webRTCPeer";
 import { Nullable } from "../types/common";
 import io from 'socket.io-client';
 
