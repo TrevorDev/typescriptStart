@@ -7,7 +7,7 @@ export class Stage {
     renderer:THREE.WebGLRenderer
     canvas:HTMLCanvasElement
 
-    constructor(divElement:HTMLDivElement){
+    constructor(divElement:HTMLDivElement, enableVR = true){
         this.scene = new THREE.Scene()
 
         // Create camera
@@ -32,8 +32,10 @@ export class Stage {
         this.renderer = new THREE.WebGLRenderer({canvas: this.canvas, antialias: true})
         console.log = tmp
 
-        this.renderer.vr.enabled = true
-        document.body.appendChild(vr.default.createButton(this.renderer, undefined));
+        if(enableVR){
+            this.renderer.vr.enabled = true
+            document.body.appendChild(vr.default.createButton(this.renderer, undefined));    
+        }
         
         // var c= (this.renderer.vr as any).getController(0)
         // console.log(c)

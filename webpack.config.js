@@ -74,5 +74,47 @@ module.exports = [
       filename: 'screenCapture.js',
       path: path.resolve(__dirname, 'public/dist')
     }
+  },
+  {
+    mode: 'development',
+    entry: "./testApp/app.ts",
+    devtool: "inline-source-map",
+    module: {
+      rules: [
+        {
+          test: /\.tsx?$/,
+          use: 'ts-loader',
+          exclude: /node_modules/
+        }
+      ]
+    },
+    resolve: {
+      extensions: ['.tsx', '.ts', '.js']
+    },
+    output: {
+      filename: 'testApp.js',
+      path: path.resolve(__dirname, 'public/dist')
+    }
+  },
+  {
+    mode: 'development',
+    entry: "./sliceMMO/app.ts",
+    devtool: "inline-source-map",
+    module: {
+      rules: [
+        {
+          test: /\.tsx?$/,
+          use: 'ts-loader',
+          exclude: /node_modules/
+        }
+      ]
+    },
+    resolve: {
+      extensions: ['.tsx', '.ts', '.js']
+    },
+    output: {
+      filename: 'sliceMMO.js',
+      path: path.resolve(__dirname, 'public/dist')
+    }
   }
 ];

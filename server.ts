@@ -5,7 +5,15 @@ import sio from "socket.io";
 import * as https from "https"
 
 import * as robot from "robotjs"
-var port = 3000;
+import program from "commander"
+
+program
+  .version('0.1.0')
+  .option('-p, --port [port]', 'port to run on')
+  .parse(process.argv)
+
+var port = program.port ? program.port : 443
+console.log("Starting on port: "+port)
 
 // Basic express webserver
 var app = express()
@@ -16,11 +24,14 @@ app.get('/', function (req, res) {
 app.get('/screenCapture', function (req, res) {
     res.sendFile(process.cwd() + "/public/screenCapture.html")
 })
+app.get('/slice', function (req, res) {
+    res.sendFile(process.cwd() + "/public/slice.html")
+})
 
 // var server = http.createServer(app)
 // server.listen(port)
-var sserver = https.createServer({key:fs.readFileSync('cert/key.pem').toString(), cert: fs.readFileSync('cert/certificate.pem').toString()}, app)
-sserver.listen(443);
+var sserver = port != 443 ? http.createServer(app) : https.createServer({key:fs.readFileSync('cert/key.pem').toString(), cert: fs.readFileSync('cert/certificate.pem').toString()}, app)
+sserver.listen(port);
 var io = sio(sserver)
 io.on('connection', (socket) => {
     console.log("connect")

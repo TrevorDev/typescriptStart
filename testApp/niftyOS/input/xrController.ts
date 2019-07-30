@@ -7,13 +7,20 @@ import { Nullable } from "../types/common";
 import { AppContainer } from "../app/appContainer";
 import { App } from "../app/app";
 
-class XRButtonState {
+export class XRButtonState {
     private _value = 0
     private _downThreshold = 0.8
     constructor(){
     }
     get value(){
         return this._value
+    }
+    isDown(){
+        if(this.value > this._downThreshold){
+            return true
+        }else{
+            return false
+        }
     }
     setValue(val:number){
         //console.log(val+" "+this._value)
