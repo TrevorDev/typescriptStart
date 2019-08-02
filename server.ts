@@ -4,7 +4,6 @@ import * as fs from "fs"
 import sio from "socket.io";
 import * as https from "https"
 
-import * as robot from "robotjs"
 import program from "commander"
 
 program
@@ -32,21 +31,21 @@ app.get('/slice', function (req, res) {
 // server.listen(port)
 var sserver = port != 443 ? http.createServer(app) : https.createServer({key:fs.readFileSync('cert/key.pem').toString(), cert: fs.readFileSync('cert/certificate.pem').toString()}, app)
 sserver.listen(port);
-var io = sio(sserver)
-io.on('connection', (socket) => {
-    console.log("connect")
-    socket.on("message", (e)=>{
-        socket.broadcast.send("message", e)
-    })
+// var io = sio(sserver)
+// io.on('connection', (socket) => {
+//     console.log("connect")
+//     socket.on("message", (e)=>{
+//         socket.broadcast.send("message", e)
+//     })
 
-    socket.on("robot", (e)=>{
-        if(e.action == "mouseMove"){
-            var screenSize = robot.getScreenSize();
-            robot.moveMouse(screenSize.width*e.x,screenSize.height*e.y)
-        }else if(e.action == "mouseDown"){
-            robot.mouseToggle("down")
-        }else if(e.action == "mouseUp"){
-            robot.mouseToggle("up")
-        }
-    })
-});
+//     socket.on("robot", (e)=>{
+//         if(e.action == "mouseMove"){
+//             var screenSize = robot.getScreenSize();
+//             robot.moveMouse(screenSize.width*e.x,screenSize.height*e.y)
+//         }else if(e.action == "mouseDown"){
+//             robot.mouseToggle("down")
+//         }else if(e.action == "mouseUp"){
+//             robot.mouseToggle("up")
+//         }
+//     })
+// });
