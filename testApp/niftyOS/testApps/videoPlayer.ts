@@ -14,8 +14,8 @@ var main = async()=>{
     localVideo.autoplay = true
     //localVideo.muted = true
     localVideo.loop = true
-    localVideo.src = "/public/video/aesthetic.mp4"
-    localVideo.play();
+    localVideo.src = "/public/video/output.mp4"
+    //localVideo.play();
     document.body.appendChild(localVideo)
 
     var screen:Nullable<THREE.Mesh> = null;
@@ -26,7 +26,23 @@ var main = async()=>{
        // if(!screen){
             // Setup screen
             var screenGeom = new THREE.PlaneGeometry( 1920/1080, 1 );
-            var videoTexture = new THREE.VideoTexture(localVideo)
+            var videoTexture = new THREE.VideoTexture(localVideo);
+
+            var refresh = ()=>{
+                var video = (videoTexture as any).image;
+
+                if (video.readyState >= video.HAVE_CURRENT_DATA ) {
+
+                    (videoTexture as any).needsUpdate = true;
+
+                }
+                setTimeout(refresh, 1000/30);
+            }
+            refresh();
+           
+            (videoTexture as any).update = ()=>{
+               
+            } 
             var screenMat = new THREE.MeshBasicMaterial( {map: videoTexture} );
             screen = new THREE.Mesh( screenGeom, screenMat );
             screen.scale.setScalar(2)

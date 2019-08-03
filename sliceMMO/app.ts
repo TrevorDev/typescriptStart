@@ -1,6 +1,8 @@
 import { Stage } from "../testApp/niftyOS/stage/stage";
 import { SceneObjectCreator } from "../testApp/niftyOS/stage/sceneObjectCreator";
 import { SliceController } from "./sliceController";
+import { Vector2 } from "three";
+import { Player } from "./player";
 
 var main = async()=>{
     console.log("hello")
@@ -65,14 +67,19 @@ var main = async()=>{
 
     var stage = new Stage(div, false) 
     SceneObjectCreator.createDefaultLights(stage.scene)
-    var b = SceneObjectCreator.createBox(stage.scene)
-    b.position.z = -5
+    
+
+    var player = new Player(stage.scene)
 
     stage.startRenderLoop((delta)=>{
-        if(controller.buttonLeft.isDown()){
-            b.position.x -= 0.001*delta
-        }
+        var dir = new Vector2()
+        dir.x = controller.buttonRight.value - controller.buttonLeft.value
+        dir.y = controller.buttonUp.value - controller.buttonDown.value
+        player.vel.x = dir.x*0.01
+        player.vel.y = dir.y*0.01
+        player.update(delta)
     })
+    
 }
 main()
 
