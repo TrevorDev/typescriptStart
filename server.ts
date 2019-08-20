@@ -1,7 +1,7 @@
-import * as express from "express"
+import express from "express"
 import * as http from "http"
-import * as sio from "socket.io";
-import * as program from "commander"
+import sio from "socket.io";
+import program from "commander"
 
 program
   .version('0.1.0')
