@@ -3,7 +3,7 @@ import { CommandQueue } from "./engine/commandQueue";
 import { GPUCommand } from "./engine/gpuCommand";
 import { GPUDevice } from "./engine/gpuDevice";
 import { RenderPass } from "./engine/renderPass";
-import { RenderPipeline } from "./engine/renderPipeline";
+import { RenderPipelineState } from "./engine/renderPipeline";
 import { Shader } from "./engine/shader";
 import { Input } from "./io/input";
 import { RenderWindow } from "./io/renderWindow";
