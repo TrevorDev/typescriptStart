@@ -43,6 +43,12 @@ export class GPUDrawPrimitivesCMD extends GPUCommand{
     }
 }
 
+export class GPUHackedActionCMD extends GPUCommand{
+    constructor(public fn:Function){
+        super("GPUHackedActionCMD");
+    }
+}
+
 export class GPUNewCMD extends GPUCommand{
     constructor(){
         super("TODO");
@@ -71,12 +77,16 @@ export class CommandBuffer {
 
         for(var cmd of this.commands){
             if(cmd.type == "RENDERPASS_START"){
-                var c = cmd as GPURenderPassStartCMD
+                let c = cmd as GPURenderPassStartCMD
                 if(c.renderPassDesc.colorAttachments[0].loadAction == "CLEAR"){
                     this.device.gl.clearColor(c.renderPassDesc.colorAttachments[0].clearColor.r,c.renderPassDesc.colorAttachments[0].clearColor.g,c.renderPassDesc.colorAttachments[0].clearColor.b,c.renderPassDesc.colorAttachments[0].clearColor.a)
                     this.device.gl.clear(this.device.gl.COLOR_BUFFER_BIT | this.device.gl.DEPTH_BUFFER_BIT);
                 }
                 
+            }
+            if(cmd.type == "GPUHackedActionCMD"){
+                let c = cmd as GPUHackedActionCMD
+                c.fn()
             }
             if(cmd.type == "PRESENT"){
             }
