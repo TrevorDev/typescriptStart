@@ -1,5 +1,5 @@
 import { Texture } from "./texture";
-import { Color } from "../math/color";
+import { Color } from "../../math/color";
 
 export class ColorAttachment {
     texture:Texture

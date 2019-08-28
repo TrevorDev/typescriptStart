@@ -2,8 +2,8 @@ import { RenderPassDesc } from "./renderPass";
 import { Texture } from "./texture";
 import { RenderEncoder } from "./renderEncorder";
 import { GPUDevice } from "./gpuDevice";
-import { Vector3 } from "../math/vector3";
-import { Color } from "../math/color";
+import { Vector3 } from "../../math/vector3";
+import { Color } from "../../math/color";
 
 export class GPUCommand {
     constructor(public type:string){}
