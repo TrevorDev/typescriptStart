@@ -3,7 +3,7 @@ import { Material } from "./material";
 import { TransformNode } from "./transformNode";
 
 export class Mesh extends TransformNode {
-    constructor(vertData:VertexData, material:Material){
+    constructor(public vertData:VertexData, public material:Material){
         super()
     }
 }

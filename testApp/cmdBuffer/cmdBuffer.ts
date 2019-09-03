@@ -13,7 +13,6 @@ import { Vector3 } from "../math/vector3";
 import { Camera } from "../sceneGraph/camera";
 import { VertexData } from "../sceneGraph/vertexData";
 import { Mesh } from "../sceneGraph/mesh";
-import { Node } from "../sceneGraph/transformNode";
 import { PointLight } from "../sceneGraph/pointLight";
 import { Scene } from "../sceneGraph/scene";
 export { GPUBuffer } from "./engine/gpuBuffer";

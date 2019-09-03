@@ -8,8 +8,12 @@ export class RenderWindow {
         document.body.appendChild(device.canvasElement)
         this.textures.push(new Texture(device))
 
-        this.dimensions.x = device.gl.canvas.clientWidth
-        this.dimensions.y = device.gl.canvas.clientHeight
+        this.updateDimensions()
+    }
+
+    updateDimensions(){
+        this.dimensions.x = this.device.gl.canvas.clientWidth
+        this.dimensions.y = this.device.gl.canvas.clientHeight
     }
 
     onScreenRefreshLoop(fn:Function){
