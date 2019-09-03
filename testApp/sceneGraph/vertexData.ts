@@ -4,9 +4,9 @@ import { GPUDevice } from "../cmdBuffer/engine/gpuDevice";
 export class VertexData {
     public gpuBufferInfo:twgl.BufferInfo
     constructor(device:GPUDevice,data:{
-        position: Array<number>
-        normal: Array<number>
-        texcoord: Array<number>
+        a_position: Array<number>
+        a_normal: Array<number>
+        a_texcoord: Array<number>
         indices: Array<number>
     }){
         this.gpuBufferInfo = twgl.createBufferInfoFromArrays(device.gl, data);

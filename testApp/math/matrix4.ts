@@ -24,7 +24,7 @@ export class Matrix4 {
         //this.m[]
         twgl.m4.translation(pos.v, this.m)
         //twgl.m4.setTranslation(pos.v, this.m)
-        console.log(this.m)
+       // console.log(this.m)
         //twgl.m4.translate()
     }
 

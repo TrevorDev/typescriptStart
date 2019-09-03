@@ -6,6 +6,9 @@ import { GPUDevice } from "../cmdBuffer/engine/gpuDevice";
 import { Camera } from "./camera";
 import { TransformNode } from "./transformNode";
 import { Mesh } from "./mesh";
+import { Texture } from "../cmdBuffer/engine/texture";
+import { PointLight } from "./pointLight";
+import { Vector3 } from "../math/vector3";
 
 // export class StandardMaterialFactory {
 //     createInstance(){
@@ -19,20 +22,15 @@ export class StandardMaterial implements Material {
     lightUboInfo:twgl.UniformBlockInfo
     materialUboInfo:twgl.UniformBlockInfo
     modelUboInfo:twgl.UniformBlockInfo
+
+    diffuseTexture:null|Texture = null
     constructor(public device:GPUDevice){
         this.programInfo = twgl.createProgramInfo(device.gl, [DefaultShaders.vertShader.str, DefaultShaders.fragShader.str])
 
-        this.viewUboInfo = twgl.createUniformBlockInfo(device.gl, this.programInfo, "View");
-        const viewProjection = this.viewUboInfo.uniforms.u_viewProjection || new Float32Array(16);
-         const viewInverse = this.viewUboInfo.uniforms.u_viewInverse || new Float32Array(16);
+
 
         this.lightUboInfo = twgl.createUniformBlockInfo(device.gl, this.programInfo, "Lights[0]");
-        twgl.setBlockUniforms(this.lightUboInfo, {
-            u_lightColor: [1,1,1,1],
-            u_lightWorldPos: [20,20,20],
-        });
-        twgl.setUniformBlock(device.gl, this.programInfo, this.lightUboInfo);
-        //lightUboInfos.push(lightUbo);
+        this.viewUboInfo = twgl.createUniformBlockInfo(device.gl, this.programInfo, "View");
 
         this.materialUboInfo = twgl.createUniformBlockInfo(device.gl, this.programInfo, "Material");
         twgl.setBlockUniforms(this.materialUboInfo, {
@@ -64,9 +62,39 @@ export class StandardMaterial implements Material {
         twgl.setUniformBlock(this.device.gl, this.programInfo, this.viewUboInfo);
     }
     updateForLights(lights:Array<TransformNode>){
-
+        // TODO fix all this
+        var light = lights[0] as PointLight
+        var tmp = new Vector3()
+        light.worldMatrix.compose(tmp)
+        twgl.setBlockUniforms(this.lightUboInfo, {
+            u_lightColor: [light.color.v[0], light.color.v[1], light.color.v[2], 1],
+            u_lightWorldPos: [tmp.x,tmp.y, tmp.z],
+        });
+        twgl.setUniformBlock(this.device.gl, this.programInfo, this.lightUboInfo);
     }
-    updateForMesh(mesh:Mesh){
+    updateUniforms(){
+        this.setTextures({
+            u_diffuse: this.diffuseTexture!,
+        })
 
+        twgl.setBlockUniforms(this.materialUboInfo, {
+            u_ambient: [0, 0, 0, 1],
+            u_specular: [0.5, 0.2, 0.2, 1],
+            u_shininess: 100,
+            u_specularFactor: 0.8,
+        });
+        twgl.setUniformBlock(this.device.gl, this.programInfo, this.materialUboInfo);
+    }
+    setTextures(textures:{[key:string]:Texture}){
+        var u:any = {}
+        for(var key in textures){
+            u[key] = textures[key].glTexture
+        }
+        twgl.setUniforms(this.programInfo, u);
+    }
+    updateAndDrawForMesh(mesh:Mesh){
+        twgl.setBuffersAndAttributes(this.device.gl, this.programInfo, mesh.vertData.gpuBufferInfo); // Set object vert data
+        twgl.bindUniformBlock(this.device.gl, this.programInfo, this.modelUboInfo);  // model position
+        twgl.drawBufferInfo(this.device.gl, mesh.vertData.gpuBufferInfo);
     }
 }
