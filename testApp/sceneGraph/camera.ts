@@ -10,10 +10,8 @@ export class Camera extends TransformNode {
 
     }
 
-    update(){
+    computeViewAndViewProjection(){
         this.worldMatrix.inverseToRef(this.view)
         this.projection.multiplyToRef(this.view, this.viewProjection)
-        
-        //this.viewInverse
     }
 }

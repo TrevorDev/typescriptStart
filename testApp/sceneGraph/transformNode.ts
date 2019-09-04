@@ -9,6 +9,35 @@ export class TransformNode {
     worldMatrix = new Matrix4()
     localMatrix = new Matrix4()
 
+    computeLocalMatrix(){
+        this.localMatrix.compose(this.position, this.rotation, this.scale)
+    }
+
+    static computeWorldMatrixForTree(root:TransformNode){
+        TransformNode.depthFirstIterate(root, (node)=>{
+            node.computeWorldMatrix(false)
+        })
+    }
+
+    static depthFirstIterate(root:TransformNode, fn:(node:TransformNode)=>void){
+        fn(root)
+        root.getChildren().forEach((c)=>{
+            this.depthFirstIterate(c, fn)
+        })
+    }
+
+    computeWorldMatrix(computeParentsFirst=true){
+        this.computeLocalMatrix()
+        if(this._parent){
+            if(computeParentsFirst){
+                this._parent.computeWorldMatrix()
+            }
+            this._parent.worldMatrix.multiplyToRef(this.localMatrix, this.worldMatrix)
+        }else{
+            this.worldMatrix.copyFrom(this.localMatrix)
+        }
+    }
+
     private _children = new Array<TransformNode>()
     private _parent:null | TransformNode = null
 

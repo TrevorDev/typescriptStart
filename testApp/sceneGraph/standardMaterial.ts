@@ -9,6 +9,7 @@ import { Mesh } from "./mesh";
 import { Texture } from "../cmdBuffer/engine/texture";
 import { PointLight } from "./pointLight";
 import { Vector3 } from "../math/vector3";
+import { Matrix4 } from "../math/matrix4";
 
 // export class StandardMaterialFactory {
 //     createInstance(){
@@ -24,10 +25,9 @@ export class StandardMaterial implements Material {
     modelUboInfo:twgl.UniformBlockInfo
 
     diffuseTexture:null|Texture = null
+    tmpMat = new Matrix4()
     constructor(public device:GPUDevice){
         this.programInfo = twgl.createProgramInfo(device.gl, [DefaultShaders.vertShader.str, DefaultShaders.fragShader.str])
-
-
 
         this.lightUboInfo = twgl.createUniformBlockInfo(device.gl, this.programInfo, "Lights[0]");
         this.viewUboInfo = twgl.createUniformBlockInfo(device.gl, this.programInfo, "View");
@@ -65,7 +65,7 @@ export class StandardMaterial implements Material {
         // TODO fix all this
         var light = lights[0] as PointLight
         var tmp = new Vector3()
-        light.worldMatrix.compose(tmp)
+        //light.worldMatrix.compose(tmp)
         twgl.setBlockUniforms(this.lightUboInfo, {
             u_lightColor: [light.color.v[0], light.color.v[1], light.color.v[2], 1],
             u_lightWorldPos: [tmp.x,tmp.y, tmp.z],
@@ -94,6 +94,14 @@ export class StandardMaterial implements Material {
     }
     updateAndDrawForMesh(mesh:Mesh){
         twgl.setBuffersAndAttributes(this.device.gl, this.programInfo, mesh.vertData.gpuBufferInfo); // Set object vert data
+        
+        // Set world matrix and inverse transpose
+        mesh.worldMatrix.copyToArrayBufferView(this.modelUboInfo.uniforms.u_world)
+        mesh.worldMatrix.inverseToRef(this.tmpMat)
+        this.tmpMat.transposeToRef(this.tmpMat)
+        this.tmpMat.copyToArrayBufferView(this.modelUboInfo.uniforms.u_worldInverseTranspose)
+        twgl.setUniformBlock(this.device.gl, this.programInfo, this.modelUboInfo);
+        
         twgl.bindUniformBlock(this.device.gl, this.programInfo, this.modelUboInfo);  // model position
         twgl.drawBufferInfo(this.device.gl, mesh.vertData.gpuBufferInfo);
     }

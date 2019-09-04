@@ -39,34 +39,41 @@ function main() {
   // Create camera
   var camera = new Camera()
   camera.position.z = 5;
-  camera.worldMatrix.compose(camera.position)
 
-  // Create mesh
-  var cubeVertexData = DefaultVertexData.createCubeVertexData(device)
-  var cube = new Mesh(cubeVertexData, standardMaterial)
+  var meshes = new Array<Mesh>()
 
+  for(var i =0;i<20;i++){
+     // Create mesh
+    var cubeVertexData = DefaultVertexData.createCubeVertexData(device)
+    var cube = new Mesh(cubeVertexData, standardMaterial)
+    cube.scale.scaleInPlace(0.4)
+    meshes.push(cube)
+    cube.position.z -= i
+    cube.position.y = -1
+  }
+ 
+
+  // var cube2 = new Mesh(cubeVertexData, standardMaterial)
+  // cube2.position.y+=2
+  // cube.addChild(cube2)
+
+  // document.onkeydown = ()=>{
+  //   cube.position.x+= 0.1
+  // }
   
   renderWindow.onScreenRefreshLoop(() => {
     // Clear and set viewport
     renderWindow.updateDimensions()
     renderer.setTexture(renderWindow.getNextTexture())
     renderer.setViewport(0, 0, renderWindow.dimensions.x, renderWindow.dimensions.y)
+    device.gl.clearColor(0.2,0.4,0.4,1)
     renderer.clear()
 
     // Update camera
     camera.projection.setProjection(30 * Math.PI / 180, renderWindow.dimensions.x/renderWindow.dimensions.y, 0.5, 250)
-    camera.update()
-    
-    // Load material program
-    standardMaterial.load()
-    standardMaterial.updateFromCamera(camera)
-    standardMaterial.updateForLights([light])
-    
-    // Load material instance specific data
-    standardMaterial.updateUniforms()
-    standardMaterial.updateAndDrawForMesh(cube)
 
-    renderer.render(camera, [cube], [light])
+    // Render scene
+    renderer.render(camera, meshes, [light])
   })
 }
 main();

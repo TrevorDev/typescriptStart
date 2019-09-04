@@ -25,5 +25,11 @@ export class Vector3 {
     get z(){
         return this.v[2];
     }
+
+    scaleInPlace(scaleVal:number){
+        this.x*=scaleVal
+        this.y*=scaleVal
+        this.z*=scaleVal
+    }
 }
 
