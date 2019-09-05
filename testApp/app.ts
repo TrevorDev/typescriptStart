@@ -16,6 +16,7 @@ import { DefaultVertexData } from "./defaultHelpers/defaultVertexData";
 import { Camera } from "./sceneGraph/camera";
 import { PointLight } from "./sceneGraph/pointLight";
 import { SceneRenderer } from "./sceneGraph/renderer";
+import { MultiviewTexture } from "./sceneGraph/multiviewTexture";
 
 function main() {
   // Initialize device and window
@@ -52,6 +53,11 @@ function main() {
     cube.position.y = -1
   }
  
+
+  var multiviewTexture = new MultiviewTexture(device, 1920/2, 1080)
+
+  
+
 
   // var cube2 = new Mesh(cubeVertexData, standardMaterial)
   // cube2.position.y+=2
