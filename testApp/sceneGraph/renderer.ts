@@ -3,12 +3,14 @@ import { Camera } from "./camera";
 import { GPUDevice } from "../cmdBuffer/engine/gpuDevice";
 import { Light } from "./light";
 import { Mesh } from "./mesh";
+import { Texture } from "../cmdBuffer/engine/texture";
+import { MultiviewTexture } from "./multiviewTexture";
 
-export class SceneRenderer {
+export class Renderer {
     constructor(public device:GPUDevice){
 
     }
-    render(camera:Camera, meshes:Array<TransformNode>, lights:Array<Light>){
+    renderScene(camera:Camera, meshes:Array<TransformNode>, lights:Array<Light>){
         camera.computeWorldMatrix()
         camera.computeViewAndViewProjection()
 
@@ -17,7 +19,6 @@ export class SceneRenderer {
             l.computeWorldMatrix()
         })
 
-        // TODO recursive do this
         meshes.forEach((m)=>{
             TransformNode.depthFirstIterate(m, (node)=>{
                 TransformNode.computeWorldMatrixForTree(node)
@@ -34,12 +35,13 @@ export class SceneRenderer {
                 }
             })
         })
-
-        
     }
 
-    setTexture(texture:any){
-
+    setRenderTexture(texture:Texture){
+        this.device.gl.bindFramebuffer(this.device.gl.DRAW_FRAMEBUFFER, texture.frameBuffer)
+    }
+    setRenderMultiviewTexture(texture:MultiviewTexture){
+        this.device.gl.bindFramebuffer(this.device.gl.DRAW_FRAMEBUFFER, texture.frameBuffer)
     }
 
     setViewport(x:number,y:number,width:number,height:number){

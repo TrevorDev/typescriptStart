@@ -15,17 +15,21 @@ import { Mesh } from "./sceneGraph/mesh";
 import { DefaultVertexData } from "./defaultHelpers/defaultVertexData";
 import { Camera } from "./sceneGraph/camera";
 import { PointLight } from "./sceneGraph/pointLight";
-import { SceneRenderer } from "./sceneGraph/renderer";
+import { Renderer } from "./sceneGraph/renderer";
 import { MultiviewTexture } from "./sceneGraph/multiviewTexture";
+import { MaterialA } from "./sceneGraph/materialA";
+import { CustomProgram } from "./sceneGraph/customProgram";
 
 function main() {
   // Initialize device and window
   var device = new GPUDevice()
   var renderWindow = new RenderWindow(device)
-  var renderer = new SceneRenderer(device)
+  var renderer = new Renderer(device)
+
+  var multiviewTexture = new MultiviewTexture(device, 1920/2, 1080)
 
   // Create material
-  var standardMaterial = new StandardMaterial(device)
+  var standardMaterial = new MaterialA(device) // new StandardMaterial(device)
   standardMaterial.diffuseTexture = Texture.createFromeSource(device, [
     255, 255, 255, 255,
     192, 192, 192, 255,
@@ -54,7 +58,8 @@ function main() {
   }
  
 
-  var multiviewTexture = new MultiviewTexture(device, 1920/2, 1080)
+  var quad = DefaultVertexData.createFullScreenQuad(device)
+  var fullScreenQuadProg = new CustomProgram(device)
 
   
 
@@ -70,8 +75,13 @@ function main() {
   renderWindow.onScreenRefreshLoop(() => {
     // Clear and set viewport
     renderWindow.updateDimensions()
-    renderer.setTexture(renderWindow.getNextTexture())
-    renderer.setViewport(0, 0, renderWindow.dimensions.x, renderWindow.dimensions.y)
+    
+    // Render next action to to multiview texture
+    renderer.setRenderMultiviewTexture(multiviewTexture)
+
+    // TODO use multiview viewport instead
+    // Setup viewport and clear
+    renderer.setViewport(0, 0, multiviewTexture.width, multiviewTexture.height)
     device.gl.clearColor(0.2,0.4,0.4,1)
     renderer.clear()
 
@@ -79,7 +89,21 @@ function main() {
     camera.projection.setProjection(30 * Math.PI / 180, renderWindow.dimensions.x/renderWindow.dimensions.y, 0.5, 250)
 
     // Render scene
-    renderer.render(camera, meshes, [light])
+    renderer.renderScene(camera, meshes, [light])
+
+    // Blit back to screen
+    renderer.setRenderTexture(renderWindow.getNextTexture())
+
+    renderer.setViewport(0, 0, renderWindow.dimensions.x, renderWindow.dimensions.y)
+    device.gl.clearColor(1.0,0.4,0.4,1)
+    renderer.clear()
+
+    // Figure out how to move this to renderer
+    // Render each eye to the screen
+    fullScreenQuadProg.load()
+    fullScreenQuadProg.setTextures({imgs: multiviewTexture})
+    fullScreenQuadProg.draw(quad)
+    
   })
 }
 main();

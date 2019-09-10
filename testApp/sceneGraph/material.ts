@@ -1,6 +1,7 @@
 import { Camera } from "./camera";
 import { Light } from "./light";
 import { Mesh } from "./mesh";
+import { GPUDevice } from "../cmdBuffer/engine/gpuDevice";
 
 export interface Material {
     load():void
