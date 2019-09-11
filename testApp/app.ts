@@ -20,9 +20,82 @@ import { MultiviewTexture } from "./sceneGraph/multiviewTexture";
 import { MaterialA } from "./sceneGraph/materialA";
 import { CustomProgram } from "./sceneGraph/customProgram";
 
-function main() {
+async function main() {
+  var isOcculusBrowser = navigator.userAgent.indexOf("OculusBrowser") > 0
+
   // Initialize device and window
   var device = new GPUDevice()
+
+  
+
+  if(isOcculusBrowser){
+    var vrDisplay = (await navigator.getVRDisplays())[0]
+    document.onclick = async ()=>{
+      console.log(vrDisplay)
+      await vrDisplay.requestPresent([{source: device.canvasElement}])
+      console.log("presenting")
+  
+      var leftEye = vrDisplay.getEyeParameters('left');
+      var rightEye = vrDisplay.getEyeParameters('right');
+  
+      device.canvasElement.width = Math.max(leftEye.renderWidth, rightEye.renderWidth) * 2;
+      device.canvasElement.height = Math.max(leftEye.renderHeight, rightEye.renderHeight);
+  
+  
+  
+      var renderer = new Renderer(device)
+      var multiviewTexture = new MultiviewTexture(device, device.canvasElement.width/2, device.canvasElement.height)
+  
+      // Create material
+      var standardMaterial = new MaterialA(device) // new StandardMaterial(device)
+      standardMaterial.diffuseTexture = Texture.createFromeSource(device, [
+        255, 255, 255, 255,
+        192, 192, 192, 255,
+        192, 192, 192, 255,
+        255, 255, 255, 255,
+      ])
+  
+      // Create light
+      var light = new PointLight()
+      light.position.z = 5;
+  
+      // Create camera
+      var camera = new Camera()
+      camera.position.z = 5;
+  
+      var meshes = new Array<Mesh>()
+  
+      for(var i =0;i<20;i++){
+        // Create mesh
+        var cubeVertexData = DefaultVertexData.createCubeVertexData(device)
+        var cube = new Mesh(cubeVertexData, standardMaterial)
+        cube.scale.scaleInPlace(0.4)
+        meshes.push(cube)
+        cube.position.z -= i
+        cube.position.y = -1
+      }
+    
+  
+      var quad = DefaultVertexData.createFullScreenQuad(device)
+      var fullScreenQuadProg = new CustomProgram(device)
+  
+      var rloop = ()=>{
+        vrDisplay.requestAnimationFrame(rloop)
+  
+        // When presenting render a stereo view.
+        device.gl.clearColor(0.4,0.2,0.2,1.0)
+        device.gl.viewport(0, 0, device.canvasElement.width * 0.5, device.canvasElement.height);
+        device.gl.enable(device.gl.DEPTH_TEST);
+        device.gl.enable(device.gl.CULL_FACE);
+        device.gl.clear(device.gl.COLOR_BUFFER_BIT | device.gl.DEPTH_BUFFER_BIT);
+        vrDisplay.submitFrame();
+      }
+      rloop()
+    }
+    return
+  }
+  
+
   var renderWindow = new RenderWindow(device)
   var renderer = new Renderer(device)
 

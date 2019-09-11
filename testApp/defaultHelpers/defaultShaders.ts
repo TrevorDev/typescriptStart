@@ -1,10 +1,10 @@
 import { Shader } from "../cmdBuffer/engine/shader";
-
+var _mvv = navigator.userAgent.indexOf("OculusBrowser") > 0 ? "GL_OVR_multiview" : "GL_OVR_multiview2"
 export class DefaultShaders {
-
+  
   static vertShaderA = new Shader(`
   #version 300 es
-  #extension GL_OVR_multiview2 : require
+  #extension `+_mvv+` : require
   precision mediump float;
   layout (num_views = 2) in;
     uniform View {

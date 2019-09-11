@@ -11,6 +11,7 @@ export class MultiviewTexture {
         if (ext) {
         is_multiview = true;
         is_multisampled = true;
+        console.log("oc mul")
         }
         else {
             ext = device.gl.getExtension('OVR_multiview2');
