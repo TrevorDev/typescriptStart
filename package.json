@@ -24,6 +24,7 @@
     "express": "^4.17.1",
     "nodemon-webpack-plugin": "^4.0.8",
     "socket.io": "^2.2.0",
+    "tone": "^13.8.25",
     "ts-loader": "^6.0.4",
     "twgl.js": "^4.11.1",
     "typescript": "^3.6.2",
@@ -32,6 +33,7 @@
     "webpack-node-externals": "^1.7.2"
   },
   "devDependencies": {
+    "@types/tone": "git://github.com/Tonejs/TypeScript.git",
     "webpack": "^4.39.1",
     "webpack-cli": "^3.3.6"
   }
