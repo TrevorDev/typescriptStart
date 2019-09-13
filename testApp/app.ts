@@ -19,38 +19,16 @@ import { Renderer } from "./sceneGraph/renderer";
 import { MultiviewTexture } from "./sceneGraph/multiviewTexture";
 import { MaterialA } from "./sceneGraph/materialA";
 import { CustomProgram } from "./sceneGraph/customProgram";
-import * as Tone from "tone"
+import { XR, XRState } from "./xr/xr";
+import { Loop } from "./sceneGraph/loop";
 
-
-// var synth = new Tone.Synth().toMaster()
-
-// var notes:any = {}
-// var a = Math.pow(2, 1/12)
-// document.onkeydown= (e:any)=>{
-//   var val = e.key*1-1
-//   var freq = 440 * Math.pow(a, val)
-//   if(!notes[freq]){
-//     notes[freq] = synth.triggerAttack(freq)
-//   } 
-//   console.log(notes)
-// } 
-// document.onkeyup= (e:any)=>{
-//   console.log(notes)
-//   var val = e.key*1-1
-//   var freq = 440 * Math.pow(a, val)
-//   if(notes[freq]){
-//     notes[freq].triggerRelease()
-//     delete notes[freq]
-//   } 
-// }  
 
 async function main() {
   var isOcculusBrowser = navigator.userAgent.indexOf("OculusBrowser") > 0
 
   // Initialize device and window
   var device = new GPUDevice()
-
-  
+  var xr = new XR(device);
 
   if(isOcculusBrowser){
     var vrDisplay = (await navigator.getVRDisplays())[0]
@@ -153,23 +131,12 @@ async function main() {
     cube.position.z -= i
     cube.position.y = -1
   }
- 
 
   var quad = DefaultVertexData.createFullScreenQuad(device)
   var fullScreenQuadProg = new CustomProgram(device)
 
-  
-
-
-  // var cube2 = new Mesh(cubeVertexData, standardMaterial)
-  // cube2.position.y+=2
-  // cube.addChild(cube2)
-
-  // document.onkeydown = ()=>{
-  //   cube.position.x+= 0.1
-  // }
-  
-  renderWindow.onScreenRefreshLoop(() => {
+  var gameLoop = ()=>{
+    meshes[0].position.y+=0.001
     // Clear and set viewport
     renderWindow.updateDimensions()
     
@@ -188,19 +155,41 @@ async function main() {
     // Render scene
     renderer.renderScene(camera, meshes, [light])
 
-    // Blit back to screen
-    renderer.setRenderTexture(renderWindow.getNextTexture())
+    if(xr.state == XRState.IN_XR){
+      // TODO FIX THIS
+      renderer.setRenderTexture(renderWindow.getNextTexture())
 
-    renderer.setViewport(0, 0, renderWindow.dimensions.x, renderWindow.dimensions.y)
-    device.gl.clearColor(1.0,0.4,0.4,1)
-    renderer.clear()
+      // When presenting render a stereo view.
+      device.gl.clearColor(0.4,0.2,0.2,1.0)
+      device.gl.viewport(0, 0, device.canvasElement.width * 0.5, device.canvasElement.height);
+      device.gl.enable(device.gl.DEPTH_TEST);
+      device.gl.enable(device.gl.CULL_FACE);
+      device.gl.clear(device.gl.COLOR_BUFFER_BIT | device.gl.DEPTH_BUFFER_BIT);
+      xr.display.submitFrame();
+    }else{
+      // Blit back to screen
+      renderer.setRenderTexture(renderWindow.getNextTexture())
 
-    // Figure out how to move this to renderer
-    // Render each eye to the screen
-    fullScreenQuadProg.load()
-    fullScreenQuadProg.setTextures({imgs: multiviewTexture})
-    fullScreenQuadProg.draw(quad)
-    
-  })
+      renderer.setViewport(0, 0, renderWindow.dimensions.x, renderWindow.dimensions.y)
+      device.gl.clearColor(1.0,0.4,0.4,1)
+      renderer.clear()
+
+      // Figure out how to move this to renderer
+      // Render each eye to the screen
+      fullScreenQuadProg.load()
+      fullScreenQuadProg.setTextures({imgs: multiviewTexture})
+      fullScreenQuadProg.draw(quad)
+    }
+  }
+
+
+  var currentLoop = new Loop(requestAnimationFrame, gameLoop)
+  document.addEventListener("pointerdown", async ()=>{
+    await currentLoop.stop()
+    if(await xr.canStart()){
+      await xr.start()
+      currentLoop = new Loop(xr.display.requestAnimationFrame, gameLoop)
+    }
+  });
 }
 main();
