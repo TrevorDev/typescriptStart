@@ -12,6 +12,10 @@ export class DefaultShaders {
       mat4 u_viewProjectionL;
       mat4 u_viewInverseR;
       mat4 u_viewProjectionR;
+      mat4 u_vl;
+      mat4 u_vr;
+      mat4 u_pl;
+      mat4 u_pr;
     };
     
     uniform Lights {
@@ -36,7 +40,7 @@ export class DefaultShaders {
     
     void main() {
       mat4 u_viewInverse = gl_ViewID_OVR == 0u ? (u_viewInverseL) :  (u_viewInverseR);
-      mat4 u_viewProjection = gl_ViewID_OVR == 0u ? (u_viewProjectionL) :  (u_viewProjectionR);
+      mat4 u_viewProjection = gl_ViewID_OVR == 0u ? (u_pl*u_vl) :  (u_pr*u_vr);
 
       v_texCoord = a_texcoord;
       v_position = (u_viewProjection * foo.u_world * a_position);

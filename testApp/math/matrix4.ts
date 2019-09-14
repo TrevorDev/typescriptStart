@@ -71,4 +71,7 @@ export class Matrix4 {
     copyToArrayBufferView(copyTo:ArrayBufferView){
         twgl.m4.copy(this.m, copyTo as any)
     }
+    copyFromArrayBufferView(copyFrom:Float32Array){
+        twgl.m4.copy(copyFrom, this.m)
+    }
 }

@@ -56,10 +56,27 @@ export class MaterialA implements Material {
         this.device.gl.useProgram(this.programInfo.program);
     }
     updateFromCamera(camera:Camera){
-        camera.worldMatrix.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewInverseL)
+        if(camera.frameData){
+            for(var i =0;i<16;i++){
+                (this.viewUboInfo.uniforms.u_vl as Float32Array)[i] = camera.frameData.leftViewMatrix[i]
+            }
+            for(var i =0;i<16;i++){
+                (this.viewUboInfo.uniforms.u_vr as Float32Array)[i] = camera.frameData.rightViewMatrix[i]
+            }
+            for(var i =0;i<16;i++){
+                (this.viewUboInfo.uniforms.u_pl as Float32Array)[i] = camera.frameData.leftProjectionMatrix[i]
+            }
+            for(var i =0;i<16;i++){
+                (this.viewUboInfo.uniforms.u_pr as Float32Array)[i] = camera.frameData.rightProjectionMatrix[i]
+            }
+        }
+        
+        
+
+        camera.viewInverse.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewInverseL)
         camera.viewProjection.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewProjectionL)
-        camera.worldMatrix.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewInverseR)
-        camera.viewProjection.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewProjectionR)
+        camera.viewInverse.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewInverseR)
+        camera.viewProjectionR.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewProjectionR)
         twgl.setUniformBlock(this.device.gl, this.programInfo, this.viewUboInfo);
     }
     updateForLights(lights:Array<TransformNode>){
