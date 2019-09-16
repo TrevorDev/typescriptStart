@@ -17,7 +17,7 @@ async function main() {
   var v = document.createElement('video');
  // v.style.display = "none"
   v.controls = true
-  v.autoplay = true
+  //v.autoplay = true
   v.volume = 0.1
   v.src = "http://localhost:3000/public/big_buck_bunny.mp4"
   //document.body.appendChild(v)
@@ -32,7 +32,7 @@ async function main() {
   // Create lights and camera
   var light = new PointLight()
   light.position.z = 5;
-  var xrCamera = new XRCamera() 
+  var camera = new XRCamera() 
 
   // Create material and geometry
   var standardMaterial = new MaterialA(device)
@@ -51,8 +51,11 @@ async function main() {
     var cube = new Mesh(cubeVertexData, standardMaterial)
     cube.scale.scaleInPlace(0.4)
     meshes.push(cube)
-    cube.position.z -= 1+i
+    cube.position.z -= 3+i
     cube.position.y = 0
+    cube.scale.x = 1920/1080
+    cube.scale.y = 1
+
   }
 
   // Custom blit operation
@@ -89,14 +92,13 @@ async function main() {
     renderer.clear()
 
     // Update camera
-    //camera.projection.setProjection(30 * Math.PI / 180, renderWindow.dimensions.x/renderWindow.dimensions.y, 0.5, 250)
 
     if(xr.state == XRState.IN_XR && xr.display.getFrameData(xr.frameData)){
-      xrCamera.updateFromFrameData(xr.frameData)
+      camera.updateFromFrameData(xr.frameData)
     }
 
     // Render scene
-    renderer.renderScene(xrCamera, meshes, [light])
+    renderer.renderScene(camera, meshes, [light])
 
     // Blit back to screen
     if(xr.state == XRState.IN_XR){
