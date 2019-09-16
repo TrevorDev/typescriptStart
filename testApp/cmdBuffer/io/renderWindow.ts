@@ -4,22 +4,25 @@ import { Texture } from "../engine/texture";
 export class RenderWindow {
     textures = new Array<Texture>()
     dimensions = { x: 0, y: 0 }
-    constructor(public device: GPUDevice) {
+    constructor(public device: GPUDevice, fullscreen = true) {
         document.body.appendChild(device.canvasElement)
 
-        document.documentElement.style["overflow"]="hidden"
-        document.documentElement.style.overflow ="hidden"
-        document.documentElement.style.width ="100%"
-        document.documentElement.style.height ="100%"
-        document.documentElement.style.margin ="0"
-        document.documentElement.style.padding ="0"
-        document.body.style.overflow ="hidden"
-        document.body.style.width ="100%"
-        document.body.style.height ="100%"
-        document.body.style.margin ="0"
-        document.body.style.padding ="0"
-        device.canvasElement.style.width = "100%"
-        device.canvasElement.style.height = "100%"
+        if(fullscreen){
+            document.documentElement.style["overflow"]="hidden"
+            document.documentElement.style.overflow ="hidden"
+            document.documentElement.style.width ="100%"
+            document.documentElement.style.height ="100%"
+            document.documentElement.style.margin ="0"
+            document.documentElement.style.padding ="0"
+            document.body.style.overflow ="hidden"
+            document.body.style.width ="100%"
+            document.body.style.height ="100%"
+            document.body.style.margin ="0"
+            document.body.style.padding ="0"
+            device.canvasElement.style.width = "100%"
+            device.canvasElement.style.height = "100%"
+        }
+        
         
         this.textures.push(new Texture(device))
 

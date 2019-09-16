@@ -1,34 +1,32 @@
-import * as twgl from "twgl.js"
 import { RenderWindow } from "./cmdBuffer/io/renderWindow";
-import { Shader } from "./cmdBuffer/engine/shader";
-import { DefaultShaders } from "./defaultHelpers/defaultShaders";
 import { GPUDevice } from "./cmdBuffer/engine/gpuDevice";
-import { GPUBuffer } from "./cmdBuffer/cmdBuffer";
-import { RenderPipelineState, RenderPipelineDescriptor } from "./cmdBuffer/engine/renderPipeline";
-import { CommandQueue } from "./cmdBuffer/engine/commandQueue";
-import { RenderPassDesc } from "./cmdBuffer/engine/renderPass";
 import { Texture } from "./cmdBuffer/engine/texture";
-import { Scene } from "./sceneGraph/scene";
-import { VertexData } from "./sceneGraph/vertexData";
-import { StandardMaterial } from "./sceneGraph/standardMaterial";
 import { Mesh } from "./sceneGraph/mesh";
 import { DefaultVertexData } from "./defaultHelpers/defaultVertexData";
-import { Camera } from "./sceneGraph/camera";
 import { PointLight } from "./sceneGraph/pointLight";
 import { Renderer } from "./sceneGraph/renderer";
-import { MultiviewTexture } from "./sceneGraph/multiviewTexture";
 import { MaterialA } from "./sceneGraph/materialA";
 import { CustomProgram } from "./sceneGraph/customProgram";
 import { XR, XRState } from "./xr/xr";
 import { Loop } from "./sceneGraph/loop";
 import { XRCamera } from "./sceneGraph/xrCamera";
+import { DefaultShaders } from "./defaultHelpers/defaultShaders";
 
 
 async function main() {
+  var v = document.createElement('video');
+ // v.style.display = "none"
+  v.controls = true
+  v.autoplay = true
+  v.volume = 0.1
+  v.src = "http://localhost:3000/public/big_buck_bunny.mp4"
+  //document.body.appendChild(v)
+
+
   // Initialize device and window
   var device = new GPUDevice()
   var xr = new XR(device);
-  var renderWindow = new RenderWindow(device)
+  var renderWindow = new RenderWindow(device, false)
   var renderer = new Renderer(device)
 
   // Create lights and camera
@@ -38,12 +36,13 @@ async function main() {
 
   // Create material and geometry
   var standardMaterial = new MaterialA(device)
-  standardMaterial.diffuseTexture = Texture.createFromeSource(device, [
-    192, 192, 192, 255,
-    192, 192, 192, 255,
-    192, 192, 192, 255,
-    192, 192, 192, 255,
-  ])
+  standardMaterial.diffuseTexture = Texture.createForVideoTexture(device)
+  // Texture.createFromeSource(device, [
+  //   192, 192, 192, 255,
+  //   192, 192, 192, 255,
+  //   192, 192, 192, 255,
+  //   192, 192, 192, 255,
+  // ])
   var cubeVertexData = DefaultVertexData.createCubeVertexData(device)
 
   // Create meshes
@@ -58,11 +57,22 @@ async function main() {
 
   // Custom blit operation
   var quad = DefaultVertexData.createFullScreenQuad(device)
-  var fullScreenQuadProg = new CustomProgram(device)
+  var fullScreenQuadProg = new CustomProgram(device, DefaultShaders.quadVertShader, DefaultShaders.blueFragShader)
 
+  var time = (new Date()).getTime()
   var gameLoop = ()=>{
+    var newTime = (new Date()).getTime()
+    var deltaTime = (newTime - time)/1000;
+    time = newTime;
+    if(v.currentTime > 0){
+      device.gl.bindTexture(device.gl.TEXTURE_2D, standardMaterial.diffuseTexture!.glTexture);
+      device.gl.texImage2D(device.gl.TEXTURE_2D, 0, device.gl.RGBA,
+      device.gl.RGBA, device.gl.UNSIGNED_BYTE, v)
+    }
+    
+
     // Update meshes
-    meshes[0].position.y+=0.001
+    meshes[0].position.y+=0.2*deltaTime
 
     // Clear and set viewport
     if(xr.state != XRState.IN_XR){
@@ -72,8 +82,7 @@ async function main() {
     
     // Render next action to to multiview texture
     renderer.setRenderMultiviewTexture(xr.multiviewTexture)
-
-    // TODO use multiview viewport instead
+    
     // Setup viewport and clear
     renderer.setViewport(0, 0, xr.multiviewTexture.width, xr.multiviewTexture.height)
     device.gl.clearColor(0.2,0.4,0.4,1)
@@ -113,9 +122,6 @@ async function main() {
 
   var currentLoop = new Loop(requestAnimationFrame, gameLoop)
   document.onclick = async ()=>{
-    
-  
- // document.addEventListener("pointerdown", async ()=>{
     await currentLoop.stop()
     console.log("TRYING")
     if(await xr.canStart()){
@@ -125,7 +131,6 @@ async function main() {
       xr.display.depthFar = 1024.0;
       currentLoop = new Loop((x:any)=>{xr.display.requestAnimationFrame(x)}, gameLoop)
     }
- // });
-}
+  }
 }
 main();

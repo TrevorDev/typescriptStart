@@ -11,19 +11,13 @@ import { PointLight } from "./pointLight";
 import { Vector3 } from "../math/vector3";
 import { Matrix4 } from "../math/matrix4";
 import { VertexData } from "./vertexData";
+import { Shader } from "../cmdBuffer/engine/shader";
 
 
 export class CustomProgram {
     programInfo:twgl.ProgramInfo
-    viewUboInfo:twgl.UniformBlockInfo
-    lightUboInfo:twgl.UniformBlockInfo
-    materialUboInfo:twgl.UniformBlockInfo
-    modelUboInfo:twgl.UniformBlockInfo
-
-    diffuseTexture:null|Texture = null
-    tmpMat = new Matrix4()
-    constructor(public device:GPUDevice){
-        this.programInfo = twgl.createProgramInfo(device.gl, [DefaultShaders.quadVertShader.str, DefaultShaders.blueFragShader.str])
+    constructor(public device:GPUDevice, vertShader:Shader, fragShader:Shader){
+        this.programInfo = twgl.createProgramInfo(device.gl, [vertShader.str, fragShader.str])
     }
 
     load(){
@@ -33,6 +27,7 @@ export class CustomProgram {
     updateUniforms(uniforms:any){
         twgl.setUniforms(this.programInfo, uniforms)
     }
+
     setTextures(textures:{[key:string]:Texture}){
         var u:any = {}
         for(var key in textures){
