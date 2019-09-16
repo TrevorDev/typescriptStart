@@ -40,7 +40,7 @@ export class DefaultShaders {
     
     void main() {
       mat4 u_viewInverse = gl_ViewID_OVR == 0u ? (u_viewInverseL) :  (u_viewInverseR);
-      mat4 u_viewProjection = gl_ViewID_OVR == 0u ? (u_pl*u_vl) :  (u_pr*u_vr);
+      mat4 u_viewProjection = gl_ViewID_OVR == 0u ? u_viewProjectionL :  u_viewProjectionR;
 
       v_texCoord = a_texcoord;
       v_position = (u_viewProjection * foo.u_world * a_position);

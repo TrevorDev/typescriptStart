@@ -10,6 +10,7 @@ import { Texture } from "../cmdBuffer/engine/texture";
 import { PointLight } from "./pointLight";
 import { Vector3 } from "../math/vector3";
 import { Matrix4 } from "../math/matrix4";
+import { XRCamera } from "./xrCamera";
 
 // export class StandardMaterialFactory {
 //     createInstance(){
@@ -55,28 +56,18 @@ export class MaterialA implements Material {
     load(){
         this.device.gl.useProgram(this.programInfo.program);
     }
-    updateFromCamera(camera:Camera){
-        if(camera.frameData){
-            for(var i =0;i<16;i++){
-                (this.viewUboInfo.uniforms.u_vl as Float32Array)[i] = camera.frameData.leftViewMatrix[i]
-            }
-            for(var i =0;i<16;i++){
-                (this.viewUboInfo.uniforms.u_vr as Float32Array)[i] = camera.frameData.rightViewMatrix[i]
-            }
-            for(var i =0;i<16;i++){
-                (this.viewUboInfo.uniforms.u_pl as Float32Array)[i] = camera.frameData.leftProjectionMatrix[i]
-            }
-            for(var i =0;i<16;i++){
-                (this.viewUboInfo.uniforms.u_pr as Float32Array)[i] = camera.frameData.rightProjectionMatrix[i]
-            }
-        }
-        
+    updateFromCamera(camera:XRCamera){
+        camera.leftEye.projection.multiplyToRef(camera.leftEye.view, this.tmpMat)
+        this.tmpMat.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewProjectionL)
+
+        camera.rightEye.projection.multiplyToRef(camera.rightEye.view, this.tmpMat)
+        this.tmpMat.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewProjectionR)
         
 
-        camera.viewInverse.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewInverseL)
-        camera.viewProjection.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewProjectionL)
-        camera.viewInverse.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewInverseR)
-        camera.viewProjectionR.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewProjectionR)
+        // camera.viewInverse.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewInverseL)
+        // camera.viewProjection.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewProjectionL)
+        // camera.viewInverse.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewInverseR)
+        // camera.viewProjectionR.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewProjectionR)
         twgl.setUniformBlock(this.device.gl, this.programInfo, this.viewUboInfo);
     }
     updateForLights(lights:Array<TransformNode>){

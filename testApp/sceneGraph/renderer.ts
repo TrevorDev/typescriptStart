@@ -5,14 +5,14 @@ import { Light } from "./light";
 import { Mesh } from "./mesh";
 import { Texture } from "../cmdBuffer/engine/texture";
 import { MultiviewTexture } from "./multiviewTexture";
+import { XRCamera } from "./xrCamera";
 
 export class Renderer {
     constructor(public device:GPUDevice){
 
     }
-    renderScene(camera:Camera, meshes:Array<TransformNode>, lights:Array<Light>){
+    renderScene(camera:XRCamera, meshes:Array<TransformNode>, lights:Array<Light>){
         camera.computeWorldMatrix()
-        camera.computeViewAndViewProjection()
 
         
         lights.forEach((l)=>{
@@ -45,6 +45,7 @@ export class Renderer {
     }
 
     setViewport(x:number,y:number,width:number,height:number){
+        this.device.gl.scissor(x,y,width,height)
         this.device.gl.viewport(x,y,width,height);
     }
     

@@ -3,12 +3,12 @@ export class Loop {
     private stopResolve:Function
     constructor(repeater:Function, fn:Function){
         var loop = () => {
-            fn()
             if(this.running){
                 repeater(loop)
             }else{
                 this.stopResolve()
             }
+            fn()
         }
         repeater(loop)
     }
