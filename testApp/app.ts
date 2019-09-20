@@ -1,25 +1,24 @@
-import { RenderWindow } from "./cmdBuffer/io/renderWindow";
-import { GPUDevice } from "./cmdBuffer/engine/gpuDevice";
-import { Texture } from "./cmdBuffer/engine/texture";
+import { RenderWindow } from "./gpu/renderWindow";
+import { GPUDevice } from "./gpu/gpuDevice";
+import { Texture } from "./gpu/texture";
 import { Mesh } from "./sceneGraph/mesh";
 import { DefaultVertexData } from "./defaultHelpers/defaultVertexData";
 import { PointLight } from "./sceneGraph/pointLight";
 import { Renderer } from "./sceneGraph/renderer";
 import { MaterialA } from "./sceneGraph/materialA";
-import { CustomProgram } from "./sceneGraph/customProgram";
+import { CustomProgram } from "./gpu/customProgram";
 import { XR, XRState } from "./xr/xr";
 import { Loop } from "./sceneGraph/loop";
-import { XRCamera } from "./sceneGraph/xrCamera";
+import { XRCamera } from "./xr/xrCamera";
 import { DefaultShaders } from "./defaultHelpers/defaultShaders";
 
 
 async function main() {
-  var v = document.createElement('video');
- // v.style.display = "none"
-  v.controls = true
-  //v.autoplay = true
-  v.volume = 0.1
-  v.src = "http://localhost:3000/public/big_buck_bunny.mp4"
+  var videoElement = document.createElement('video');
+  videoElement.controls = true
+  videoElement.autoplay = true
+  videoElement.volume = 0.0
+  videoElement.src = "http://localhost:3000/public/big_buck_bunny.mp4"
   //document.body.appendChild(v)
 
 
@@ -67,10 +66,10 @@ async function main() {
     var newTime = (new Date()).getTime()
     var deltaTime = (newTime - time)/1000;
     time = newTime;
-    if(v.currentTime > 0){
+    if(videoElement.currentTime > 0){
       device.gl.bindTexture(device.gl.TEXTURE_2D, standardMaterial.diffuseTexture!.glTexture);
       device.gl.texImage2D(device.gl.TEXTURE_2D, 0, device.gl.RGBA,
-      device.gl.RGBA, device.gl.UNSIGNED_BYTE, v)
+      device.gl.RGBA, device.gl.UNSIGNED_BYTE, videoElement)
     }
     
 

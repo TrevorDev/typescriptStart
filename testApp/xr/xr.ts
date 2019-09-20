@@ -1,6 +1,6 @@
-import { GPUDevice } from "../cmdBuffer/engine/gpuDevice"
-import { MultiviewTexture } from "../sceneGraph/multiviewTexture"
-import { Texture } from "../cmdBuffer/engine/texture"
+import { GPUDevice } from "../gpu/gpuDevice"
+import { MultiviewTexture } from "../gpu/multiviewTexture"
+import { Texture } from "../gpu/texture"
 
 export enum XRState {
     IN_XR,

@@ -1,4 +1,4 @@
-import { Shader } from "../cmdBuffer/engine/shader";
+import { Shader } from "../gpu/shader";
 var _mvv = navigator.userAgent.indexOf("OculusBrowser") > 0 ? "GL_OVR_multiview" : "GL_OVR_multiview2"
 export class DefaultShaders {
   

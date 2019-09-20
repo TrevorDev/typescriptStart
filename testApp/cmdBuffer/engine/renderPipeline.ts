@@ -1,6 +1,6 @@
-import { Shader } from "./shader";
+import { Shader } from "../../gpu/shader";
 import * as twgl from "twgl.js"
-import { GPUDevice } from "./gpuDevice";
+import { GPUDevice } from "../../gpu/gpuDevice";
 
 export class RenderPipelineDescriptor {
     public vertexFunction: Shader

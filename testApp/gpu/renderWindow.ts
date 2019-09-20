@@ -1,5 +1,5 @@
-import { GPUDevice } from "../engine/gpuDevice";
-import { Texture } from "../engine/texture";
+import { GPUDevice } from "./gpuDevice";
+import { Texture } from "./texture";
 
 export class RenderWindow {
     textures = new Array<Texture>()

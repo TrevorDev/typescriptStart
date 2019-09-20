@@ -1,7 +1,7 @@
 import { RenderPassDesc } from "./renderPass";
-import { Texture } from "./texture";
+import { Texture } from "../../gpu/texture";
 import { RenderEncoder } from "./renderEncorder";
-import { GPUDevice } from "./gpuDevice";
+import { GPUDevice } from "../../gpu/gpuDevice";
 import { Vector3 } from "../../math/vector3";
 import { Color } from "../../math/color";
 

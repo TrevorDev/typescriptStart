@@ -1,6 +1,6 @@
-import { TransformNode } from "./transformNode";
+import { TransformNode } from "../sceneGraph/transformNode";
 import { Matrix4 } from "../math/matrix4";
-import { Camera } from "./camera";
+import { Camera } from "../sceneGraph/camera";
 
 export class XRCamera extends TransformNode {
     leftEye = new Camera()

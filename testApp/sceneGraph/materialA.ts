@@ -2,15 +2,15 @@
 import * as twgl from "twgl.js"
 import { Material } from "./material";
 import { DefaultShaders } from "../defaultHelpers/defaultShaders";
-import { GPUDevice } from "../cmdBuffer/engine/gpuDevice";
+import { GPUDevice } from "../gpu/gpuDevice";
 import { Camera } from "./camera";
 import { TransformNode } from "./transformNode";
 import { Mesh } from "./mesh";
-import { Texture } from "../cmdBuffer/engine/texture";
+import { Texture } from "../gpu/texture";
 import { PointLight } from "./pointLight";
 import { Vector3 } from "../math/vector3";
 import { Matrix4 } from "../math/matrix4";
-import { XRCamera } from "./xrCamera";
+import { XRCamera } from "../xr/xrCamera";
 
 // export class StandardMaterialFactory {
 //     createInstance(){

@@ -1,11 +1,11 @@
 import { TransformNode } from "./transformNode";
 import { Camera } from "./camera";
-import { GPUDevice } from "../cmdBuffer/engine/gpuDevice";
+import { GPUDevice } from "../gpu/gpuDevice";
 import { Light } from "./light";
 import { Mesh } from "./mesh";
-import { Texture } from "../cmdBuffer/engine/texture";
-import { MultiviewTexture } from "./multiviewTexture";
-import { XRCamera } from "./xrCamera";
+import { Texture } from "../gpu/texture";
+import { MultiviewTexture } from "../gpu/multiviewTexture";
+import { XRCamera } from "../xr/xrCamera";
 
 export class Renderer {
     constructor(public device:GPUDevice){

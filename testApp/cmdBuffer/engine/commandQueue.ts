@@ -1,5 +1,5 @@
 import { CommandBuffer } from "./commandBuffer";
-import { GPUDevice } from "./gpuDevice";
+import { GPUDevice } from "../../gpu/gpuDevice";
 
 export class CommandQueue {
     constructor(public device:GPUDevice){}

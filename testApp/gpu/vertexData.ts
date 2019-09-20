@@ -1,5 +1,5 @@
 import * as twgl from "twgl.js"
-import { GPUDevice } from "../cmdBuffer/engine/gpuDevice";
+import { GPUDevice } from "./gpuDevice";
 
 export class VertexData {
     public gpuBufferInfo:twgl.BufferInfo

@@ -1,6 +1,7 @@
 import { GPUDevice } from "./gpuDevice";
 import * as twgl from "twgl.js"
 
+// TODO is this used?
 export class GPUBuffer {
     public bufferInfo:twgl.BufferInfo
     constructor(device:GPUDevice, data: {

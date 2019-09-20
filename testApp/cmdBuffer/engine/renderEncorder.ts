@@ -1,5 +1,5 @@
 import { RenderPipelineState } from "./renderPipeline";
-import { GPUBuffer } from "./gpuBuffer";
+import { GPUBuffer } from "../../gpu/gpuBuffer";
 import { CommandBuffer, GPUHackedActionCMD } from "./commandBuffer";
 import * as twgl from "twgl.js"
 

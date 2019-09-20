@@ -1,5 +1,5 @@
-import { VertexData } from "../sceneGraph/vertexData";
-import { GPUDevice } from "../cmdBuffer/engine/gpuDevice";
+import { VertexData } from "../gpu/vertexData";
+import { GPUDevice } from "../gpu/gpuDevice";
 
 export class DefaultVertexData {
     static createCubeVertexData(device:GPUDevice){

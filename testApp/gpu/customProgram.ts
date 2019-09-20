@@ -1,17 +1,17 @@
 
 import * as twgl from "twgl.js"
-import { Material } from "./material";
+import { Material } from "../sceneGraph/material";
 import { DefaultShaders } from "../defaultHelpers/defaultShaders";
-import { GPUDevice } from "../cmdBuffer/engine/gpuDevice";
-import { Camera } from "./camera";
-import { TransformNode } from "./transformNode";
-import { Mesh } from "./mesh";
-import { Texture } from "../cmdBuffer/engine/texture";
-import { PointLight } from "./pointLight";
+import { GPUDevice } from "./gpuDevice";
+import { Camera } from "../sceneGraph/camera";
+import { TransformNode } from "../sceneGraph/transformNode";
+import { Mesh } from "../sceneGraph/mesh";
+import { Texture } from "./texture";
+import { PointLight } from "../sceneGraph/pointLight";
 import { Vector3 } from "../math/vector3";
 import { Matrix4 } from "../math/matrix4";
 import { VertexData } from "./vertexData";
-import { Shader } from "../cmdBuffer/engine/shader";
+import { Shader } from "./shader";
 
 
 export class CustomProgram {

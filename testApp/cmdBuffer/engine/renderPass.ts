@@ -1,4 +1,4 @@
-import { Texture } from "./texture";
+import { Texture } from "../../gpu/texture";
 import { Color } from "../../math/color";
 
 export class ColorAttachment {

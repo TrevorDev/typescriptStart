@@ -1,4 +1,4 @@
-import { VertexData } from "./vertexData";
+import { VertexData } from "../gpu/vertexData";
 import { Material } from "./material";
 import { TransformNode } from "./transformNode";
 
