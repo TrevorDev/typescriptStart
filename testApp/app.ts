@@ -11,21 +11,14 @@ import { XR, XRState } from "./xr/xr";
 import { Loop } from "./sceneGraph/loop";
 import { XRCamera } from "./xr/xrCamera";
 import { DefaultShaders } from "./defaultHelpers/defaultShaders";
+import { VideoTexture } from "./defaultHelpers/videoTexture";
 
 
 async function main() {
-  var videoElement = document.createElement('video');
-  videoElement.controls = true
-  videoElement.autoplay = true
-  videoElement.volume = 0.0
-  videoElement.src = "http://localhost:3000/public/big_buck_bunny.mp4"
-  //document.body.appendChild(v)
-
-
   // Initialize device and window
   var device = new GPUDevice()
   var xr = new XR(device);
-  var renderWindow = new RenderWindow(device, false)
+  var renderWindow = new RenderWindow(device, true)
   var renderer = new Renderer(device)
 
   // Create lights and camera
@@ -34,8 +27,9 @@ async function main() {
   var camera = new XRCamera() 
 
   // Create material and geometry
+  var videoTexture = new VideoTexture(device)
   var standardMaterial = new MaterialA(device)
-  standardMaterial.diffuseTexture = Texture.createForVideoTexture(device)
+  standardMaterial.diffuseTexture = videoTexture.texture//Texture.createForVideoTexture(device)
   // Texture.createFromeSource(device, [
   //   192, 192, 192, 255,
   //   192, 192, 192, 255,
@@ -66,11 +60,12 @@ async function main() {
     var newTime = (new Date()).getTime()
     var deltaTime = (newTime - time)/1000;
     time = newTime;
-    if(videoElement.currentTime > 0){
-      device.gl.bindTexture(device.gl.TEXTURE_2D, standardMaterial.diffuseTexture!.glTexture);
-      device.gl.texImage2D(device.gl.TEXTURE_2D, 0, device.gl.RGBA,
-      device.gl.RGBA, device.gl.UNSIGNED_BYTE, videoElement)
-    }
+    videoTexture.update()
+    // if(videoElement.currentTime > 0){
+    //   device.gl.bindTexture(device.gl.TEXTURE_2D, standardMaterial.diffuseTexture!.glTexture);
+    //   device.gl.texImage2D(device.gl.TEXTURE_2D, 0, device.gl.RGBA,
+    //   device.gl.RGBA, device.gl.UNSIGNED_BYTE, videoElement)
+    // }
     
 
     // Update meshes

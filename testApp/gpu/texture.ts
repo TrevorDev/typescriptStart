@@ -33,7 +33,7 @@ export class Texture {
             format: device.gl.RGBA,
             min: device.gl.LINEAR,
             mag: device.gl.NEAREST,
-            src: [0, 0, 255, 255],
+            src: [0, 0, 0, 255],
           }); 
         return r
     }
