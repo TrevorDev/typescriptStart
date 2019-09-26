@@ -1,66 +1,74 @@
 import { Vector3 } from "../math/vector3";
 import { Quaternion } from "../math/quaternion";
 import { Matrix4 } from "../math/matrix4";
+import { Ray } from "../math/ray";
+import { PMathTemp } from "../math/privateMathTemp";
 
 export class TransformNode {
     position = new Vector3()
     rotation = new Quaternion()
-    scale = new Vector3(1,1,1)
+    scale = new Vector3(1, 1, 1)
     worldMatrix = new Matrix4()
     localMatrix = new Matrix4()
 
-    computeLocalMatrix(){
+    computeLocalMatrix() {
         this.localMatrix.compose(this.position, this.rotation, this.scale)
     }
 
-    static computeWorldMatrixForTree(root:TransformNode){
-        TransformNode.depthFirstIterate(root, (node)=>{
+    static computeWorldMatrixForTree(root: TransformNode) {
+        TransformNode.depthFirstIterate(root, (node) => {
             node.computeWorldMatrix(false)
         })
     }
 
-    static depthFirstIterate(root:TransformNode, fn:(node:TransformNode)=>void){
+    static depthFirstIterate(root: TransformNode, fn: (node: TransformNode) => void) {
         fn(root)
-        root.getChildren().forEach((c)=>{
+        root.getChildren().forEach((c) => {
             this.depthFirstIterate(c, fn)
         })
     }
 
-    computeWorldMatrix(computeParentsFirst=true){
+    computeWorldMatrix(computeParentsFirst = true) {
         this.computeLocalMatrix()
-        if(this._parent){
-            if(computeParentsFirst){
+        if (this._parent) {
+            if (computeParentsFirst) {
                 this._parent.computeWorldMatrix()
             }
             this._parent.worldMatrix.multiplyToRef(this.localMatrix, this.worldMatrix)
-        }else{
+        } else {
             this.worldMatrix.copyFrom(this.localMatrix)
         }
     }
 
     private _children = new Array<TransformNode>()
-    private _parent:null | TransformNode = null
+    private _parent: null | TransformNode = null
 
-    getParent(){
+    getParent() {
         return this._parent
     }
-    getChildren(){
+    getChildren() {
         return this._children
     }
 
-    addChild(node:TransformNode){
-        if(node._parent){
+    addChild(node: TransformNode) {
+        if (node._parent) {
             node._parent.removeChild(node)
         }
         node._parent = this
         this._children.push(node)
     }
-    removeChild(node:TransformNode){
+    removeChild(node: TransformNode) {
         var ind = this._children.indexOf(node)
-        if(ind > 0){
+        if (ind > 0) {
             node._parent = null
             this._children.splice(ind, 1)
         }
     }
-    
+
+    forwardToRef(result: Ray) {
+        result.origin.copyFrom(this.position)
+        result.direction.set(0, 0, -1);
+        result.direction.rotateByQuaternionToRef(this.rotation, result.direction)
+    }
+
 }
