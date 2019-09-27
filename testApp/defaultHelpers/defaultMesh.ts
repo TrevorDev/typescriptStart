@@ -33,6 +33,12 @@ export class DefaultMesh {
         var vertData = DefaultVertexData.createCubeVertexData(device)
         return new Mesh(vertData, DefaultMesh.defaultMaterial!)
     }
+    static createPlane(device: GPUDevice) {
+        DefaultMesh.initMat(device)
+
+        var vertData = DefaultVertexData.createPlaneVertexData(device)
+        return new Mesh(vertData, DefaultMesh.defaultMaterial!)
+    }
 
     static createCylinder(device: GPUDevice) {
         DefaultMesh.initMat(device)

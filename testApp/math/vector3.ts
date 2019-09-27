@@ -60,5 +60,36 @@ export class Vector3 {
         res.y = (e[1] * x + e[5] * y + e[9] * z + e[13]) * w;
         res.z = (e[2] * x + e[6] * y + e[10] * z + e[14]) * w;
     }
+
+    transformDirectionToRef(m: Matrix4, res: Vector3) {
+        var x = this.x, y = this.y, z = this.z;
+        var e = m.m;
+
+        res.x = e[0] * x + e[4] * y + e[8] * z;
+        res.y = e[1] * x + e[5] * y + e[9] * z;
+        res.z = e[2] * x + e[6] * y + e[10] * z;
+
+        res.normalizeToRef(res)
+    }
+
+    subtractToRef(sub: Vector3, res: Vector3) {
+        res.x = this.x - sub.x
+        res.y = this.y - sub.y
+        res.z = this.z - sub.z
+    }
+    normalizeToRef(res: Vector3) {
+        var len = this.length()
+        res.x /= len
+        res.y /= len
+        res.z /= len
+    }
+
+    length() {
+        return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+    }
+
+    dot(v: Vector3) {
+        return this.x * v.x + this.y * v.y + this.z * v.z;
+    }
 }
 

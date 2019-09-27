@@ -25,7 +25,18 @@ export class DefaultVertexData {
     }
 
     static createCylinderVertexData(device: GPUDevice) {
-        var data = twgl.primitives.createTruncatedConeVertices(0.5, 0.5, 1, 16, 16) as any
+        var data = twgl.primitives.createTruncatedConeVertices(0.5, 0.5, 1, 6, 1) as any
+
+        return new VertexData(device, {
+            a_position: data.position,
+            a_normal: data.normal,
+            a_texcoord: data.texcoord,
+            indices: data.indices,
+        });
+    }
+
+    static createPlaneVertexData(device: GPUDevice) {
+        var data = twgl.primitives.createPlaneVertices(1, 1) as any
 
         return new VertexData(device, {
             a_position: data.position,
