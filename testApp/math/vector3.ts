@@ -35,6 +35,10 @@ export class Vector3 {
         this.z = z
     }
 
+    setScalar(x: number) {
+        this.set(x, x, x)
+    }
+
     scaleInPlace(scaleVal: number) {
         this.x *= scaleVal
         this.y *= scaleVal

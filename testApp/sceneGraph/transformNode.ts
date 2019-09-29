@@ -4,7 +4,15 @@ import { Matrix4 } from "../math/matrix4";
 import { Ray } from "../math/ray";
 import { PMathTemp } from "../math/privateMathTemp";
 
+export enum NodeType {
+    CAMERA,
+    MESH,
+    LIGHT,
+    NODE
+}
+
 export class TransformNode {
+    type = NodeType.NODE
     position = new Vector3()
     rotation = new Quaternion()
     scale = new Vector3(1, 1, 1)

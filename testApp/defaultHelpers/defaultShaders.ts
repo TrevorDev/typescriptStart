@@ -1,10 +1,10 @@
 import { Shader } from "../gpu/shader";
 var _mvv = navigator.userAgent.indexOf("OculusBrowser") > 0 ? "GL_OVR_multiview" : "GL_OVR_multiview2"
 export class DefaultShaders {
-  
+
   static vertShaderA = new Shader(`
   #version 300 es
-  #extension `+_mvv+` : require
+  #extension `+ _mvv + ` : require
   precision mediump float;
   layout (num_views = 2) in;
     uniform View {
@@ -95,17 +95,14 @@ export class DefaultShaders {
       vec3 halfVector = normalize(surfaceToLight + surfaceToView);
       vec4 litR = lit(dot(a_normal, surfaceToLight),
                         dot(a_normal, halfVector), u_shininess);
-      vec4 outColor = vec4((
-      lights[0].u_lightColor * (diffuseColor * litR.y + diffuseColor * u_ambient +
-                    u_specular * litR.z * u_specularFactor)).rgb,
-          diffuseColor.a);
+      vec4 outColor = vec4((lights[0].u_lightColor * (diffuseColor * litR.y + diffuseColor * u_ambient + u_specular * litR.z * u_specularFactor)).rgb, diffuseColor.a);
       theColor = outColor;
     }
       
   `)
 
 
-static quadVertShader = new Shader(`
+  static quadVertShader = new Shader(`
 #version 300 es
 
 in vec4 a_position;
@@ -121,7 +118,7 @@ void main() {
       
 `)
 
-static blueFragShader = new Shader(`
+  static blueFragShader = new Shader(`
     #version 300 es
     precision mediump float;
 

@@ -3,6 +3,7 @@ import { Mesh } from "../sceneGraph/mesh";
 import { Vector3 } from "../math/vector3";
 import { Matrix4 } from "../math/matrix4";
 import { Triangle } from "../math/triangle";
+import { TransformNode, NodeType } from "../sceneGraph/transformNode";
 
 export class HitResult {
     hitDistance: null | number
@@ -78,33 +79,37 @@ export class Hit {
     /**
      * Ray direction must be normalized
      * @param ray 
-     * @param mesh 
+     * @param node 
      */
-    static rayIntersectsMesh(ray: Ray, mesh: Mesh, res: HitResult) {
+    static rayIntersectsMesh(ray: Ray, node: TransformNode, res: HitResult) {
         res.reset()
 
-        mesh.computeWorldMatrix(true)
-        mesh.worldMatrix.inverseToRef(Hit._tempMat)
-        ray.applyMatrixToRef(Hit._tempMat, Hit._tempRay)
-        //console.log(Hit._tempRay.direction.v)
+        if (node.type == NodeType.MESH) {
+            var mesh = node as Mesh
+            mesh.computeWorldMatrix(true)
+            mesh.worldMatrix.inverseToRef(Hit._tempMat)
+            ray.applyMatrixToRef(Hit._tempMat, Hit._tempRay)
+            //console.log(Hit._tempRay.direction.v)
 
-        var p = mesh.vertData.getPositions()
-        var ind = mesh.vertData.getIndices()
-        var triCount = mesh.vertData.getIndices().length / 3;
-        for (var i = 0; i < triCount; i++) {
-            for (var j = 0; j < 3; j++) {
-                Hit._tempTri.points[j].x = p[(ind[(i * 3) + j] * 3) + 0]
-                Hit._tempTri.points[j].y = p[(ind[(i * 3) + j] * 3) + 1]
-                Hit._tempTri.points[j].z = p[(ind[(i * 3) + j] * 3) + 2]
+            var p = mesh.vertData.getPositions()
+            var ind = mesh.vertData.getIndices()
+            var triCount = mesh.vertData.getIndices().length / 3;
+            for (var i = 0; i < triCount; i++) {
+                for (var j = 0; j < 3; j++) {
+                    Hit._tempTri.points[j].x = p[(ind[(i * 3) + j] * 3) + 0]
+                    Hit._tempTri.points[j].y = p[(ind[(i * 3) + j] * 3) + 1]
+                    Hit._tempTri.points[j].z = p[(ind[(i * 3) + j] * 3) + 2]
 
-            }
-            var hitRes = {}
-            //debugger
-            this.rayIntersectsTriangle(this._tempRay, Hit._tempTri, null, this._tmpHit)
-            if (this._tmpHit.hitDistance != null && (res.hitDistance == null || res.hitDistance > this._tmpHit.hitDistance)) {
-                res.copyFrom(this._tmpHit)
+                }
+                var hitRes = {}
+                //debugger
+                this.rayIntersectsTriangle(this._tempRay, Hit._tempTri, null, this._tmpHit)
+                if (this._tmpHit.hitDistance != null && (res.hitDistance == null || res.hitDistance > this._tmpHit.hitDistance)) {
+                    res.copyFrom(this._tmpHit)
+                }
             }
         }
+
         return null
     }
 }

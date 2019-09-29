@@ -17,47 +17,52 @@ import { DefaultMesh } from "./defaultHelpers/defaultMesh";
 import { Ray } from "./math/ray";
 import { Vector3 } from "./math/vector3";
 import { Hit, HitResult } from "./defaultHelpers/hit";
+import { OS } from "./os/os";
 
 
 async function main() {
-  var stage = new Stage();
+  // var stage = new Stage();
 
-  // Create meshes
-  for (var i = 0; i < 2; i++) {
-    var mesh = DefaultMesh.createCylinder(stage.device)
-    stage.meshes.push(mesh)
-    mesh.position.set(0, -1, -5 - (i * 1.5))
-  }
-  // stage.meshes[1].rotation.fromEuler(new Vector3(Math.PI / 2, 0, 0))
-  // stage.meshes[1].computeWorldMatrix(true)
-  var forward = new Ray()
-  var euler = new Vector3()
-  //euler.y += 0.003
-  stage.renderLoop = (deltaTime: number) => {
-    // Update meshes
-    //stage.meshes[0].position.x -= 0.2 * deltaTime
-    //stage.meshes[0].rotation.
-    euler.y += 0.5 * deltaTime
-    stage.meshes[0].rotation.fromEuler(euler)
-    stage.meshes[0].computeWorldMatrix(true)
-    stage.meshes[0].forwardToRef(forward)
-    //console.log(forward.direction.v)
-    //stage.meshes[0].rotation.toEulerRef(euler)
-    //euler.y += 0.1 * deltaTime
-    //console.log(forward.direction.v)
+  // var meshes = new Array<Mesh>()
+  // // Create meshes
+  // for (var i = 0; i < 2; i++) {
+  //   var mesh = DefaultMesh.createCylinder(stage.device)
+  //   stage.addNode(mesh)
+  //   meshes.push(mesh)
+  //   mesh.position.set(0, -1, -5 - (i * 1.5))
+  // }
+  // // stage.meshes[1].rotation.fromEuler(new Vector3(Math.PI / 2, 0, 0))
+  // // stage.meshes[1].computeWorldMatrix(true)
+  // var forward = new Ray()
+  // var euler = new Vector3()
+  // //euler.y += 0.003
+  // stage.renderLoop = (deltaTime: number, curTime: number) => {
+  //   // Update meshes
+  //   //stage.meshes[0].position.x -= 0.2 * deltaTime
+  //   //stage.meshes[0].rotation.
+  //   euler.y += 0.5 * deltaTime
+  //   meshes[0].rotation.fromEuler(euler)
+  //   meshes[0].computeWorldMatrix(true)
+  //   meshes[0].forwardToRef(forward)
+  //   //console.log(forward.direction.v)
+  //   //stage.meshes[0].rotation.toEulerRef(euler)
+  //   //euler.y += 0.1 * deltaTime
+  //   //console.log(forward.direction.v)
 
-    //console.log(forward)
-    var hitResult = new HitResult()
-    var x = Hit.rayIntersectsMesh(forward, stage.meshes[1], hitResult)
-    console.log(hitResult)
-  }
+  //   //console.log(forward)
+  //   var hitResult = new HitResult()
+  //   var x = Hit.rayIntersectsMesh(forward, meshes[1], hitResult)
+  //   console.log(hitResult)
+  // }
 
-  document.onkeydown = () => {
-    i++
-    var mesh = DefaultMesh.createCylinder(stage.device)
-    stage.meshes.push(mesh)
-    mesh.position.set(i * 0.5, -1, -5 - (i * 1.5))
-    //console.log(i)
-  }
+  // document.onkeydown = () => {
+  //   i++
+  //   var mesh = DefaultMesh.createCylinder(stage.device)
+  //   meshes.push(mesh)
+  //   stage.addNode(mesh)
+  //   mesh.position.set(i * 0.5, -1, -5 - (i * 1.5))
+  //   //console.log(i)
+  // }
+  var os = new OS()
 }
 main();

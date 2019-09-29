@@ -13,6 +13,7 @@ import { XRCamera } from "../xr/xrCamera";
 import { DefaultShaders } from "../defaultHelpers/defaultShaders";
 import { VideoTexture } from "../defaultHelpers/videoTexture";
 import { Light } from "../sceneGraph/light";
+import { TransformNode } from "../sceneGraph/transformNode";
 
 export class Stage {
     // Initialize device and window
@@ -22,8 +23,20 @@ export class Stage {
     renderer: Renderer
     camera: XRCamera
     lights = new Array<Light>()
-    meshes = new Array<Mesh>()
-    renderLoop: null | Function = null
+    private nodes = new Array<TransformNode>()
+    renderLoop: ((deltaTime: number, curTime: number) => void) | null = null
+
+    addNode(node: TransformNode) {
+        this.nodes.push(node)
+    }
+    removeNode(node: TransformNode) {
+        var index = this.nodes.indexOf(node)
+        if (index >= 0) {
+            this.nodes.splice(index, 1);
+        }
+    }
+
+
     constructor() {
         this.device = new GPUDevice()
         this.xr = new XR(this.device);
@@ -71,7 +84,7 @@ export class Stage {
             }
 
             // Render scene
-            this.renderer.renderScene(this.camera, this.meshes, this.lights)
+            this.renderer.renderScene(this.camera, this.nodes, this.lights)
 
             // Blit back to screen
             if (this.xr.state == XRState.IN_XR) {

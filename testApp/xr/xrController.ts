@@ -1,11 +1,19 @@
 import { TransformNode } from "../sceneGraph/transformNode";
+import { Ray } from "../math/ray";
+import { AppContainer } from "../os/app/appContainer";
 
 export class XRController extends TransformNode {
-    constructor(){
+    ray = new Ray()
+    // TODO move this class to os?
+    hoveredApp: null | AppContainer = null
+
+    constructor() {
         super()
     }
 
-    update(){
+    update() {
 
     }
+
+
 }
