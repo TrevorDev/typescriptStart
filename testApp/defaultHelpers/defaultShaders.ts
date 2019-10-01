@@ -118,10 +118,11 @@ void main() {
       
 `)
 
-  static blueFragShader = new Shader(`
+  static multiviewBlitToTextureFragShader = new Shader(`
     #version 300 es
     precision mediump float;
 
+    uniform float debug;
     uniform mediump sampler2DArray imgs;
     
     in vec4 v_position;
@@ -130,9 +131,12 @@ void main() {
     out vec4 theColor;
     
     void main() {
+      
       vec2 coord = v_texCoord;
       float side = step(0.5, coord.x);
-      coord.x = (coord.x - (0.5*side))*2.0;
+      if(debug < 1.){
+        coord.x = (coord.x - (0.5*side))*2.0;
+      }
       theColor = texture(imgs, vec3(coord, side));
     }
       

@@ -1,5 +1,5 @@
 import { Stage } from "../../defaultHelpers/stage";
-import { XRController } from "../../xr/xrController";
+import { XRController } from "./xrController";
 
 export class InputManager {
     controllers: Array<XRController> = []

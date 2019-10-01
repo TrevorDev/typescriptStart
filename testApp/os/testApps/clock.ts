@@ -17,27 +17,13 @@ var main = async () => {
     canEl.height = 128 * 2
     var ctx = canEl.getContext("2d")!
 
-    // Debug overlay canvas
-    // document.body.appendChild(canEl)
-    // canEl.style.position = "absolute"
-    // canEl.style.zIndex = "20"
-    // canEl.style.top = "0px"
-
-    // Create texture from the canvas
-    // var texture = new THREE.CanvasTexture(canEl)
-    // texture.needsUpdate = true
-
-    // // Setup mesh to render text to
-    // var screenGeom = new THREE.PlaneGeometry(1, 128 / 512);
-    // var screenMat = new THREE.MeshLambertMaterial({ map: texture });
-    // screenMat.transparent = true
-
     var canvasTexture = new CanvasTexture(os.device, canEl)
 
     var mat = new MaterialA(os.device)
     mat.diffuseTexture = canvasTexture.texture
 
     var screen = DefaultMesh.createPlane(os.device)
+    screen.scale.x = canEl.width / canEl.height
     screen.material = mat
     screen.position.y = 1
     app.scene.addChild(screen)
@@ -60,7 +46,8 @@ var main = async () => {
             frameIndex = (frameIndex + 1) % framesToWatch
         }
 
-        euler.x += Math.PI / 3 * delta
+        //euler.x += Math.PI / 3 * delta
+        euler.x = Math.PI / 2
         screen.rotation.fromEuler(euler)
 
         // Get time
@@ -69,14 +56,14 @@ var main = async () => {
 
         // Draw text
         var size = 50 * 2
-        ctx.fillStyle = '#000000';
+        ctx.fillStyle = '#2c3e50';
         ctx.fillRect(0, 0, canEl.width, canEl.height)
         //ctx.clearRect(0, 0, canEl.width, canEl.height)
-        ctx.fillStyle = '#FFFFFF';
+        ctx.fillStyle = '#ecf0f1';
         ctx.font = size + 'px serif';
         var dim = ctx.measureText("M")
         ctx.fillText("" + clockTime, 10, dim.width);
-        ctx.fillText("FPS: " + (Math.floor(10000 / (frameSum / frameArray.length)) / 10).toFixed(1), 10, dim.width * 2 + 10);
+        ctx.fillText("FPS: " + (Math.floor(10 / (frameSum / frameArray.length)) / 10).toFixed(1), 10, dim.width * 2 + 10);
         canvasTexture.update()
     }
 

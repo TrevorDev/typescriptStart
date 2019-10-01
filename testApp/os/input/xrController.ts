@@ -1,6 +1,6 @@
-import { TransformNode } from "../sceneGraph/transformNode";
-import { Ray } from "../math/ray";
-import { AppContainer } from "../os/app/appContainer";
+import { TransformNode } from "../../sceneGraph/transformNode";
+import { Ray } from "../../math/ray";
+import { AppContainer } from "../app/appContainer";
 
 export class XRController extends TransformNode {
     ray = new Ray()

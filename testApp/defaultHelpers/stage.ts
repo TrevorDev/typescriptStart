@@ -16,6 +16,9 @@ import { Light } from "../sceneGraph/light";
 import { TransformNode } from "../sceneGraph/transformNode";
 
 export class Stage {
+    // Debug flags
+    singleViewDebug = true;
+
     // Initialize device and window
     device: GPUDevice
     xr: XR
@@ -38,10 +41,13 @@ export class Stage {
 
 
     constructor() {
+        // Initialize Renderer
         this.device = new GPUDevice()
         this.xr = new XR(this.device);
         this.window = new RenderWindow(this.device, true)
         this.renderer = new Renderer(this.device)
+
+        // Lights and camera
         this.camera = new XRCamera()
 
         this.lights.push(new PointLight())
@@ -49,9 +55,10 @@ export class Stage {
         this.lights[0].position.x = 10;
         this.lights[0].position.y = 10;
 
-        // Custom blit operation
+        // Custom blit operation used to draw multiview frame into single frame required for webVR
+        // TODO remove this after webXR allows submit multiview frames
         var quad = DefaultVertexData.createFullScreenQuad(this.device)
-        var fullScreenQuadProg = new CustomProgram(this.device, DefaultShaders.quadVertShader, DefaultShaders.blueFragShader)
+        var fullScreenQuadProg = new CustomProgram(this.device, DefaultShaders.quadVertShader, DefaultShaders.multiviewBlitToTextureFragShader)
 
         var time = (new Date()).getTime()
         var gameLoop = () => {
@@ -68,7 +75,6 @@ export class Stage {
                 this.window.updateDimensions()
             }
 
-
             // Render next action to to multiview texture
             this.renderer.setRenderMultiviewTexture(this.xr.multiviewTexture)
 
@@ -78,7 +84,6 @@ export class Stage {
             this.renderer.clear()
 
             // Update camera
-
             if (this.xr.state == XRState.IN_XR && this.xr.display.getFrameData(this.xr.frameData)) {
                 this.camera.updateFromFrameData(this.xr.frameData)
             }
@@ -99,6 +104,7 @@ export class Stage {
             this.renderer.clear()
 
             fullScreenQuadProg.load()
+            fullScreenQuadProg.updateUniforms({ debug: this.singleViewDebug });
             fullScreenQuadProg.setTextures({ imgs: this.xr.multiviewTexture })
             fullScreenQuadProg.draw(quad)
 
@@ -109,8 +115,14 @@ export class Stage {
 
 
         var currentLoop: null | Loop = new Loop(requestAnimationFrame, gameLoop)
+
+        // Click to enter VR
+        // TODO move this somewhere else
         var clickToggle = false
-        document.onclick = async () => {
+        document.addEventListener("pointerdown", async () => {
+            if (this.singleViewDebug) {
+                return;
+            }
             clickToggle = !clickToggle
             if (!clickToggle) {
                 if (currentLoop) {
@@ -132,7 +144,6 @@ export class Stage {
                     currentLoop = new Loop((x: any) => { this.xr.display.requestAnimationFrame(x) }, gameLoop)
                 }
             }
-
-        }
+        })
     }
 }
