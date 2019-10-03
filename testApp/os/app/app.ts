@@ -14,4 +14,8 @@ export class App {
     update(delta: number, curTime: number) {
 
     }
+
+    dispose() {
+
+    }
 }

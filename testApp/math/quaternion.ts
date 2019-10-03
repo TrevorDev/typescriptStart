@@ -33,6 +33,13 @@ export class Quaternion {
         return this.q[3];
     }
 
+    set(x: number, y: number, z: number, w: number) {
+        this.x = x
+        this.y = y
+        this.z = z
+        this.w = w
+    }
+
     toEulerRef(res: Vector3) {
         var qz = this.z;
         var qx = this.x;

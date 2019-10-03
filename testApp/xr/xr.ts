@@ -9,53 +9,89 @@ export enum XRState {
 
 export class XR {
     textures = new Array<Texture>()
-    display:VRDisplay
+    display: VRDisplay
     state = XRState.NOT_IN_XR
-    multiviewTexture:MultiviewTexture
-    frameData:VRFrameData
-    constructor(private gpuDevice:GPUDevice){
-        this.multiviewTexture = new MultiviewTexture(gpuDevice, 1920/2, 1080)
+    multiviewTexture: MultiviewTexture
+    frameData: VRFrameData
+    leftControllerIndex: number | null = null
+    rightControllerIndex: number | null = null
+    get leftController() {
+        if (this.leftControllerIndex == null) {
+            return null;
+        }
+        return navigator.getGamepads()[this.leftControllerIndex]
+    }
+    get rightController() {
+        if (this.rightControllerIndex == null) {
+            return null;
+        }
+        return navigator.getGamepads()[this.rightControllerIndex]
+    }
+    constructor(private gpuDevice: GPUDevice) {
+        this.multiviewTexture = new MultiviewTexture(gpuDevice, 1920 / 2, 1080)
 
         this.textures.push(new Texture(gpuDevice))
+
+        window.addEventListener('gamepadconnected', (e) => {
+            console.log("connected")
+            console.log(e)
+            var gamepad = (e as any).gamepad
+            if (gamepad.hand == "right") {
+                this.rightControllerIndex = gamepad.index
+            } else {
+                this.leftControllerIndex = gamepad.index
+            }
+        });
+
+        window.addEventListener('gamepaddisconnected', (e) => {
+            console.log("disconnected")
+            console.log(e)
+            var gamepad = (e as any).gamepad
+            if (gamepad.hand == "right") {
+                this.rightControllerIndex = null
+            } else {
+                this.leftControllerIndex = null
+            }
+        });
     }
 
     getNextTexture() {
         return this.textures[0]
     }
 
-    async canStart(){
-        if(!navigator.getVRDisplays){
+    async canStart() {
+        if (!navigator.getVRDisplays) {
             return false
         }
         this.display = (await navigator.getVRDisplays())[0]
-        if(!this.display){
+        if (!this.display) {
             return false
         }
         return true
     }
 
-    async start(){
+    async start() {
         console.log("GET DISPLAY")
         this.display = (await navigator.getVRDisplays())[0]
         console.log(this.display)
-        await this.display.requestPresent([{source: this.gpuDevice.canvasElement}])
+        await this.display.requestPresent([{ source: this.gpuDevice.canvasElement }])
         console.log("PRESENT")
-        
+
         var leftEye = this.display.getEyeParameters('left');
         var rightEye = this.display.getEyeParameters('right');
 
         var eyeWidth = Math.max(leftEye.renderWidth, rightEye.renderWidth)
         var eyeHeight = Math.max(leftEye.renderHeight, rightEye.renderHeight)
-        
+
         this.gpuDevice.canvasElement.width = eyeWidth * 2;
         this.gpuDevice.canvasElement.height = eyeHeight;
 
-        
+
         // Currently beleive there is a bug in oculus msaa multiview extension as aa still exists on verticles
-        this.frameData= new VRFrameData();
+        this.frameData = new VRFrameData();
         this.multiviewTexture = new MultiviewTexture(this.gpuDevice, eyeWidth, eyeHeight)
         this.state = XRState.IN_XR
-        
+
         console.log("DONE START")
     }
 }

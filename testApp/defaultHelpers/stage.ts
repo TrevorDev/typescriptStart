@@ -17,7 +17,7 @@ import { TransformNode } from "../sceneGraph/transformNode";
 
 export class Stage {
     // Debug flags
-    singleViewDebug = true;
+    singleViewDebug = false;
 
     // Initialize device and window
     device: GPUDevice
@@ -66,6 +66,11 @@ export class Stage {
             var deltaTime = (newTime - time) / 1000;
             time = newTime;
 
+            // Update camera
+            if (this.xr.state == XRState.IN_XR && this.xr.display.getFrameData(this.xr.frameData)) {
+                this.camera.updateFromFrameData(this.xr.frameData)
+            }
+
             if (this.renderLoop) {
                 this.renderLoop(deltaTime, time)
             }
@@ -82,11 +87,6 @@ export class Stage {
             this.renderer.setViewport(0, 0, this.xr.multiviewTexture.width, this.xr.multiviewTexture.height)
             this.device.gl.clearColor(0.2, 0.4, 0.4, 1)
             this.renderer.clear()
-
-            // Update camera
-            if (this.xr.state == XRState.IN_XR && this.xr.display.getFrameData(this.xr.frameData)) {
-                this.camera.updateFromFrameData(this.xr.frameData)
-            }
 
             // Render scene
             this.renderer.renderScene(this.camera, this.nodes, this.lights)
@@ -119,7 +119,7 @@ export class Stage {
         // Click to enter VR
         // TODO move this somewhere else
         var clickToggle = false
-        document.addEventListener("pointerdown", async () => {
+        document.onclick = async () => {
             if (this.singleViewDebug) {
                 return;
             }
@@ -144,6 +144,9 @@ export class Stage {
                     currentLoop = new Loop((x: any) => { this.xr.display.requestAnimationFrame(x) }, gameLoop)
                 }
             }
-        })
+        }
+        // document.addEventListener("pointerdown", async () => {
+
+        // })
     }
 }
