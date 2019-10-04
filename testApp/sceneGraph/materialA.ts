@@ -75,7 +75,7 @@ export class MaterialA implements Material {
         // TODO fix all this
         var light = lights[0] as PointLight
         var tmp = new Vector3()
-        //light.worldMatrix.compose(tmp)
+        light.worldMatrix.decompose(tmp)
         //debugger
         twgl.setBlockUniforms(this.lightUboInfo, {
             u_lightColor: [light.color.v[0], light.color.v[1], light.color.v[2], 1],

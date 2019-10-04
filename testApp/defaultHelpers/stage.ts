@@ -66,6 +66,8 @@ export class Stage {
             var deltaTime = (newTime - time) / 1000;
             time = newTime;
 
+            //this.lights[0].position.y = Math.sin(newTime / 1000) * 20
+
             // Update camera
             if (this.xr.state == XRState.IN_XR && this.xr.display.getFrameData(this.xr.frameData)) {
                 this.camera.updateFromFrameData(this.xr.frameData)

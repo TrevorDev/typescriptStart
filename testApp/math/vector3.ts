@@ -4,6 +4,8 @@ import { Quaternion } from "./quaternion";
 import { PMathTemp } from "./privateMathTemp";
 
 export class Vector3 {
+    static _tmp0 = new Vector3()
+
     v: twgl.v3.Vec3
     constructor(x = 0, y = 0, z = 0) {
         this.v = twgl.v3.create(x, y, z)
@@ -33,6 +35,7 @@ export class Vector3 {
         this.x = x
         this.y = y
         this.z = z
+        return this
     }
 
     setScalar(x: number) {

@@ -43,7 +43,7 @@ export class OS {
 
             // Cast controller ray into each app
             /**
-             * Multiple apps can be "hovered" only one app can be "active"
+             * Multiple apps(one per controller) can be "hovered" only one app can be "active"
              * Launcher starts as active
              * 
              * The active controls the look of the controllers when they point at nothing or the active app

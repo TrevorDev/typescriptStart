@@ -70,6 +70,102 @@ export class Matrix4 {
         //twgl.m4.translate()
     }
 
+    decompose(position?: Vector3, quaternion?: Quaternion, scale?: Vector3) {
+        var te = this.m;
+
+        var sx = Vector3._tmp0.set(te[0], te[1], te[2]).length();
+        var sy = Vector3._tmp0.set(te[4], te[5], te[6]).length();
+        var sz = Vector3._tmp0.set(te[8], te[9], te[10]).length();
+
+        // if determine is negative, we need to invert one scale
+        var det = this.determinant();
+        if (det < 0) sx = - sx;
+
+        if (position) {
+            position.x = te[12];
+            position.y = te[13];
+            position.z = te[14];
+        }
+
+
+        // scale the rotation part
+        Matrix4._tmp0.copyFrom(this);
+
+        var invSX = 1 / sx;
+        var invSY = 1 / sy;
+        var invSZ = 1 / sz;
+
+        Matrix4._tmp0.m[0] *= invSX;
+        Matrix4._tmp0.m[1] *= invSX;
+        Matrix4._tmp0.m[2] *= invSX;
+
+        Matrix4._tmp0.m[4] *= invSY;
+        Matrix4._tmp0.m[5] *= invSY;
+        Matrix4._tmp0.m[6] *= invSY;
+
+        Matrix4._tmp0.m[8] *= invSZ;
+        Matrix4._tmp0.m[9] *= invSZ;
+        Matrix4._tmp0.m[10] *= invSZ;
+
+        if (quaternion) {
+            quaternion.fromRotationMatrix(Matrix4._tmp0);
+        }
+
+        if (scale) {
+            scale.x = sx;
+            scale.y = sy;
+            scale.z = sz;
+        }
+
+    }
+    determinant() {
+        var te = this.m;
+
+        var n11 = te[0], n12 = te[4], n13 = te[8], n14 = te[12];
+        var n21 = te[1], n22 = te[5], n23 = te[9], n24 = te[13];
+        var n31 = te[2], n32 = te[6], n33 = te[10], n34 = te[14];
+        var n41 = te[3], n42 = te[7], n43 = te[11], n44 = te[15];
+
+        //TODO: make this more efficient
+        //( based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm )
+
+        return (
+            n41 * (
+                + n14 * n23 * n32
+                - n13 * n24 * n32
+                - n14 * n22 * n33
+                + n12 * n24 * n33
+                + n13 * n22 * n34
+                - n12 * n23 * n34
+            ) +
+            n42 * (
+                + n11 * n23 * n34
+                - n11 * n24 * n33
+                + n14 * n21 * n33
+                - n13 * n21 * n34
+                + n13 * n24 * n31
+                - n14 * n23 * n31
+            ) +
+            n43 * (
+                + n11 * n24 * n32
+                - n11 * n22 * n34
+                - n14 * n21 * n32
+                + n12 * n21 * n34
+                + n14 * n22 * n31
+                - n12 * n24 * n31
+            ) +
+            n44 * (
+                - n13 * n22 * n31
+                - n11 * n23 * n32
+                + n11 * n22 * n33
+                + n13 * n21 * n32
+                - n12 * n21 * n33
+                + n12 * n23 * n31
+            )
+
+        );
+    }
+
     copyToArrayBufferView(copyTo: ArrayBufferView) {
         twgl.m4.copy(this.m, copyTo as any)
     }
