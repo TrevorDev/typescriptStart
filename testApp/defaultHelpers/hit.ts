@@ -27,6 +27,7 @@ export class Hit {
     static _tempVecB = new Vector3()
     static _tempVecC = new Vector3()
     static _tmpHit = new HitResult()
+    static _tmpHitB = new HitResult()
     static rayIntersectsTriangle(ray: Ray, tri: Triangle, normal: null | Vector3, res: HitResult) {
         // See https://github.com/TrevorDev/outLine/blob/master/public/custom/moreSpace/collision.js
         //when line collides with plane:
@@ -111,5 +112,17 @@ export class Hit {
         }
 
         return null
+    }
+
+    static rayIntersectsMeshes(ray: Ray, nodes: Array<TransformNode>, res: HitResult) {
+        res.reset()
+        Hit._tmpHitB.reset()
+
+        for (var n of nodes) {
+            Hit.rayIntersectsMesh(ray, n, Hit._tmpHitB);
+            if (res.hitDistance == null || (Hit._tmpHitB.hitDistance != null && Hit._tmpHitB.hitDistance < res.hitDistance)) {
+                res.copyFrom(Hit._tmpHitB)
+            }
+        }
     }
 }

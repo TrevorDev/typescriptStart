@@ -48,6 +48,12 @@ export class Vector3 {
         this.z *= scaleVal
     }
 
+    addToRef(a: Vector3, res: Vector3) {
+        res.x = this.x + a.x
+        res.y = this.y + a.y
+        res.z = this.z + a.z
+    }
+
     copyFrom(from: Vector3) {
         this.set(from.x, from.y, from.z)
     }

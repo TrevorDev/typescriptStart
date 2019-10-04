@@ -6,6 +6,9 @@ import { DefaultMesh } from "../defaultHelpers/defaultMesh";
 import { GPUDevice } from "../gpu/gpuDevice";
 import { AppContainer } from "./app/appContainer";
 import { App } from "./app/app";
+import { Launcher } from "./homeEnv/launcher";
+import { AppSpec } from "./app/appSpec";
+import { Vector3 } from "../math/vector3";
 
 export class OS {
     /**
@@ -20,10 +23,10 @@ export class OS {
      * Main OS components
      */
     public device: GPUDevice
-    private globalStage: Stage
-    private inputManager: InputManager;
-    private appManager: AppManager
-    private launcherApp: null | AppContainer = null
+    public globalStage: Stage
+    public inputManager: InputManager;
+    public appManager: AppManager
+    public launcherApp: null | AppContainer = null
 
     /**
      * Creates a multitasking OS
@@ -61,7 +64,7 @@ export class OS {
              * 
              */
             this.inputManager.controllers.forEach((controller) => {
-                var closestHit = { distance: 0, obj: null }
+                var closestHit = { distance: Infinity, obj: null }
                 var hitResult = new HitResult()
                 var isTaskBar = false
                 this.appManager.appContainers.forEach((container) => {
@@ -79,6 +82,13 @@ export class OS {
                         controller.hoveredApp = container
                     }
                 })
+
+                if (closestHit.distance < Infinity) {
+                    controller.hitMesh.position.copyFrom(controller.ray.direction)
+                    controller.hitMesh.position.scaleInPlace(closestHit.distance)
+                    controller.hitMesh.position.addToRef(controller.ray.origin, controller.hitMesh.position)
+                }
+
                 //controller.hoveredIntersection = closestHit.distance < Infinity ? closestHit : null
             })
 
@@ -91,30 +101,7 @@ export class OS {
         console.log("NiftyOS v1.0")
 
         // Create launcher
-        this.registerApp({
-            appName: "Launcher",
-            iconImage: null,
-            create: (app: App) => {
-                var screen = DefaultMesh.createCube(this.device)
-                screen.position.y = 1
-                app.scene.addChild(screen)
-
-                app.update = (delta) => {
-                }
-
-                app.dispose = () => {
-
-                }
-
-                (app as any).registerApp = (appSpec: any) => {
-                    console.log(appSpec.appName)
-                    var container = this.appManager.createApp()
-                    this.launcherApp = container
-                    container.containerSpace.position.z = -10
-                    appSpec.create(container.app)
-                }
-            }
-        })
+        var launcher = new Launcher(this)
 
         // Register a test app
         require("./testApps/clock")
@@ -131,7 +118,7 @@ export class OS {
     /**
      * Initialize and position app
      */
-    registerApp(appSpec: any) {
+    registerApp(appSpec: AppSpec) {
         if (!this.launcherApp) {
             var container = this.appManager.createApp()
             this.launcherApp = container

@@ -3,11 +3,16 @@ import { Ray } from "../../math/ray";
 import { AppContainer } from "../app/appContainer";
 import { Stage } from "../../defaultHelpers/stage";
 import { DefaultMesh } from "../../defaultHelpers/defaultMesh";
+import { Vector3 } from "../../math/vector3";
+import { Quaternion } from "../../math/quaternion";
+import { Mesh } from "../../sceneGraph/mesh";
 
 export class XRController extends TransformNode {
     ray = new Ray()
     // TODO move this class to os?
     hoveredApp: null | AppContainer = null
+    hitMesh: Mesh
+    rayMesh: Mesh
 
     constructor(stage: Stage, hand: string) {
         super()
@@ -23,7 +28,17 @@ export class XRController extends TransformNode {
         stage.addNode(this)
         var mesh = DefaultMesh.createCube(stage.device)
         mesh.scale.scaleInPlace(0.05)
+        mesh.scale.z *= 10
         this.addChild(mesh)
+
+        this.hitMesh = DefaultMesh.createSphere(stage.device)
+        this.hitMesh.scale.scaleInPlace(0.1)
+        stage.addNode(this.hitMesh)
+
+        // this.rayMesh = DefaultMesh.createSphere(stage.device)
+        // this.rayMesh.scale.scaleInPlace(0.1)
+        // this.rayMesh.scale.z *= 5
+        // stage.addNode(this.rayMesh)
     }
 
     getGamepad(): null | Gamepad {
@@ -42,6 +57,11 @@ export class XRController extends TransformNode {
                 }
             }
         }
+        this.computeWorldMatrix(true)
+        var vec = new Vector3(0, 0, -1)
+        var q = new Quaternion()
+        this.worldMatrix.decompose(this.ray.origin, q);
+        vec.rotateByQuaternionToRef(q, this.ray.direction)
     }
 
 
