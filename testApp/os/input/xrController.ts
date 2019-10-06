@@ -7,12 +7,52 @@ import { Vector3 } from "../../math/vector3";
 import { Quaternion } from "../../math/quaternion";
 import { Mesh } from "../../sceneGraph/mesh";
 
+export class XRButtonState {
+    private _value = 0
+    private _downThreshold = 0.8
+    public justDown = false;
+    constructor() {
+    }
+    get value() {
+        return this._value
+    }
+    isDown() {
+        if (this.value > this._downThreshold) {
+            return true
+        } else {
+            return false
+        }
+    }
+    setValue(val: number) {
+        //console.log(val+" "+this._value)
+        if (val >= this._downThreshold && this._value < this._downThreshold) {
+            this._value = val
+            //this.onDown.notifyObservers(this)
+            this.justDown = true
+        } else if (val < this._downThreshold && this._value >= this._downThreshold) {
+            this._value = val
+            //this.onUp.notifyObservers(this)
+        } else {
+            this._value = val
+        }
+        //this.onChange.notifyObservers(this)
+    }
+    update() {
+        this.justDown = false
+    }
+    // onDown = new Observable<XRButtonState>()
+    // onUp = new Observable<XRButtonState>()
+    // onChange = new Observable<XRButtonState>()
+}
+
 export class XRController extends TransformNode {
     ray = new Ray()
     // TODO move this class to os?
     hoveredApp: null | AppContainer = null
     hitMesh: Mesh
     rayMesh: Mesh
+
+    primaryButton = new XRButtonState()
 
     constructor(stage: Stage, hand: string) {
         super()
@@ -46,8 +86,11 @@ export class XRController extends TransformNode {
     }
 
     update() {
+        this.primaryButton.update()
+
         var gamepad = this.getGamepad()
         if (gamepad) {
+            this.primaryButton.setValue(gamepad.buttons[1].value)
             if (gamepad.pose) {
                 if (gamepad.pose.position) {
                     this.position.set(gamepad.pose.position[0], gamepad.pose.position[1], gamepad.pose.position[2])

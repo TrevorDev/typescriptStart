@@ -17,7 +17,6 @@ export class Launcher {
                 // app.scene.addChild(screen)
                 app.castRay = (ray, result) => {
                     Hit.rayIntersectsMeshes(ray, appSpheres, result)
-                    console.log(result.hitDistance)
                 }
 
 
@@ -30,9 +29,10 @@ export class Launcher {
 
                 (app as any).registerApp = (appSpec: AppSpec) => {
 
-                    console.log(appSpec.appName)
-
                     var appSphere = DefaultMesh.createSphere(os.device);
+                    appSphere.scale.scaleInPlace(0.3)
+                    appSphere.position.y = appSphere.scale.y / 2
+
                     app.scene.addChild(appSphere)
                     appSpheres.push(appSphere)
 

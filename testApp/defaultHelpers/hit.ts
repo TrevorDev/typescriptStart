@@ -79,6 +79,7 @@ export class Hit {
 
     /**
      * Ray direction must be normalized
+     * Ray is in world space, node is in any space, ray is converted to node space before intersection
      * @param ray 
      * @param node 
      */
@@ -109,11 +110,25 @@ export class Hit {
                     res.copyFrom(this._tmpHit)
                 }
             }
+
+            if (res.hitDistance != null) {
+
+                // Compute intersection point in world space
+                this._tempVecA.copyFrom(this._tempRay.direction)
+                this._tempVecA.scaleInPlace(res.hitDistance)
+                this._tempVecA.addToRef(this._tempRay.origin, this._tempVecA)
+                this._tempVecA.rotateByMatrixToRef(mesh.worldMatrix, this._tempVecA)
+
+                // calculate distance in world space
+                ray.origin.subtractToRef(this._tempVecA, this._tempVecA)
+                res.hitDistance = this._tempVecA.length()
+            }
         }
 
         return null
     }
 
+    // Ray and triangle are in same space
     static rayIntersectsMeshes(ray: Ray, nodes: Array<TransformNode>, res: HitResult) {
         res.reset()
         Hit._tmpHitB.reset()

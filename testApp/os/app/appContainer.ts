@@ -14,6 +14,7 @@ export class AppContainer {
         globalStage.addNode(this.containerSpace)
 
         var appSpace = new TransformNode();
+        appSpace.position.y = 0.1
         this.app = new App(appSpace)
         this.containerSpace.addChild(appSpace)
 

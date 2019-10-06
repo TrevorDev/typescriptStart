@@ -63,6 +63,8 @@ export class Vector3 {
         this.rotateByMatrixToRef(PMathTemp.m1, res)
     }
 
+    // Applies a matrix
+    // TODO rename to applyMatrix
     rotateByMatrixToRef(m: Matrix4, res: Vector3) {
         var x = this.x, y = this.y, z = this.z;
         var e = m.m;

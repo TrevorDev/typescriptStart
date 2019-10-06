@@ -67,6 +67,8 @@ export class OS {
                 var closestHit = { distance: Infinity, obj: null }
                 var hitResult = new HitResult()
                 var isTaskBar = false
+
+                // Check which app is hovered for this controller
                 this.appManager.appContainers.forEach((container) => {
                     Hit.rayIntersectsMesh(controller.ray, container.taskBar, hitResult)
 
@@ -83,13 +85,16 @@ export class OS {
                     }
                 })
 
+                // Position gaze mesh
                 if (closestHit.distance < Infinity) {
                     controller.hitMesh.position.copyFrom(controller.ray.direction)
                     controller.hitMesh.position.scaleInPlace(closestHit.distance)
                     controller.hitMesh.position.addToRef(controller.ray.origin, controller.hitMesh.position)
                 }
 
-                //controller.hoveredIntersection = closestHit.distance < Infinity ? closestHit : null
+                if (controller.primaryButton.justDown) {
+                    console.log("PRESSSED")
+                }
             })
 
             // Run each app's render loop
@@ -122,7 +127,7 @@ export class OS {
         if (!this.launcherApp) {
             var container = this.appManager.createApp()
             this.launcherApp = container
-            container.containerSpace.position.z = -10
+            container.containerSpace.position.z = -4
             appSpec.create(container.app)
         } else {
             (this.launcherApp.app as any).registerApp(appSpec)
