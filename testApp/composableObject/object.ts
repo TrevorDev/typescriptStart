@@ -14,7 +14,7 @@ export class Object {
         if (!this.components[component.getType()]) {
             this.components[component.getType()] = []
         }
-
+        component.object = this;
         this.components[component.getType()].push(component)
     }
 
