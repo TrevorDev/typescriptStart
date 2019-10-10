@@ -1,9 +1,7 @@
 import { Vector3 } from "../../math/vector3"
 import { Quaternion } from "../../math/quaternion"
 import { Matrix4 } from "../../math/matrix4"
-import { Object } from "../object"
 import { Component } from "./component"
-import { TransformObject } from "../transformObject"
 import { Ray } from "../../math/ray"
 
 export class Transform extends Component {

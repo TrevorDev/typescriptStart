@@ -6,6 +6,8 @@ import { DefaultMesh } from "../../defaultHelpers/defaultMesh";
 import { Vector3 } from "../../math/vector3";
 import { Quaternion } from "../../math/quaternion";
 import { Mesh } from "../../sceneGraph/mesh";
+import { TransformObject } from "../../composableObject/baseObjects/transformObject";
+import { MeshObject } from "../../composableObject/baseObjects/meshObject";
 
 export class XRButtonState {
     private _value = 0
@@ -45,12 +47,12 @@ export class XRButtonState {
     // onChange = new Observable<XRButtonState>()
 }
 
-export class XRController extends TransformNode {
+export class XRController extends TransformObject {
     ray = new Ray()
     // TODO move this class to os?
     hoveredApp: null | AppContainer = null
-    hitMesh: Mesh
-    rayMesh: Mesh
+    hitMesh: MeshObject
+    rayMesh: MeshObject
 
     primaryButton = new XRButtonState()
 
@@ -66,13 +68,13 @@ export class XRController extends TransformNode {
             }
         }
         stage.addNode(this)
-        var mesh = DefaultMesh.createCube(stage.device)
-        mesh.scale.scaleInPlace(0.05)
-        mesh.scale.z *= 10
-        this.addChild(mesh)
+        var mesh = new MeshObject(stage.device)//DefaultMesh.createCube(stage.device)
+        mesh.transform.scale.scaleInPlace(0.05)
+        mesh.transform.scale.z *= 10
+        this.transform.addChild(mesh.transform)
 
-        this.hitMesh = DefaultMesh.createSphere(stage.device)
-        this.hitMesh.scale.scaleInPlace(0.1)
+        this.hitMesh = new MeshObject(stage.device)//DefaultMesh.createSphere(stage.device)
+        this.hitMesh.transform.scale.scaleInPlace(0.1)
         stage.addNode(this.hitMesh)
 
         // this.rayMesh = DefaultMesh.createSphere(stage.device)
@@ -93,17 +95,17 @@ export class XRController extends TransformNode {
             this.primaryButton.setValue(gamepad.buttons[1].value)
             if (gamepad.pose) {
                 if (gamepad.pose.position) {
-                    this.position.set(gamepad.pose.position[0], gamepad.pose.position[1], gamepad.pose.position[2])
+                    this.transform.position.set(gamepad.pose.position[0], gamepad.pose.position[1], gamepad.pose.position[2])
                 }
                 if (gamepad.pose.orientation) {
-                    this.rotation.set(gamepad.pose.orientation[0], gamepad.pose.orientation[1], gamepad.pose.orientation[2], gamepad.pose.orientation[3])
+                    this.transform.rotation.set(gamepad.pose.orientation[0], gamepad.pose.orientation[1], gamepad.pose.orientation[2], gamepad.pose.orientation[3])
                 }
             }
         }
-        this.computeWorldMatrix(true)
+        this.transform.computeWorldMatrix(true)
         var vec = new Vector3(0, 0, -1)
         var q = new Quaternion()
-        this.worldMatrix.decompose(this.ray.origin, q);
+        this.transform.worldMatrix.decompose(this.ray.origin, q);
         vec.rotateByQuaternionToRef(q, this.ray.direction)
     }
 

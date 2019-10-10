@@ -14,6 +14,11 @@ import { DefaultShaders } from "../defaultHelpers/defaultShaders";
 import { VideoTexture } from "../defaultHelpers/videoTexture";
 import { Light } from "../sceneGraph/light";
 import { TransformNode } from "../sceneGraph/transformNode";
+import { TransformObject } from "../composableObject/baseObjects/transformObject";
+import { Camera } from "../composableObject/components/camera";
+import { CameraObject } from "../composableObject/baseObjects/cameraObject";
+import { MeshObject } from "../composableObject/baseObjects/meshObject";
+import { LightObject } from "../composableObject/baseObjects/lightObject";
 
 export class Stage {
     // Debug flags
@@ -24,15 +29,15 @@ export class Stage {
     xr: XR
     window: RenderWindow
     renderer: Renderer
-    camera: XRCamera
-    lights = new Array<Light>()
-    private nodes = new Array<TransformNode>()
+    camera: CameraObject
+    lights = new Array<LightObject>()
+    private nodes = new Array<TransformObject>()
     renderLoop: ((deltaTime: number, curTime: number) => void) | null = null
 
-    addNode(node: TransformNode) {
+    addNode(node: TransformObject) {
         this.nodes.push(node)
     }
-    removeNode(node: TransformNode) {
+    removeNode(node: TransformObject) {
         var index = this.nodes.indexOf(node)
         if (index >= 0) {
             this.nodes.splice(index, 1);
@@ -48,12 +53,13 @@ export class Stage {
         this.renderer = new Renderer(this.device)
 
         // Lights and camera
-        this.camera = new XRCamera()
+        this.camera = new CameraObject()
 
-        this.lights.push(new PointLight())
-        this.lights[0].position.z = 5;
-        this.lights[0].position.x = 10;
-        this.lights[0].position.y = 10;
+
+        this.lights.push(new LightObject())
+        this.lights[0].transform.position.z = 5;
+        this.lights[0].transform.position.x = 10;
+        this.lights[0].transform.position.y = 10;
 
         // Custom blit operation used to draw multiview frame into single frame required for webVR
         // TODO remove this after webXR allows submit multiview frames
@@ -70,7 +76,7 @@ export class Stage {
 
             // Update camera
             if (this.xr.state == XRState.IN_XR && this.xr.display.getFrameData(this.xr.frameData)) {
-                this.camera.updateFromFrameData(this.xr.frameData)
+                this.camera.camera.xrCamera.updateFromFrameData(this.xr.frameData)
             }
 
             if (this.renderLoop) {
@@ -91,7 +97,7 @@ export class Stage {
             this.renderer.clear()
 
             // Render scene
-            this.renderer.renderScene(this.camera, this.nodes, this.lights)
+            this.renderer.renderScene(this.camera.camera.xrCamera, this.nodes, this.lights)
 
             // Blit back to screen
             if (this.xr.state == XRState.IN_XR) {

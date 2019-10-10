@@ -4,6 +4,7 @@ import { DefaultMesh } from "../../defaultHelpers/defaultMesh";
 import { AppSpec } from "../app/appSpec";
 import { Mesh } from "../../sceneGraph/mesh";
 import { Hit } from "../../defaultHelpers/hit";
+import { MeshObject } from "../../composableObject/baseObjects/meshObject";
 
 export class Launcher {
     constructor(os: OS) {
@@ -11,7 +12,7 @@ export class Launcher {
             appName: "Launcher",
             iconImage: null,
             create: (app: App) => {
-                var appSpheres = new Array<Mesh>()
+                var appSpheres = new Array<MeshObject>()
                 // var screen = DefaultMesh.createCube(os.device)
                 // screen.position.y = 1
                 // app.scene.addChild(screen)
@@ -29,11 +30,11 @@ export class Launcher {
 
                 (app as any).registerApp = (appSpec: AppSpec) => {
 
-                    var appSphere = DefaultMesh.createSphere(os.device);
-                    appSphere.scale.scaleInPlace(0.3)
-                    appSphere.position.y = appSphere.scale.y / 2
+                    var appSphere = new MeshObject(os.device)//DefaultMesh.createSphere(os.device);
+                    appSphere.transform.scale.scaleInPlace(0.3)
+                    appSphere.transform.position.y = appSphere.transform.scale.y / 2
 
-                    app.scene.addChild(appSphere)
+                    app.scene.transform.addChild(appSphere.transform)
                     appSpheres.push(appSphere)
 
                     // var container = os.appManager.createApp()

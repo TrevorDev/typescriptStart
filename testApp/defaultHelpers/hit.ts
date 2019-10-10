@@ -1,9 +1,10 @@
 import { Ray } from "../math/ray";
-import { Mesh } from "../sceneGraph/mesh";
 import { Vector3 } from "../math/vector3";
 import { Matrix4 } from "../math/matrix4";
 import { Triangle } from "../math/triangle";
 import { TransformNode, NodeType } from "../sceneGraph/transformNode";
+import { TransformObject } from "../composableObject/baseObjects/transformObject";
+import { Mesh } from "../composableObject/components/mesh";
 
 export class HitResult {
     hitDistance: null | number
@@ -83,13 +84,13 @@ export class Hit {
      * @param ray 
      * @param node 
      */
-    static rayIntersectsMesh(ray: Ray, node: TransformNode, res: HitResult) {
+    static rayIntersectsMesh(ray: Ray, node: TransformObject, res: HitResult) {
         res.reset()
 
-        if (node.type == NodeType.MESH) {
-            var mesh = node as Mesh
-            mesh.computeWorldMatrix(true)
-            mesh.worldMatrix.inverseToRef(Hit._tempMat)
+        var mesh = node.getComponent<Mesh>(Mesh.type)
+        if (mesh) {
+            node.transform.computeWorldMatrix(true)
+            node.transform.worldMatrix.inverseToRef(Hit._tempMat)
             ray.applyMatrixToRef(Hit._tempMat, Hit._tempRay)
             //console.log(Hit._tempRay.direction.v)
 
@@ -117,7 +118,7 @@ export class Hit {
                 this._tempVecA.copyFrom(this._tempRay.direction)
                 this._tempVecA.scaleInPlace(res.hitDistance)
                 this._tempVecA.addToRef(this._tempRay.origin, this._tempVecA)
-                this._tempVecA.rotateByMatrixToRef(mesh.worldMatrix, this._tempVecA)
+                this._tempVecA.rotateByMatrixToRef(node.transform.worldMatrix, this._tempVecA)
 
                 // calculate distance in world space
                 ray.origin.subtractToRef(this._tempVecA, this._tempVecA)
@@ -129,7 +130,7 @@ export class Hit {
     }
 
     // Ray and triangle are in same space
-    static rayIntersectsMeshes(ray: Ray, nodes: Array<TransformNode>, res: HitResult) {
+    static rayIntersectsMeshes(ray: Ray, nodes: Array<TransformObject>, res: HitResult) {
         res.reset()
         Hit._tmpHitB.reset()
 

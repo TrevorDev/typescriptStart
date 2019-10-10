@@ -1,40 +1,46 @@
-import { TransformNode, NodeType } from "./transformNode";
 import { Camera } from "./camera";
 import { GPUDevice } from "../gpu/gpuDevice";
 import { Light } from "./light";
-import { Mesh } from "./mesh";
+import { Mesh } from "./../composableObject/components/mesh";
 import { Texture } from "../gpu/texture";
 import { MultiviewTexture } from "../gpu/multiviewTexture";
 import { XRCamera } from "../xr/xrCamera";
+import { TransformObject } from "../composableObject/baseObjects/transformObject";
+import { Transform } from "../composableObject/components/transform";
+import { Material } from "../composableObject/components/material";
+import { MeshObject } from "../composableObject/baseObjects/meshObject";
+import { LightObject } from "../composableObject/baseObjects/lightObject";
+import { CameraObject } from "../composableObject/baseObjects/cameraObject";
 
 export class Renderer {
     constructor(public device: GPUDevice) {
 
     }
-    renderScene(camera: XRCamera, nodes: Array<TransformNode>, lights: Array<Light>) {
+    renderScene(camera: XRCamera, nodes: Array<TransformObject>, lights: Array<LightObject>) {
         camera.computeWorldMatrix()
 
 
         lights.forEach((l) => {
-            l.computeWorldMatrix()
+            l.transform.computeWorldMatrix()
         })
 
         nodes.forEach((m) => {
 
-            TransformNode.depthFirstIterate(m, (node) => {
-                TransformNode.computeWorldMatrixForTree(node)
-                if (node.type == NodeType.MESH) {
-
-                    var mesh = node as Mesh
+            Transform.depthFirstIterate(m.transform, (node) => {
+                Transform.computeWorldMatrixForTree(node)
+                // debugger
+                var material = node.object.getComponent<Material>(Material.type)
+                var mesh = node.object.getComponent<Mesh>(Mesh.type)
+                if (material && mesh) {
 
                     // Load material program
-                    mesh.material.load()
-                    mesh.material.updateFromCamera(camera)
-                    mesh.material.updateForLights(lights)
+                    material.material.load()
+                    material.material.updateFromCamera(camera)
+                    material.material.updateForLights(lights)
 
                     // Load material instance specific data
-                    mesh.material.updateUniforms()
-                    mesh.material.updateAndDrawForMesh(mesh)
+                    material.material.updateUniforms()
+                    material.material.updateAndDrawForMesh(mesh)
 
                 }
             })

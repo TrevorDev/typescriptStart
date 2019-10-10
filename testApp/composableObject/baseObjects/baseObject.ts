@@ -1,7 +1,8 @@
-import { TransformNode } from "../sceneGraph/transformNode";
-import { Component } from "./components/component";
+import { TransformNode } from "../../sceneGraph/transformNode";
+import { Component } from "../components/component";
+import { TransformObject } from "./transformObject";
 
-export class Object {
+export class BaseObject {
     components: { [componentType: number]: Array<Component> } = {};
     constructor() {
     }
@@ -14,7 +15,7 @@ export class Object {
         if (!this.components[component.getType()]) {
             this.components[component.getType()] = []
         }
-        component.object = this;
+        component.object = this as any as TransformObject;
         this.components[component.getType()].push(component)
     }
 

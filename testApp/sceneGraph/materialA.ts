@@ -5,12 +5,13 @@ import { DefaultShaders } from "../defaultHelpers/defaultShaders";
 import { GPUDevice } from "../gpu/gpuDevice";
 import { Camera } from "./camera";
 import { TransformNode } from "./transformNode";
-import { Mesh } from "./mesh";
 import { Texture } from "../gpu/texture";
 import { PointLight } from "./pointLight";
 import { Vector3 } from "../math/vector3";
 import { Matrix4 } from "../math/matrix4";
 import { XRCamera } from "../xr/xrCamera";
+import { Mesh } from "../composableObject/components/mesh";
+import { LightObject } from "../composableObject/baseObjects/lightObject";
 
 // export class StandardMaterialFactory {
 //     createInstance(){
@@ -71,9 +72,9 @@ export class MaterialA implements Material {
         // camera.viewProjectionR.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewProjectionR)
         twgl.setUniformBlock(this.device.gl, this.programInfo, this.viewUboInfo);
     }
-    updateForLights(lights: Array<TransformNode>) {
+    updateForLights(lights: Array<LightObject>) {
         // TODO fix all this
-        var light = lights[0] as PointLight
+        var light = lights[0].light.lightSpec as PointLight
         var tmp = new Vector3()
         light.worldMatrix.decompose(tmp)
         //debugger
@@ -109,8 +110,8 @@ export class MaterialA implements Material {
         twgl.setBuffersAndAttributes(this.device.gl, this.programInfo, mesh.vertData.gpuBufferInfo); // Set object vert data
 
         // Set world matrix and inverse transpose
-        mesh.worldMatrix.copyToArrayBufferView(this.modelUboInfo.uniforms.u_world)
-        mesh.worldMatrix.inverseToRef(this.tmpMat)
+        mesh.object.transform.worldMatrix.copyToArrayBufferView(this.modelUboInfo.uniforms.u_world)
+        mesh.object.transform.worldMatrix.inverseToRef(this.tmpMat)
         this.tmpMat.transposeToRef(this.tmpMat)
         this.tmpMat.copyToArrayBufferView(this.modelUboInfo.uniforms.u_worldInverseTranspose)
         twgl.setUniformBlock(this.device.gl, this.programInfo, this.modelUboInfo);

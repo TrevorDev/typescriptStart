@@ -87,9 +87,9 @@ export class OS {
 
                 // Position gaze mesh
                 if (closestHit.distance < Infinity) {
-                    controller.hitMesh.position.copyFrom(controller.ray.direction)
-                    controller.hitMesh.position.scaleInPlace(closestHit.distance)
-                    controller.hitMesh.position.addToRef(controller.ray.origin, controller.hitMesh.position)
+                    controller.hitMesh.transform.position.copyFrom(controller.ray.direction)
+                    controller.hitMesh.transform.position.scaleInPlace(closestHit.distance)
+                    controller.hitMesh.transform.position.addToRef(controller.ray.origin, controller.hitMesh.transform.position)
                 }
 
                 if (controller.primaryButton.justDown) {
@@ -127,7 +127,7 @@ export class OS {
         if (!this.launcherApp) {
             var container = this.appManager.createApp()
             this.launcherApp = container
-            container.containerSpace.position.z = -4
+            container.containerSpace.transform.position.z = -4
             appSpec.create(container.app)
         } else {
             (this.launcherApp.app as any).registerApp(appSpec)
