@@ -48,10 +48,26 @@ export class DefaultVertexData {
 
     static createFullScreenQuad(device: GPUDevice) {
         return new VertexData(device, {
-            a_position: [-1, -1, 0, -1, 1, 0, 1, -1, 0, 1, 1, 0],
-            a_normal: [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
-            a_texcoord: [0, 0, 0, 1, 1, 0, 1, 1],
-            indices: [2, 1, 0, 3, 1, 2],
+
+
+            a_position: [0.0, 0.0, 0.0,
+                1.0, 0.0, 0.0,
+                0.0, 1.0, 0.0,
+
+                0.0, 1.0, 0.0,
+                1.0, 0.0, 0.0,
+                1.0, 1.0, 0.0,
+
+                0.0, 0.0, 1.0,
+                1.0, 0.0, 1.0,
+                0.0, 1.0, 1.0,
+
+                0.0, 1.0, 1.0,
+                1.0, 0.0, 1.0,
+                1.0, 1.0, 1.0,],
+            a_normal: [0, 0, 1],
+            a_texcoord: [0, 0],
+            indices: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
         })
     }
 

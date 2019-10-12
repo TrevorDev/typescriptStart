@@ -1,15 +1,35 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <title>title</title>
+
+  <!-- This entire block in only to facilitate dynamically enabling and
+    disabling the WebVR polyfill, and is not necessary for most WebVR apps.
+    If you want to use the polyfill in your app, just include the js file and
+    everything will work the way you want it to by default. -->
+  <script>
+
+  </script>
+  <script src="public/cs/js/third-party/wglu/wglu-url.js"></script>
+  <script>
+  </script>
+  <!-- End sample polyfill enabling logic -->
+
+  <script src="public/cs/js/third-party/gl-matrix-min.js"></script>
+
+  <script src="public/cs/js/third-party/wglu/wglu-program.js"></script>
+  <script src="public/cs/js/third-party/wglu/wglu-stats.js"></script>
+  <script src="public/cs/js/third-party/wglu/wglu-texture.js"></script>
+
+  <script src="public/cs/js/vr-cube-sea.js"></script>
+  <script src="public/cs/js/stereo-util.js"></script>
+  <script src="public/cs/js/vr-samples-util.js"></script>
 </head>
 
 <body>
+  <canvas id="webgl-canvas"></canvas>
+  <div id="presenting-message">Put on your headset now</div>
+
 </body>
 <script src="/public/dist/testApp.js"></script>
 
