@@ -109,7 +109,7 @@ export class OS {
         var launcher = new Launcher(this)
 
         // Register a test app
-        // require("./testApps/clock")
+        require("./testApps/clock")
     }
 
     /**

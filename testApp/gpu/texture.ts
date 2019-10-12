@@ -8,8 +8,8 @@ export class Texture {
         // TODO add constructor that sets framebuffer
         var r = new Texture(device)
         r.glTexture = twgl.createTexture(device.gl, {
-            min: device.gl.LINEAR,
-            mag: device.gl.LINEAR,
+            min: device.gl.NEAREST,
+            mag: device.gl.NEAREST,
             src: src,
         });
         return r

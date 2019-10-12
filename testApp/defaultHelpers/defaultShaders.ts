@@ -42,11 +42,11 @@ export class DefaultShaders {
       mat4 u_viewInverse = gl_ViewID_OVR == 0u ? (u_viewInverseL) :  (u_viewInverseR);
       mat4 u_viewProjection = gl_ViewID_OVR == 0u ? u_viewProjectionL :  u_viewProjectionR;
 
-      //v_texCoord = a_texcoord;
+      v_texCoord = a_texcoord;
       v_position = (u_viewProjection * foo.u_world * a_position);
-      // v_normal = (foo.u_worldInverseTranspose * vec4(a_normal, 0)).xyz;
-      // v_surfaceToLight = lights[0].u_lightWorldPos - (foo.u_world * a_position).xyz;
-      // v_surfaceToView = (u_viewInverse[3] - (foo.u_world * a_position)).xyz;
+      v_normal = (foo.u_worldInverseTranspose * vec4(a_normal, 0)).xyz;
+      v_surfaceToLight = lights[0].u_lightWorldPos - (foo.u_world * a_position).xyz;
+      v_surfaceToView = (u_viewInverse[3] - (foo.u_world * a_position)).xyz;
       gl_Position = v_position;
     }
       
@@ -88,7 +88,14 @@ export class DefaultShaders {
     
     
     void main() {
-      vec4 outColor = vec4(0.5,0.5,0.5,1.0);
+      vec4 diffuseColor = texture(u_diffuse, v_texCoord);
+      vec3 a_normal = normalize(v_normal);
+      vec3 surfaceToLight = normalize(v_surfaceToLight);
+      vec3 surfaceToView = normalize(v_surfaceToView);
+      vec3 halfVector = normalize(surfaceToLight + surfaceToView);
+      vec4 litR = lit(dot(a_normal, surfaceToLight),
+                        dot(a_normal, halfVector), u_shininess);
+      vec4 outColor = vec4((lights[0].u_lightColor * (diffuseColor * litR.y + diffuseColor * u_ambient + u_specular * litR.z * u_specularFactor)).rgb, diffuseColor.a);
       theColor = outColor;
     }
       

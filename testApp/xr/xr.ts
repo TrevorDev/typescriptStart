@@ -28,7 +28,7 @@ export class XR {
         return navigator.getGamepads()[this.rightControllerIndex]
     }
     constructor(private gpuDevice: GPUDevice) {
-        this.multiviewTexture = new MultiviewTexture(gpuDevice, 2432 / 2, 1344)
+        this.multiviewTexture = new MultiviewTexture(gpuDevice, 1920 / 2, 1080)
 
         this.textures.push(new Texture(gpuDevice))
 
@@ -93,7 +93,7 @@ export class XR {
 
         // Currently beleive there is a bug in oculus msaa multiview extension as aa still exists on verticles
         this.frameData = new VRFrameData();
-        // this.multiviewTexture = new MultiviewTexture(this.gpuDevice, eyeWidth, eyeHeight)
+        this.multiviewTexture = new MultiviewTexture(this.gpuDevice, eyeWidth, eyeHeight)
         this.state = XRState.IN_XR
 
         await this.display.requestPresent([{ source: this.gpuDevice.canvasElement }])
