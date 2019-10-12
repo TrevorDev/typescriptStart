@@ -1,5 +1,5 @@
 import { BaseObject } from "./baseObject";
-import { TransformComponent } from "../components/transformComponent";
+import { TransformComponent } from "../components/transform/transformComponent";
 
 export class TransformObject extends BaseObject {
     transform: TransformComponent

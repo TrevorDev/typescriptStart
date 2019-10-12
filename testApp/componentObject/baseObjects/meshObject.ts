@@ -1,6 +1,6 @@
 import { TransformObject } from "./transformObject"
-import { MaterialComponent } from "../components/materialComponent"
-import { MeshComponent } from "../components/meshComponent"
+import { MaterialComponent } from "../components/material/materialComponent"
+import { MeshComponent } from "../components/mesh/meshComponent"
 import { DefaultVertexData } from "../../defaultHelpers/defaultVertexData"
 import { MaterialA } from "../../sceneGraph/materialA"
 import { GPUDevice } from "../../gpu/gpuDevice"

@@ -8,8 +8,8 @@ import { DefaultVertexData } from "./defaultHelpers/defaultVertexData";
 import { CustomProgram } from "./gpu/customProgram";
 import { DefaultShaders } from "./defaultHelpers/defaultShaders";
 import { MaterialA } from "./sceneGraph/materialA";
-import { LightObject } from "./composableObject/baseObjects/lightObject";
-import { MeshObject } from "./composableObject/baseObjects/meshObject";
+import { LightObject } from "./componentObject/baseObjects/lightObject";
+import { MeshObject } from "./componentObject/baseObjects/meshObject";
 import { Texture } from "./gpu/texture";
 import { Vector3 } from "./math/vector3";
 import * as twgl from "twgl.js"

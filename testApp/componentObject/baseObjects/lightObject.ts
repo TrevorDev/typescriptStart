@@ -1,5 +1,5 @@
 import { TransformObject } from "./transformObject"
-import { LightComponent } from "../components/lightComponent"
+import { LightComponent } from "../components/light/lightComponent"
 import { PointLight } from "../../sceneGraph/pointLight"
 
 export class LightObject extends TransformObject {

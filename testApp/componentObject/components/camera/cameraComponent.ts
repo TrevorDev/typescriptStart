@@ -1,5 +1,5 @@
-import { Component } from "./component";
-import { XRCamera } from "../../xr/xrCamera";
+import { Component } from "../component";
+import { XRCamera } from "../../../xr/xrCamera";
 
 export class CameraComponent extends Component {
     static type = Component._TYPE_COUNTER++;

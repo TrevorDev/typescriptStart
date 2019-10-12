@@ -10,8 +10,8 @@ import { PointLight } from "./pointLight";
 import { Vector3 } from "../math/vector3";
 import { Matrix4 } from "../math/matrix4";
 import { XRCamera } from "../xr/xrCamera";
-import { MeshComponent } from "../composableObject/components/meshComponent";
-import { LightObject } from "../composableObject/baseObjects/lightObject";
+import { MeshComponent } from "../componentObject/components/mesh/meshComponent";
+import { LightObject } from "../componentObject/baseObjects/lightObject";
 
 // export class StandardMaterialFactory {
 //     createInstance(){

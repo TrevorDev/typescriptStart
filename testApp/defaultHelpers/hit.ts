@@ -3,8 +3,8 @@ import { Vector3 } from "../math/vector3";
 import { Matrix4 } from "../math/matrix4";
 import { Triangle } from "../math/triangle";
 import { TransformNode, NodeType } from "../sceneGraph/transformNode";
-import { TransformObject } from "../composableObject/baseObjects/transformObject";
-import { MeshComponent } from "../composableObject/components/meshComponent";
+import { TransformObject } from "../componentObject/baseObjects/transformObject";
+import { MeshComponent } from "../componentObject/components/mesh/meshComponent";
 
 export class HitResult {
     hitDistance: null | number

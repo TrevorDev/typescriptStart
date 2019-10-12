@@ -4,7 +4,7 @@ import { DefaultMesh } from "../../defaultHelpers/defaultMesh";
 import { AppSpec } from "../app/appSpec";
 import { Mesh } from "../../sceneGraph/mesh";
 import { Hit } from "../../defaultHelpers/hit";
-import { MeshObject } from "../../composableObject/baseObjects/meshObject";
+import { MeshObject } from "../../componentObject/baseObjects/meshObject";
 
 export class Launcher {
     constructor(os: OS) {

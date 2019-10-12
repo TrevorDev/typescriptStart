@@ -3,8 +3,8 @@ import { TransformNode } from "../../sceneGraph/transformNode";
 import { Stage } from "../../defaultHelpers/stage";
 import { InputManager } from "../input/inputManager";
 import { DefaultMesh } from "../../defaultHelpers/defaultMesh";
-import { TransformObject } from "../../composableObject/baseObjects/transformObject";
-import { MeshObject } from "../../composableObject/baseObjects/meshObject";
+import { TransformObject } from "../../componentObject/baseObjects/transformObject";
+import { MeshObject } from "../../componentObject/baseObjects/meshObject";
 import { Vector3 } from "../../math/vector3";
 export class AppContainer {
     app: App

@@ -1,7 +1,7 @@
 import { TransformNode } from "../../sceneGraph/transformNode";
 import { Ray } from "../../math/ray";
 import { HitResult } from "../../defaultHelpers/hit";
-import { TransformObject } from "../../composableObject/baseObjects/transformObject";
+import { TransformObject } from "../../componentObject/baseObjects/transformObject";
 
 export class App {
     constructor(public scene: TransformObject) {

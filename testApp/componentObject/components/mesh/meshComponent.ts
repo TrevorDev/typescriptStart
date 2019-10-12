@@ -1,5 +1,5 @@
-import { Component } from "./component";
-import { VertexData } from "../../gpu/vertexData";
+import { Component } from "../component";
+import { VertexData } from "../../../gpu/vertexData";
 
 export class MeshComponent extends Component {
     static type = Component._TYPE_COUNTER++;

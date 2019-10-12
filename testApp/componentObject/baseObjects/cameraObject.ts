@@ -1,5 +1,5 @@
 import { TransformObject } from "./transformObject"
-import { CameraComponent } from "../components/cameraComponent"
+import { CameraComponent } from "../components/camera/cameraComponent"
 import { XRCamera } from "../../xr/xrCamera"
 
 export class CameraObject extends TransformObject {

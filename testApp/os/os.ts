@@ -9,10 +9,10 @@ import { App } from "./app/app";
 import { Launcher } from "./homeEnv/launcher";
 import { AppSpec } from "./app/appSpec";
 import { Vector3 } from "../math/vector3";
-import { MeshObject } from "../composableObject/baseObjects/meshObject";
-import { MeshComponent } from "../composableObject/components/meshComponent";
+import { MeshObject } from "../componentObject/baseObjects/meshObject";
+import { MeshComponent } from "../componentObject/components/mesh/meshComponent";
 import { DefaultVertexData } from "../defaultHelpers/defaultVertexData";
-import { MaterialComponent } from "../composableObject/components/materialComponent";
+import { MaterialComponent } from "../componentObject/components/material/materialComponent";
 
 export class OS {
     /**

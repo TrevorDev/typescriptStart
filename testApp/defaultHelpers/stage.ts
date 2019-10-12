@@ -14,11 +14,11 @@ import { DefaultShaders } from "../defaultHelpers/defaultShaders";
 import { VideoTexture } from "../defaultHelpers/videoTexture";
 import { Light } from "../sceneGraph/light";
 import { TransformNode } from "../sceneGraph/transformNode";
-import { TransformObject } from "../composableObject/baseObjects/transformObject";
-import { CameraComponent } from "../composableObject/components/cameraComponent";
-import { CameraObject } from "../composableObject/baseObjects/cameraObject";
-import { MeshObject } from "../composableObject/baseObjects/meshObject";
-import { LightObject } from "../composableObject/baseObjects/lightObject";
+import { TransformObject } from "../componentObject/baseObjects/transformObject";
+import { CameraComponent } from "../componentObject/components/camera/cameraComponent";
+import { CameraObject } from "../componentObject/baseObjects/cameraObject";
+import { MeshObject } from "../componentObject/baseObjects/meshObject";
+import { LightObject } from "../componentObject/baseObjects/lightObject";
 
 export class Stage {
     // Debug flags

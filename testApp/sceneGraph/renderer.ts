@@ -1,16 +1,16 @@
 import { Camera } from "./camera";
 import { GPUDevice } from "../gpu/gpuDevice";
 import { Light } from "./light";
-import { MeshComponent } from "../composableObject/components/meshComponent";
+import { MeshComponent } from "../componentObject/components/mesh/meshComponent";
 import { Texture } from "../gpu/texture";
 import { MultiviewTexture } from "../gpu/multiviewTexture";
 import { XRCamera } from "../xr/xrCamera";
-import { TransformObject } from "../composableObject/baseObjects/transformObject";
-import { TransformComponent } from "../composableObject/components/transformComponent";
-import { MaterialComponent } from "../composableObject/components/materialComponent";
-import { MeshObject } from "../composableObject/baseObjects/meshObject";
-import { LightObject } from "../composableObject/baseObjects/lightObject";
-import { CameraObject } from "../composableObject/baseObjects/cameraObject";
+import { TransformObject } from "../componentObject/baseObjects/transformObject";
+import { TransformComponent } from "../componentObject/components/transform/transformComponent";
+import { MaterialComponent } from "../componentObject/components/material/materialComponent";
+import { MeshObject } from "../componentObject/baseObjects/meshObject";
+import { LightObject } from "../componentObject/baseObjects/lightObject";
+import { CameraObject } from "../componentObject/baseObjects/cameraObject";
 
 export class Renderer {
     constructor(public device: GPUDevice) {

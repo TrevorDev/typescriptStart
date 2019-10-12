@@ -1,4 +1,4 @@
-import { Component } from "./component";
+import { Component } from "../component";
 
 export class DragComponent extends Component {
     static type = Component._TYPE_COUNTER++;

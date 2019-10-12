@@ -1,8 +1,8 @@
-import { Vector3 } from "../../math/vector3"
-import { Quaternion } from "../../math/quaternion"
-import { Matrix4 } from "../../math/matrix4"
-import { Component } from "./component"
-import { Ray } from "../../math/ray"
+import { Vector3 } from "../../../math/vector3"
+import { Quaternion } from "../../../math/quaternion"
+import { Matrix4 } from "../../../math/matrix4"
+import { Component } from "../component"
+import { Ray } from "../../../math/ray"
 
 export class TransformComponent extends Component {
     static type = Component._TYPE_COUNTER++

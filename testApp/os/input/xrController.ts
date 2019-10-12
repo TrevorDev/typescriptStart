@@ -6,8 +6,8 @@ import { DefaultMesh } from "../../defaultHelpers/defaultMesh";
 import { Vector3 } from "../../math/vector3";
 import { Quaternion } from "../../math/quaternion";
 import { Mesh } from "../../sceneGraph/mesh";
-import { TransformObject } from "../../composableObject/baseObjects/transformObject";
-import { MeshObject } from "../../composableObject/baseObjects/meshObject";
+import { TransformObject } from "../../componentObject/baseObjects/transformObject";
+import { MeshObject } from "../../componentObject/baseObjects/meshObject";
 
 export class XRButtonState {
     private _value = 0
