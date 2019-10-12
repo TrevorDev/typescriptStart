@@ -4,10 +4,10 @@ import { Matrix4 } from "../../math/matrix4"
 import { Component } from "./component"
 import { Ray } from "../../math/ray"
 
-export class Transform extends Component {
+export class TransformComponent extends Component {
     static type = Component._TYPE_COUNTER++
     getType(): number {
-        return Transform.type;
+        return TransformComponent.type;
     }
 
     position = new Vector3()
@@ -20,13 +20,13 @@ export class Transform extends Component {
         this.localMatrix.compose(this.position, this.rotation, this.scale)
     }
 
-    static computeWorldMatrixForTree(root: Transform) {
-        Transform.depthFirstIterate(root, (node) => {
+    static computeWorldMatrixForTree(root: TransformComponent) {
+        TransformComponent.depthFirstIterate(root, (node) => {
             node.computeWorldMatrix(false)
         })
     }
 
-    static depthFirstIterate(root: Transform, fn: (node: Transform) => void) {
+    static depthFirstIterate(root: TransformComponent, fn: (node: TransformComponent) => void) {
         fn(root)
         root.getChildren().forEach((c) => {
             this.depthFirstIterate(c, fn)
@@ -45,8 +45,8 @@ export class Transform extends Component {
         }
     }
 
-    private _children = new Array<Transform>()
-    private _parent: null | Transform = null
+    private _children = new Array<TransformComponent>()
+    private _parent: null | TransformComponent = null
 
     getParent() {
         return this._parent
@@ -55,14 +55,14 @@ export class Transform extends Component {
         return this._children
     }
 
-    addChild(node: Transform) {
+    addChild(node: TransformComponent) {
         if (node._parent) {
             node._parent.removeChild(node)
         }
         node._parent = this
         this._children.push(node)
     }
-    removeChild(node: Transform) {
+    removeChild(node: TransformComponent) {
         var ind = this._children.indexOf(node)
         if (ind > 0) {
             node._parent = null

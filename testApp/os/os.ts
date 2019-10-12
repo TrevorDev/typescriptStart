@@ -9,6 +9,10 @@ import { App } from "./app/app";
 import { Launcher } from "./homeEnv/launcher";
 import { AppSpec } from "./app/appSpec";
 import { Vector3 } from "../math/vector3";
+import { MeshObject } from "../composableObject/baseObjects/meshObject";
+import { MeshComponent } from "../composableObject/components/meshComponent";
+import { DefaultVertexData } from "../defaultHelpers/defaultVertexData";
+import { MaterialComponent } from "../composableObject/components/materialComponent";
 
 export class OS {
     /**
@@ -100,6 +104,10 @@ export class OS {
             // Run each app's render loop
             this.appManager.update(delta, curTime)
         })
+
+        // var floor = new MeshObject(this.globalStage.device)
+        // floor.mesh = new Mesh(DefaultVertexData.createPlaneVertexData(this.globalStage.device))
+        // floor.material = new Material()
 
         // OS is done loading
         this.setGlobal()

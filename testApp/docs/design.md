@@ -8,3 +8,11 @@ Coordinate system:
 -z is forward
 This mirrors threeJS/opengl defaults, will make gltf easier to import because it uses the same.
 This is also the reason why an initial object.forward is (0,0,-1) which is weird but whatever
+
+Builds on top of lower level apis
+    opengl
+    webgl
+    twgl
+    GPU Folder
+    composable Object folder
+    OS

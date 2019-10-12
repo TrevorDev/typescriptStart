@@ -10,7 +10,7 @@ import { PointLight } from "./pointLight";
 import { Vector3 } from "../math/vector3";
 import { Matrix4 } from "../math/matrix4";
 import { XRCamera } from "../xr/xrCamera";
-import { Mesh } from "../composableObject/components/mesh";
+import { MeshComponent } from "../composableObject/components/meshComponent";
 import { LightObject } from "../composableObject/baseObjects/lightObject";
 
 // export class StandardMaterialFactory {
@@ -104,7 +104,7 @@ export class MaterialA implements Material {
         }
         twgl.setUniforms(this.programInfo, u);
     }
-    updateAndDrawForMesh(mesh: Mesh) {
+    updateAndDrawForMesh(mesh: MeshComponent) {
         //this.device.gl.cullFace(this.device.gl.FRONT_FACE)
 
         twgl.setBuffersAndAttributes(this.device.gl, this.programInfo, mesh.vertData.gpuBufferInfo); // Set object vert data

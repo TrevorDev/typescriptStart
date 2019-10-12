@@ -1,11 +1,11 @@
 import { BaseObject } from "./baseObject";
-import { Transform } from "../components/transform";
+import { TransformComponent } from "../components/transformComponent";
 
 export class TransformObject extends BaseObject {
-    transform: Transform
+    transform: TransformComponent
     constructor() {
         super()
-        this.transform = new Transform()
+        this.transform = new TransformComponent()
         this.addComponent(this.transform)
     }
 }

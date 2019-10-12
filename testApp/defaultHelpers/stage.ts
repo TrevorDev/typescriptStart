@@ -15,7 +15,7 @@ import { VideoTexture } from "../defaultHelpers/videoTexture";
 import { Light } from "../sceneGraph/light";
 import { TransformNode } from "../sceneGraph/transformNode";
 import { TransformObject } from "../composableObject/baseObjects/transformObject";
-import { Camera } from "../composableObject/components/camera";
+import { CameraComponent } from "../composableObject/components/cameraComponent";
 import { CameraObject } from "../composableObject/baseObjects/cameraObject";
 import { MeshObject } from "../composableObject/baseObjects/meshObject";
 import { LightObject } from "../composableObject/baseObjects/lightObject";

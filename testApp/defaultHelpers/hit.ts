@@ -4,7 +4,7 @@ import { Matrix4 } from "../math/matrix4";
 import { Triangle } from "../math/triangle";
 import { TransformNode, NodeType } from "../sceneGraph/transformNode";
 import { TransformObject } from "../composableObject/baseObjects/transformObject";
-import { Mesh } from "../composableObject/components/mesh";
+import { MeshComponent } from "../composableObject/components/meshComponent";
 
 export class HitResult {
     hitDistance: null | number
@@ -87,7 +87,7 @@ export class Hit {
     static rayIntersectsMesh(ray: Ray, node: TransformObject, res: HitResult) {
         res.reset()
 
-        var mesh = node.getComponent<Mesh>(Mesh.type)
+        var mesh = node.getComponent<MeshComponent>(MeshComponent.type)
         if (mesh) {
             node.transform.computeWorldMatrix(true)
             node.transform.worldMatrix.inverseToRef(Hit._tempMat)

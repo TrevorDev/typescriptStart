@@ -1,12 +1,12 @@
 import { TransformObject } from "./transformObject"
-import { Light } from "../components/light"
+import { LightComponent } from "../components/lightComponent"
 import { PointLight } from "../../sceneGraph/pointLight"
 
 export class LightObject extends TransformObject {
-    light: Light
+    light: LightComponent
     constructor() {
         super()
-        this.light = new Light(new PointLight())
+        this.light = new LightComponent(new PointLight())
         this.addComponent(this.light)
     }
 }

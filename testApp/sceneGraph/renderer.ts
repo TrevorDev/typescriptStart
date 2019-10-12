@@ -1,13 +1,13 @@
 import { Camera } from "./camera";
 import { GPUDevice } from "../gpu/gpuDevice";
 import { Light } from "./light";
-import { Mesh } from "./../composableObject/components/mesh";
+import { MeshComponent } from "../composableObject/components/meshComponent";
 import { Texture } from "../gpu/texture";
 import { MultiviewTexture } from "../gpu/multiviewTexture";
 import { XRCamera } from "../xr/xrCamera";
 import { TransformObject } from "../composableObject/baseObjects/transformObject";
-import { Transform } from "../composableObject/components/transform";
-import { Material } from "../composableObject/components/material";
+import { TransformComponent } from "../composableObject/components/transformComponent";
+import { MaterialComponent } from "../composableObject/components/materialComponent";
 import { MeshObject } from "../composableObject/baseObjects/meshObject";
 import { LightObject } from "../composableObject/baseObjects/lightObject";
 import { CameraObject } from "../composableObject/baseObjects/cameraObject";
@@ -26,11 +26,11 @@ export class Renderer {
 
         nodes.forEach((m) => {
 
-            Transform.depthFirstIterate(m.transform, (node) => {
-                Transform.computeWorldMatrixForTree(node)
+            TransformComponent.depthFirstIterate(m.transform, (node) => {
+                TransformComponent.computeWorldMatrixForTree(node)
                 // debugger
-                var material = node.object.getComponent<Material>(Material.type)
-                var mesh = node.object.getComponent<Mesh>(Mesh.type)
+                var material = node.object.getComponent<MaterialComponent>(MaterialComponent.type)
+                var mesh = node.object.getComponent<MeshComponent>(MeshComponent.type)
                 if (material && mesh) {
 
                     // Load material program

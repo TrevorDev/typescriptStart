@@ -1,18 +1,18 @@
 import { TransformObject } from "./transformObject"
-import { Material } from "../components/material"
-import { Mesh } from "../components/mesh"
+import { MaterialComponent } from "../components/materialComponent"
+import { MeshComponent } from "../components/meshComponent"
 import { DefaultVertexData } from "../../defaultHelpers/defaultVertexData"
 import { MaterialA } from "../../sceneGraph/materialA"
 import { GPUDevice } from "../../gpu/gpuDevice"
 import { Texture } from "../../gpu/texture"
 
 export class MeshObject extends TransformObject {
-    material: Material
-    mesh: Mesh
+    material: MaterialComponent
+    mesh: MeshComponent
     constructor(device: GPUDevice) {
         super()
         var mat = new MaterialA(device)
-        this.material = new Material(mat)
+        this.material = new MaterialComponent(mat)
         mat.diffuseTexture =
             Texture.createFromeSource(device, [
                 0, 192, 0, 255,
@@ -21,7 +21,7 @@ export class MeshObject extends TransformObject {
                 192, 192, 192, 255,
             ])
 
-        this.mesh = new Mesh(DefaultVertexData.createCubeVertexData(device))
+        this.mesh = new MeshComponent(DefaultVertexData.createCubeVertexData(device))
 
         this.addComponent(this.material)
         this.addComponent(this.mesh)
