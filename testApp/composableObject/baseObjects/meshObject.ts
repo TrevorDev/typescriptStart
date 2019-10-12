@@ -15,13 +15,13 @@ export class MeshObject extends TransformObject {
         this.material = new Material(mat)
         mat.diffuseTexture =
             Texture.createFromeSource(device, [
-                0, 192, 0, 255,
-                192, 0, 0, 255,
-                0, 0, 192, 255,
+                192, 192, 192, 255,
+                192, 192, 192, 255,
+                192, 192, 192, 255,
                 192, 192, 192, 255,
             ])
 
-        this.mesh = new Mesh(DefaultVertexData.createCubeVertexData(device))
+        this.mesh = new Mesh(DefaultVertexData.createPlaneVertexData(device))
 
         this.addComponent(this.material)
         this.addComponent(this.mesh)

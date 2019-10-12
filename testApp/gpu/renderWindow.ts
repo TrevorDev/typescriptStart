@@ -38,8 +38,9 @@ export class RenderWindow {
     updateDimensions() {
         this.dimensions.x = (this.device.gl.canvas as HTMLCanvasElement).clientWidth
         this.dimensions.y = (this.device.gl.canvas as HTMLCanvasElement).clientHeight
-        this.canvasElement.width = this.dimensions.x
-        this.canvasElement.height = this.dimensions.y
+
+        this.canvasElement.width = 2432
+        this.canvasElement.height = 1344
     }
 
     onScreenRefreshLoop(fn: Function) {

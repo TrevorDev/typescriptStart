@@ -109,7 +109,7 @@ export class OS {
         var launcher = new Launcher(this)
 
         // Register a test app
-        require("./testApps/clock")
+        // require("./testApps/clock")
     }
 
     /**
@@ -127,7 +127,7 @@ export class OS {
         if (!this.launcherApp) {
             var container = this.appManager.createApp()
             this.launcherApp = container
-            container.containerSpace.transform.position.z = -4
+            container.containerSpace.transform.position.z = -1
             appSpec.create(container.app)
         } else {
             (this.launcherApp.app as any).registerApp(appSpec)

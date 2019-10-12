@@ -3,87 +3,60 @@ import * as twgl from "twgl.js"
 import { GPUDevice } from "./gpuDevice";
 
 export class MultiviewTexture {
-    public glTexture:WebGLTexture|null = null
-    public frameBuffer:any
-    constructor(private device:GPUDevice, public width:number, public height:number, private samples = 4){
+    public glTexture: WebGLTexture | null = null
+    public frameBuffer: any
+    constructor(private device: GPUDevice, public width: number, public height: number, useM = true) {
+        var samples = device.gl.getParameter(device.gl.MAX_SAMPLES);
+        console.log("samples: " + samples)
         var is_multiview, is_multisampled = false;
         var ext = device.gl.getExtension('OCULUS_multiview');
-        if (ext) {
-        is_multiview = true;
-        is_multisampled = true;
-        console.log("oc mul")
+        if (useM && ext) {
+            console.log("OCULUS_multiview extension is supported");
+            is_multiview = true;
+            is_multisampled = true;
         }
         else {
+            console.log("OCULUS_multiview extension is NOT supported");
             ext = device.gl.getExtension('OVR_multiview2');
             if (ext) {
+                console.log("OVR_multiview2 extension is supported");
                 is_multiview = true;
             }
             else {
-                console.log("Neither OCULUS_multiview nor OVR_multiview2 extensions are supported");
+                console.log("Neither OCULUS_multiview nor OVR_multiview2 extension is NOT supported");
                 is_multiview = false;
-                alert("Multiview not supported")
             }
         }
 
 
-        var backFbo = device.gl.getParameter(device.gl.FRAMEBUFFER_BINDING);
-        var gl = device.gl as any
-        if (ext) {
-            this.frameBuffer = device.gl.createFramebuffer();
-            device.gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.frameBuffer);
+        console.log("onResize, presenting, multiview = " + is_multiview + ", new size = " + width + "x" + height);
 
-            // color texture / attachment
+        var gl = device.gl;
+        if (ext) {
+            console.log("MaxViews = " + device.gl.getParameter(ext.MAX_VIEWS_OVR));
+            this.frameBuffer = gl.createFramebuffer();
+            gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.frameBuffer);
             this.glTexture = gl.createTexture();
             gl.bindTexture(gl.TEXTURE_2D_ARRAY, this.glTexture);
             gl.texStorage3D(gl.TEXTURE_2D_ARRAY, 1, gl.RGBA8, width, height, 2);
-            if (!is_multisampled){
+            if (!is_multisampled)
                 ext.framebufferTextureMultiviewOVR(gl.DRAW_FRAMEBUFFER, gl.COLOR_ATTACHMENT0, this.glTexture, 0, 0, 2);
-            }else{
+            else
                 ext.framebufferTextureMultisampleMultiviewOVR(gl.DRAW_FRAMEBUFFER, gl.COLOR_ATTACHMENT0, this.glTexture, 0, samples, 0, 2);
-            }
-           
+            console.log("Fbo attachment numviews = " + gl.getFramebufferAttachmentParameter(gl.DRAW_FRAMEBUFFER, gl.COLOR_ATTACHMENT0, ext.FRAMEBUFFER_ATTACHMENT_TEXTURE_NUM_VIEWS_OVR));
+            console.log("Fbo base view index = " + gl.getFramebufferAttachmentParameter(gl.DRAW_FRAMEBUFFER, gl.COLOR_ATTACHMENT0, ext.FRAMEBUFFER_ATTACHMENT_TEXTURE_BASE_VIEW_INDEX_OVR));
 
-            // depth texture / attachment
             var depthStencilTex = gl.createTexture();
             gl.bindTexture(gl.TEXTURE_2D_ARRAY, depthStencilTex);
-            gl.texStorage3D(gl.TEXTURE_2D_ARRAY, 1, gl.DEPTH32F_STENCIL8, width, height, 2);
-            if (!is_multisampled){
-                ext.framebufferTextureMultiviewOVR(gl.DRAW_FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, depthStencilTex, 0, 0, 2);
-            }else{
-                ext.framebufferTextureMultisampleMultiviewOVR(gl.DRAW_FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, depthStencilTex, 0, samples, 0, 2);
-            }
-            
+            gl.texStorage3D(gl.TEXTURE_2D_ARRAY, 1, gl.DEPTH_COMPONENT24, width, height, 2);
+            if (!is_multisampled)
+                ext.framebufferTextureMultiviewOVR(gl.DRAW_FRAMEBUFFER, gl.DEPTH_ATTACHMENT, depthStencilTex, 0, 0, 2);
+            else
+                ext.framebufferTextureMultisampleMultiviewOVR(gl.DRAW_FRAMEBUFFER, gl.DEPTH_ATTACHMENT, depthStencilTex, 0, samples, 0, 2);
+            console.log("Fbo attachment numviews = " + gl.getFramebufferAttachmentParameter(gl.DRAW_FRAMEBUFFER, gl.DEPTH_ATTACHMENT, ext.FRAMEBUFFER_ATTACHMENT_TEXTURE_NUM_VIEWS_OVR));
+            console.log("Fbo base view index = " + gl.getFramebufferAttachmentParameter(gl.DRAW_FRAMEBUFFER, gl.DEPTH_ATTACHMENT, ext.FRAMEBUFFER_ATTACHMENT_TEXTURE_BASE_VIEW_INDEX_OVR));
+            //gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
         }
-        gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, backFbo)
+
     }
-
-   // bind(){
-        // var gl = this.device.gl
-        // gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.frameBuffer)
-        // var gl = this.device.gl
-        // gl.enable(gl.SCISSOR_TEST);
-            
-        // let projections = [frameData.leftProjectionMatrix, frameData.rightProjectionMatrix];
-        // let viewMats = [frameData.leftViewMatrix, frameData.rightViewMatrix];
-        // let width = Math.max(leftEye.renderWidth, rightEye.renderWidth);
-        // let height = Math.max(leftEye.renderHeight, rightEye.renderHeight);
-        // gl.viewport(0, 0, width, height);
-        // gl.scissor(0, 0, width, height);
-        // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-        // cubeSea.render(projections, viewMats, stats, /*multiview*/ true);
-        
-        // // Now we need to copy rendering from the texture2D array into the actual back
-        // // buffer to present it on the device
-        // gl.invalidateFramebuffer(gl.DRAW_FRAMEBUFFER, [ gl.DEPTH_STENCIL_ATTACHMENT ]);
-        
-        // gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, backFbo);
-
-        // // This function just copies two layers of the texture2D array as side-by-side
-        // // stereo into the back buffer.
-        // stereoUtil.blit(this.glTexture, 0, 0, 1, 1, width*2, height);
-
-
-        // gl.disable(gl.SCISSOR_TEST);
-  //  }
 }

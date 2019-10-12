@@ -2,16 +2,16 @@ import { GPUDevice } from "./gpuDevice";
 import * as twgl from "twgl.js"
 
 export class Texture {
-    public glTexture:WebGLTexture|null = null
+    public glTexture: WebGLTexture | null = null
     public frameBuffer = null
-    static createFromeSource(device:GPUDevice, src:Array<number>){
+    static createFromeSource(device: GPUDevice, src: Array<number>) {
         // TODO add constructor that sets framebuffer
         var r = new Texture(device)
         r.glTexture = twgl.createTexture(device.gl, {
-            min: device.gl.NEAREST,
-            mag: device.gl.NEAREST,
+            min: device.gl.LINEAR,
+            mag: device.gl.LINEAR,
             src: src,
-          }); 
+        });
         return r
     }
 
@@ -24,21 +24,21 @@ export class Texture {
     // const srcType = gl.UNSIGNED_BYTE;
     // const pixel = new Uint8Array([0, 0, 255, 25
 
-    static createForVideoTexture(device:GPUDevice){
+    static createForVideoTexture(device: GPUDevice) {
         var r = new Texture(device)
         r.glTexture = twgl.createTexture(device.gl, {
-            level:0,
-            width:1,
-            height:1,
+            level: 0,
+            width: 1,
+            height: 1,
             format: device.gl.RGBA,
             min: device.gl.LINEAR,
-            mag: device.gl.NEAREST,
+            mag: device.gl.LINEAR,
             src: [0, 0, 0, 255],
-          }); 
+        });
         return r
     }
 
-    constructor(device:GPUDevice){
+    constructor(device: GPUDevice) {
         // this.glTexture = twgl.createTexture(device.gl, {
         //     min: device.gl.NEAREST,
         //     mag: device.gl.NEAREST,

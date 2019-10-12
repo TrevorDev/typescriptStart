@@ -88,8 +88,10 @@ export class Stage {
                 this.window.updateDimensions()
             }
 
+            var gl = this.device.gl
             // Render next action to to multiview texture
             this.renderer.setRenderMultiviewTexture(this.xr.multiviewTexture)
+            gl.disable(gl.SCISSOR_TEST);
 
             // Setup viewport and clear
             this.renderer.setViewport(0, 0, this.xr.multiviewTexture.width, this.xr.multiviewTexture.height)
@@ -98,7 +100,8 @@ export class Stage {
 
             // Render scene
             this.renderer.renderScene(this.camera.camera.xrCamera, this.nodes, this.lights)
-
+            gl.invalidateFramebuffer(gl.FRAMEBUFFER, [gl.DEPTH_ATTACHMENT]);
+            gl.disable(gl.SCISSOR_TEST);
             // Blit back to screen
             if (this.xr.state == XRState.IN_XR) {
                 this.renderer.setRenderTexture(this.xr.getNextTexture())
@@ -147,6 +150,9 @@ export class Stage {
                 if (await this.xr.canStart()) {
                     console.log("STARTING")
                     await this.xr.start()
+                    // It's heighly reccommended that you set the near and far planes to
+                    // something appropriate for your scene so the projection matricies
+                    // WebVR produces have a well scaled depth buffer.
                     this.xr.display.depthNear = 0.1;
                     this.xr.display.depthFar = 1024.0;
                     currentLoop = new Loop((x: any) => { this.xr.display.requestAnimationFrame(x) }, gameLoop)

@@ -55,13 +55,11 @@ export class Renderer {
     }
 
     setViewport(x: number, y: number, width: number, height: number) {
-        this.device.gl.scissor(x, y, width, height)
+        //  this.device.gl.scissor(x, y, width, height)
         this.device.gl.viewport(x, y, width, height);
     }
 
     clear() {
-        this.device.gl.enable(this.device.gl.DEPTH_TEST);
-        //this.device.gl.enable(this.device.gl.CULL_FACE);
-        this.device.gl.clear(this.device.gl.COLOR_BUFFER_BIT | this.device.gl.DEPTH_BUFFER_BIT);
+        this.device.gl.clear(this.device.gl.COLOR_BUFFER_BIT | this.device.gl.DEPTH_BUFFER_BIT | this.device.gl.STENCIL_BUFFER_BIT);
     }
 }
