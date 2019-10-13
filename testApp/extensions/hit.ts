@@ -2,7 +2,6 @@ import { Ray } from "../math/ray";
 import { Vector3 } from "../math/vector3";
 import { Matrix4 } from "../math/matrix4";
 import { Triangle } from "../math/triangle";
-import { TransformNode, NodeType } from "../sceneGraph/transformNode";
 import { TransformObject } from "../componentObject/baseObjects/transformObject";
 import { MeshComponent } from "../componentObject/components/mesh/meshComponent";
 

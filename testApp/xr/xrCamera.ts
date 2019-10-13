@@ -1,5 +1,4 @@
 import { TransformNode } from "../sceneGraph/transformNode";
-import { Matrix4 } from "../math/matrix4";
 import { Camera } from "../sceneGraph/camera";
 
 export class XRCamera extends TransformNode {
