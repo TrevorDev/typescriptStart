@@ -10,6 +10,7 @@ export class XRButtonState {
     private _value = 0
     private _downThreshold = 0.8
     public justDown = false;
+    public justUp = false;
     constructor() {
     }
     get value() {
@@ -31,6 +32,7 @@ export class XRButtonState {
         } else if (val < this._downThreshold && this._value >= this._downThreshold) {
             this._value = val
             //this.onUp.notifyObservers(this)
+            this.justUp = true
         } else {
             this._value = val
         }
@@ -38,6 +40,7 @@ export class XRButtonState {
     }
     update() {
         this.justDown = false
+        this.justUp = false
     }
     // onDown = new Observable<XRButtonState>()
     // onUp = new Observable<XRButtonState>()

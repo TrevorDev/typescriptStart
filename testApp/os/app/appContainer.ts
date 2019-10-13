@@ -3,6 +3,7 @@ import { Stage } from "../../extensions/stage";
 import { InputManager } from "../input/inputManager";
 import { TransformObject } from "../../componentObject/baseObjects/transformObject";
 import { MeshObject } from "../../componentObject/baseObjects/meshObject";
+import { DragComponent } from "../../componentObject/components/behavior/dragComponent";
 export class AppContainer {
     app: App
     taskBar: MeshObject
@@ -19,6 +20,7 @@ export class AppContainer {
         this.containerSpace.transform.addChild(appSpace.transform)
 
         this.taskBar = new MeshObject(globalStage.device)//DefaultMesh.createCube(globalStage.device)
+        this.taskBar.addComponent(new DragComponent())
         var taskBarSize = 0.1
         this.taskBar.transform.scale.setScalar(taskBarSize)
         //this.taskBar.transform.rotation.fromEuler(new Vector3(0, 0, Math.PI / 4))

@@ -8,6 +8,7 @@ import { Launcher } from "./homeEnv/launcher";
 import { AppSpec } from "./app/appSpec";
 import { DefaultMesh } from "../extensions/defaultMesh";
 import { Color } from "../math/color";
+import { DragComponent } from "../componentObject/components/behavior/dragComponent";
 
 export class OS {
     /**
@@ -91,8 +92,10 @@ export class OS {
                     controller.hitMesh.transform.position.addToRef(controller.ray.origin, controller.hitMesh.transform.position)
                 }
 
-                if (controller.primaryButton.justDown) {
+                if (controller.primaryButton.justDown && isTaskBar) {
                     console.log("PRESSSED")
+                    var drag = controller.hoveredApp!.taskBar.getComponent<DragComponent>(DragComponent.type)
+                    drag!.start(controller)
                 }
             })
 
