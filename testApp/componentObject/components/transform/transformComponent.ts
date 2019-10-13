@@ -75,4 +75,22 @@ export class TransformComponent extends Component {
         result.direction.set(0, 0, -1);
         result.direction.rotateByQuaternionToRef(this.rotation, result.direction)
     }
+
+    /**
+     * Sets the local matrix of the transform such that the computed world matrix will match the one given
+     * @param worldMatrix world matrix to set
+     */
+    setLocalMatrixFromWorldMatrix(worldMatrix: Matrix4) {
+        var parent = this.object.transform.getParent()
+        if (parent) {
+            var m = new Matrix4()
+            parent.worldMatrix.inverseToRef(m)
+            m.multiplyToRef(worldMatrix, m)
+
+            m.decompose(this.object.transform.position, this.object.transform.rotation, this.object.transform.scale)
+            this.object.transform.computeWorldMatrix()
+        } else {
+            this.object.transform.localMatrix.copyFrom(worldMatrix)
+        }
+    }
 }

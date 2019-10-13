@@ -92,11 +92,18 @@ export class OS {
                     controller.hitMesh.transform.position.addToRef(controller.ray.origin, controller.hitMesh.transform.position)
                 }
 
-                if (controller.primaryButton.justDown && isTaskBar) {
-                    console.log("PRESSSED")
-                    var drag = controller.hoveredApp!.taskBar.getComponent<DragComponent>(DragComponent.type)
-                    drag!.start(controller)
+                if (controller.hoveredApp) {
+                    var drag = controller.hoveredApp.taskBar.getComponent<DragComponent>(DragComponent.type)!
+                    if (controller.primaryButton.justDown && isTaskBar) {
+                        console.log("PRESSSED")
+                        drag.start(controller)
+                    }
+                    drag.update()
+                    if (controller.primaryButton.justUp) {
+                        drag.end()
+                    }
                 }
+
             })
 
             // Run each app's render loop

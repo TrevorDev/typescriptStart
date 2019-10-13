@@ -8,19 +8,31 @@ export class DragComponent extends Component {
     getType(): number {
         return DragComponent.type
     }
+    identity = new Matrix4()
 
+    activeController: null | XRController = null
     node = new TransformObject()
     start(controller: XRController) {
+        if (this.activeController) {
+            return
+        }
+        this.activeController = controller
+
+        // Update matrix
         var m = new Matrix4()
         controller.transform.computeWorldMatrix()
         this.object.transform.computeWorldMatrix()
 
+        // Compute difference between parent and child world matrix and set as child local matrix
         controller.transform.worldMatrix.inverseToRef(m)
         m.multiplyToRef(this.object.transform.worldMatrix, m)
-        m.decompose(this.object.transform.position, this.object.transform.rotation, this.object.transform.scale)
-        this.object.transform.computeLocalMatrix()
 
-        controller.transform.addChild(this.object.transform)
+        // Set child local matrix on node and set it's parent
+        m.decompose(this.node.transform.position, this.node.transform.rotation, this.node.transform.scale)
+        this.node.transform.computeLocalMatrix()
+
+        // Add child
+        controller.transform.addChild(this.node.transform)
 
 
 
@@ -28,10 +40,19 @@ export class DragComponent extends Component {
         // this.object
     }
     update() {
+        if (!this.activeController) {
+            return
+        }
 
+        this.node.transform.computeWorldMatrix()
+
+        this.object.transform.setLocalMatrixFromWorldMatrix(this.node.transform.worldMatrix)
     }
     end() {
-
+        if (!this.activeController) {
+            return
+        }
+        this.activeController = null
     }
 
 
