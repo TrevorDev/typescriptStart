@@ -1,8 +1,4 @@
-import { Vector3 } from "../../math/vector3"
 import { OS } from "../os"
-import { DefaultMesh } from "../../defaultHelpers/defaultMesh"
-import { MaterialA } from "../../sceneGraph/materialA"
-import { CanvasTexture } from "../../defaultHelpers/canvasTexture"
 import { App } from "../app/app"
 
 var os = OS.GetOS()

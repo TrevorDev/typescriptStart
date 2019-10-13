@@ -1,5 +1,5 @@
 import { AppContainer } from "./appContainer";
-import { Stage } from "../../defaultHelpers/stage";
+import { Stage } from "../../extensions/stage";
 import { InputManager } from "../input/inputManager";
 
 export class AppManager {

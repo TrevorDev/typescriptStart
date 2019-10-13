@@ -1,11 +1,8 @@
 import { App } from "./app";
-import { TransformNode } from "../../sceneGraph/transformNode";
-import { Stage } from "../../defaultHelpers/stage";
+import { Stage } from "../../extensions/stage";
 import { InputManager } from "../input/inputManager";
-import { DefaultMesh } from "../../defaultHelpers/defaultMesh";
 import { TransformObject } from "../../componentObject/baseObjects/transformObject";
 import { MeshObject } from "../../componentObject/baseObjects/meshObject";
-import { Vector3 } from "../../math/vector3";
 export class AppContainer {
     app: App
     taskBar: MeshObject

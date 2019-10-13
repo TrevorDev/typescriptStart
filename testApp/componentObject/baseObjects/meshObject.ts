@@ -1,7 +1,7 @@
 import { TransformObject } from "./transformObject"
 import { MaterialComponent } from "../components/material/materialComponent"
 import { MeshComponent } from "../components/mesh/meshComponent"
-import { DefaultVertexData } from "../../defaultHelpers/defaultVertexData"
+import { DefaultVertexData } from "../../extensions/defaultVertexData"
 import { MaterialA } from "../../sceneGraph/materialA"
 import { GPUDevice } from "../../gpu/gpuDevice"
 import { Texture } from "../../gpu/texture"

@@ -1,6 +1,6 @@
 import { Ray } from "../../math/ray";
 import { AppContainer } from "../app/appContainer";
-import { Stage } from "../../defaultHelpers/stage";
+import { Stage } from "../../extensions/stage";
 import { Vector3 } from "../../math/vector3";
 import { Quaternion } from "../../math/quaternion";
 import { TransformObject } from "../../componentObject/baseObjects/transformObject";

@@ -1,4 +1,4 @@
-import { Stage } from "../../defaultHelpers/stage";
+import { Stage } from "../../extensions/stage";
 import { XRController } from "./xrController";
 
 export class InputManager {

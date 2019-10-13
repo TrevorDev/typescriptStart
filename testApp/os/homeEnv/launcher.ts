@@ -1,8 +1,7 @@
 import { OS } from "../os";
 import { App } from "../app/app";
-import { DefaultMesh } from "../../defaultHelpers/defaultMesh";
 import { AppSpec } from "../app/appSpec";
-import { Hit } from "../../defaultHelpers/hit";
+import { Hit } from "../../extensions/hit";
 import { MeshObject } from "../../componentObject/baseObjects/meshObject";
 
 export class Launcher {

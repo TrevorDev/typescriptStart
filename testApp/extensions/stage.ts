@@ -1,11 +1,11 @@
 import { RenderWindow } from "../gpu/renderWindow";
 import { GPUDevice } from "../gpu/gpuDevice";
-import { DefaultVertexData } from "../defaultHelpers/defaultVertexData";
+import { DefaultVertexData } from "./defaultVertexData";
 import { Renderer } from "../sceneGraph/renderer";
 import { CustomProgram } from "../gpu/customProgram";
 import { XR, XRState } from "../xr/xr";
 import { Loop } from "../sceneGraph/loop";
-import { DefaultShaders } from "../defaultHelpers/defaultShaders";
+import { DefaultShaders } from "./defaultShaders";
 import { TransformObject } from "../componentObject/baseObjects/transformObject";
 import { CameraObject } from "../componentObject/baseObjects/cameraObject";
 import { LightObject } from "../componentObject/baseObjects/lightObject";
