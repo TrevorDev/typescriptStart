@@ -1,41 +1,33 @@
 
 import * as twgl from "twgl.js"
-import { Material } from "../sceneGraph/material";
-import { DefaultShaders } from "../defaultHelpers/defaultShaders";
 import { GPUDevice } from "./gpuDevice";
-import { Camera } from "../sceneGraph/camera";
-import { TransformNode } from "../sceneGraph/transformNode";
-import { Mesh } from "../sceneGraph/mesh";
 import { Texture } from "./texture";
-import { PointLight } from "../sceneGraph/pointLight";
-import { Vector3 } from "../math/vector3";
-import { Matrix4 } from "../math/matrix4";
 import { VertexData } from "./vertexData";
 import { Shader } from "./shader";
 
 
 export class CustomProgram {
-    programInfo:twgl.ProgramInfo
-    constructor(public device:GPUDevice, vertShader:Shader, fragShader:Shader){
+    programInfo: twgl.ProgramInfo
+    constructor(public device: GPUDevice, vertShader: Shader, fragShader: Shader) {
         this.programInfo = twgl.createProgramInfo(device.gl, [vertShader.str, fragShader.str])
     }
 
-    load(){
+    load() {
         this.device.gl.useProgram(this.programInfo.program);
     }
-   
-    updateUniforms(uniforms:any){
+
+    updateUniforms(uniforms: any) {
         twgl.setUniforms(this.programInfo, uniforms)
     }
 
-    setTextures(textures:{[key:string]:Texture}){
-        var u:any = {}
-        for(var key in textures){
+    setTextures(textures: { [key: string]: Texture }) {
+        var u: any = {}
+        for (var key in textures) {
             u[key] = textures[key].glTexture
         }
         twgl.setUniforms(this.programInfo, u);
     }
-    draw(vertexData:VertexData){
+    draw(vertexData: VertexData) {
         twgl.setBuffersAndAttributes(this.device.gl, this.programInfo, vertexData.gpuBufferInfo); // Set object vert data
         twgl.drawBufferInfo(this.device.gl, vertexData.gpuBufferInfo);
     }

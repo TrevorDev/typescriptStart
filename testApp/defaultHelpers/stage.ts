@@ -1,23 +1,13 @@
 import { RenderWindow } from "../gpu/renderWindow";
 import { GPUDevice } from "../gpu/gpuDevice";
-import { Texture } from "../gpu/texture";
-import { Mesh } from "../sceneGraph/mesh";
 import { DefaultVertexData } from "../defaultHelpers/defaultVertexData";
-import { PointLight } from "../sceneGraph/pointLight";
 import { Renderer } from "../sceneGraph/renderer";
-import { MaterialA } from "../sceneGraph/materialA";
 import { CustomProgram } from "../gpu/customProgram";
 import { XR, XRState } from "../xr/xr";
 import { Loop } from "../sceneGraph/loop";
-import { XRCamera } from "../xr/xrCamera";
 import { DefaultShaders } from "../defaultHelpers/defaultShaders";
-import { VideoTexture } from "../defaultHelpers/videoTexture";
-import { Light } from "../sceneGraph/light";
-import { TransformNode } from "../sceneGraph/transformNode";
 import { TransformObject } from "../componentObject/baseObjects/transformObject";
-import { CameraComponent } from "../componentObject/components/camera/cameraComponent";
 import { CameraObject } from "../componentObject/baseObjects/cameraObject";
-import { MeshObject } from "../componentObject/baseObjects/meshObject";
 import { LightObject } from "../componentObject/baseObjects/lightObject";
 
 export class Stage {

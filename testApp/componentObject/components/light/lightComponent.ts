@@ -1,5 +1,5 @@
 import { Component } from "../component";
-import { Light as LightSpec } from "../../../sceneGraph/light";
+import { Light as LightSpec } from "./light";
 
 export class LightComponent extends Component {
     static type = Component._TYPE_COUNTER++;

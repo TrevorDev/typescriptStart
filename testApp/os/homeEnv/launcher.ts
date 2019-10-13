@@ -2,7 +2,6 @@ import { OS } from "../os";
 import { App } from "../app/app";
 import { DefaultMesh } from "../../defaultHelpers/defaultMesh";
 import { AppSpec } from "../app/appSpec";
-import { Mesh } from "../../sceneGraph/mesh";
 import { Hit } from "../../defaultHelpers/hit";
 import { MeshObject } from "../../componentObject/baseObjects/meshObject";
 

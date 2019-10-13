@@ -1,11 +1,8 @@
-import { TransformNode } from "../../sceneGraph/transformNode";
 import { Ray } from "../../math/ray";
 import { AppContainer } from "../app/appContainer";
 import { Stage } from "../../defaultHelpers/stage";
-import { DefaultMesh } from "../../defaultHelpers/defaultMesh";
 import { Vector3 } from "../../math/vector3";
 import { Quaternion } from "../../math/quaternion";
-import { Mesh } from "../../sceneGraph/mesh";
 import { TransformObject } from "../../componentObject/baseObjects/transformObject";
 import { MeshObject } from "../../componentObject/baseObjects/meshObject";
 

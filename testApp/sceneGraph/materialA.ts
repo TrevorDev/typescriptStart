@@ -1,12 +1,10 @@
 
 import * as twgl from "twgl.js"
-import { Material } from "./material";
+import { Material } from "../componentObject/components/material/material";
 import { DefaultShaders } from "../defaultHelpers/defaultShaders";
 import { GPUDevice } from "../gpu/gpuDevice";
-import { Camera } from "./camera";
-import { TransformNode } from "./transformNode";
 import { Texture } from "../gpu/texture";
-import { PointLight } from "./pointLight";
+import { PointLight } from "../componentObject/components/light/pointLight";
 import { Vector3 } from "../math/vector3";
 import { Matrix4 } from "../math/matrix4";
 import { XRCamera } from "../xr/xrCamera";
@@ -76,7 +74,7 @@ export class MaterialA implements Material {
         // TODO fix all this
         var light = lights[0].light.lightSpec as PointLight
         var tmp = new Vector3()
-        light.worldMatrix.decompose(tmp)
+        lights[0].transform.worldMatrix.decompose(tmp)
         //debugger
         twgl.setBlockUniforms(this.lightUboInfo, {
             u_lightColor: [light.color.v[0], light.color.v[1], light.color.v[2], 1],
