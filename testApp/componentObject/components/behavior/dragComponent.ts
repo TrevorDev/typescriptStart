@@ -23,21 +23,9 @@ export class DragComponent extends Component {
         controller.transform.computeWorldMatrix()
         this.object.transform.computeWorldMatrix()
 
-        // Compute difference between parent and child world matrix and set as child local matrix
-        controller.transform.worldMatrix.inverseToRef(m)
-        m.multiplyToRef(this.object.transform.worldMatrix, m)
-
-        // Set child local matrix on node and set it's parent
-        m.decompose(this.node.transform.position, this.node.transform.rotation, this.node.transform.scale)
-        this.node.transform.computeLocalMatrix()
-
-        // Add child
+        // Add child but keep world matrix
         controller.transform.addChild(this.node.transform)
-
-
-
-        //controller.transform.addChild(this.object.transform)
-        // this.object
+        this.node.transform.setLocalMatrixFromWorldMatrix(this.object.transform.worldMatrix)
     }
     update() {
         if (!this.activeController) {
