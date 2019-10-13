@@ -1,6 +1,6 @@
 
 import * as twgl from "twgl.js"
-import { GPUDevice } from "./gpuDevice";
+import { GPUDevice } from "../gpu/gpuDevice";
 
 export class MultiviewTexture {
     public glTexture: WebGLTexture | null = null

@@ -1,7 +1,7 @@
 import { GPUDevice } from "../gpu/gpuDevice";
 import { MeshComponent } from "../componentObject/components/mesh/meshComponent";
 import { Texture } from "../gpu/texture";
-import { MultiviewTexture } from "../gpu/multiviewTexture";
+import { MultiviewTexture } from "./multiviewTexture";
 import { TransformObject } from "../componentObject/baseObjects/transformObject";
 import { TransformComponent } from "../componentObject/components/transform/transformComponent";
 import { MaterialComponent } from "../componentObject/components/material/materialComponent";

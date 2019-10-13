@@ -1,7 +1,7 @@
 import { OS } from "./os/os";
 import { RenderWindow } from "./gpu/renderWindow";
 import { XR } from "./extensions/xr/xr";
-import { MultiviewTexture } from "./gpu/multiviewTexture";
+import { MultiviewTexture } from "./extensions/multiviewTexture";
 import { GPUDevice } from "./gpu/gpuDevice";
 import { DefaultVertexData } from "./extensions/defaultVertexData";
 import { CustomProgram } from "./gpu/customProgram";

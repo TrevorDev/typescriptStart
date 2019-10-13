@@ -10,6 +10,7 @@ import { TransformObject } from "../componentObject/baseObjects/transformObject"
 import { CameraObject } from "../componentObject/baseObjects/cameraObject";
 import { LightObject } from "../componentObject/baseObjects/lightObject";
 import { XRHead } from "./xr/xrHead";
+import { MultiviewBlit } from "./multiviewBlit";
 
 export class Stage {
     // Debug flags
@@ -54,8 +55,7 @@ export class Stage {
 
         // Custom blit operation used to draw multiview frame into single frame required for webVR
         // TODO remove this after webXR allows submit multiview frames
-        var quad = DefaultVertexData.createFullScreenQuad(this.device)
-        var fullScreenQuadProg = new CustomProgram(this.device, DefaultShaders.quadVertShader, DefaultShaders.multiviewBlitToTextureFragShader)
+        var mvb = new MultiviewBlit(this.device)
 
         var time = (new Date()).getTime()
         var gameLoop = () => {
@@ -105,10 +105,7 @@ export class Stage {
             this.device.gl.clearColor(1.0, 0.4, 0.4, 1)
             this.renderer.clear()
 
-            fullScreenQuadProg.load()
-            fullScreenQuadProg.updateUniforms({ debug: this.singleViewDebug });
-            fullScreenQuadProg.setTextures({ imgs: this.xr.multiviewTexture })
-            fullScreenQuadProg.draw(quad)
+            mvb.blit(this.xr.multiviewTexture)
 
             if (this.xr.state == XRState.IN_XR) {
                 this.xr.display.submitFrame();

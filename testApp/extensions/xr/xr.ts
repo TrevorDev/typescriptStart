@@ -1,5 +1,5 @@
 import { GPUDevice } from "../../gpu/gpuDevice"
-import { MultiviewTexture } from "../../gpu/multiviewTexture"
+import { MultiviewTexture } from "../multiviewTexture"
 import { Texture } from "../../gpu/texture"
 
 export enum XRState {
