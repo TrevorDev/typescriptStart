@@ -65,8 +65,10 @@ export class XRHead extends TransformObject {
     }
 
     updateViewMatrixForCameras() {
-        this.transform.computeWorldMatrix()
+        this.leftEye.transform.computeWorldMatrix()
         this.leftEye.transform.worldMatrix.inverseToRef(this.leftEye.camera.view)
+
+        this.rightEye.transform.computeWorldMatrix()
         this.rightEye.transform.worldMatrix.inverseToRef(this.rightEye.camera.view)
     }
 }
