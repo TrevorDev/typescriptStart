@@ -64,14 +64,14 @@ export class XRController extends TransformObject {
                 return stage.xr.rightController
             }
         }
-        stage.addNode(this)
+        stage.xrStage.transform.addChild(this.transform)
         var mesh = new MeshObject(stage.device)//DefaultMesh.createCube(stage.device)
         mesh.transform.scale.scaleInPlace(0.05)
         mesh.transform.scale.z *= 10
         this.transform.addChild(mesh.transform)
 
         this.hitMesh = new MeshObject(stage.device)//DefaultMesh.createSphere(stage.device)
-        this.hitMesh.transform.scale.scaleInPlace(0.1)
+        this.hitMesh.transform.scale.scaleInPlace(0.05)
         stage.addNode(this.hitMesh)
 
         // this.rayMesh = DefaultMesh.createSphere(stage.device)

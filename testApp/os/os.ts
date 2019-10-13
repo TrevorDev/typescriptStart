@@ -134,6 +134,7 @@ export class OS {
             var container = this.appManager.createApp()
             this.launcherApp = container
             container.containerSpace.transform.position.z = -1
+            container.containerSpace.transform.position.y = 1.5
             appSpec.create(container.app)
         } else {
             (this.launcherApp.app as any).registerApp(appSpec)
