@@ -1,15 +1,15 @@
 
 import * as twgl from "twgl.js"
-import { Material } from "../componentObject/components/material/material";
-import { DefaultShaders } from "../extensions/defaultShaders";
-import { GPUDevice } from "../gpu/gpuDevice";
-import { Texture } from "../gpu/texture";
-import { PointLight } from "../componentObject/components/light/pointLight";
-import { Vector3 } from "../math/vector3";
-import { Matrix4 } from "../math/matrix4";
-import { XRCamera } from "../xr/xrCamera";
-import { MeshComponent } from "../componentObject/components/mesh/meshComponent";
-import { LightObject } from "../componentObject/baseObjects/lightObject";
+import { Material } from "./material";
+import { DefaultShaders } from "../../../extensions/defaultShaders";
+import { GPUDevice } from "../../../gpu/gpuDevice";
+import { Texture } from "../../../gpu/texture";
+import { PointLight } from "../light/pointLight";
+import { Vector3 } from "../../../math/vector3";
+import { Matrix4 } from "../../../math/matrix4";
+import { XRCamera } from "../../../extensions/xr/xrCamera";
+import { MeshComponent } from "../mesh/meshComponent";
+import { LightObject } from "../../baseObjects/lightObject";
 
 // export class StandardMaterialFactory {
 //     createInstance(){
@@ -17,7 +17,7 @@ import { LightObject } from "../componentObject/baseObjects/lightObject";
 //     }
 // }
 
-export class MaterialA implements Material {
+export class BasicMaterial implements Material {
     programInfo: twgl.ProgramInfo
     viewUboInfo: twgl.UniformBlockInfo
     lightUboInfo: twgl.UniformBlockInfo

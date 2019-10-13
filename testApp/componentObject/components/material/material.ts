@@ -1,4 +1,4 @@
-import { XRCamera } from "../../../xr/xrCamera";
+import { XRCamera } from "../../../extensions/xr/xrCamera";
 import { MeshComponent } from "../mesh/meshComponent";
 import { LightObject } from "../../baseObjects/lightObject";
 
