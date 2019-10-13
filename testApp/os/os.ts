@@ -63,6 +63,7 @@ export class OS {
             this.inputManager.controllers.forEach((controller) => {
                 var closestHit = { distance: Infinity, obj: null }
                 var hitResult = new HitResult()
+                var isTaskBar = false
 
                 // Check which app is hovered for this controller
                 this.appManager.appContainers.forEach((container) => {
@@ -70,11 +71,13 @@ export class OS {
 
                     if (hitResult.hitDistance && hitResult.hitDistance < closestHit.distance) {
                         closestHit.distance = hitResult.hitDistance
+                        isTaskBar = true
                         controller.hoveredApp = container
                     }
                     container.app.castRay(controller.ray, hitResult)
                     if (hitResult.hitDistance && hitResult.hitDistance < closestHit.distance) {
                         closestHit.distance = hitResult.hitDistance
+                        isTaskBar = false
                         controller.hoveredApp = container
                     }
                 })
@@ -103,6 +106,8 @@ export class OS {
         this.setGlobal()
         console.log("NiftyOS v1.0")
 
+        // Create launcher
+        var launcher = new Launcher(this)
 
         // Register a test app
         require("./testApps/clock")
