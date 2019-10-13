@@ -19,108 +19,119 @@ import { Shader } from "../../../gpu/shader";
 // }
 
 export class BasicMaterial implements Material {
-    programInfo: twgl.ProgramInfo
-    viewUboInfo: twgl.UniformBlockInfo
-    lightUboInfo: twgl.UniformBlockInfo
-    materialUboInfo: twgl.UniformBlockInfo
-    modelUboInfo: twgl.UniformBlockInfo
-    diffuseTexture: null | Texture = null
-    lightingAmount = 1;
-    tmpMat = new Matrix4()
-    constructor(public device: GPUDevice) {
-        this.programInfo = twgl.createProgramInfo(device.gl, [BasicMaterial.vertShader.str, BasicMaterial.fragShader.str])
+  static _defaultTexture: Texture;
 
-        this.lightUboInfo = twgl.createUniformBlockInfo(device.gl, this.programInfo, "Lights[0]");
-        this.viewUboInfo = twgl.createUniformBlockInfo(device.gl, this.programInfo, "View");
-
-        this.materialUboInfo = twgl.createUniformBlockInfo(device.gl, this.programInfo, "Material");
-        twgl.setBlockUniforms(this.materialUboInfo, {
-            u_ambient: [0, 0, 0, 1],
-            u_specular: [1, 1, 1, 1],
-            u_shininess: 100,
-            u_specularFactor: 0.8,
-        });
-        twgl.setUniformBlock(device.gl, this.programInfo, this.materialUboInfo);
-        //materialUboInfos.push(materialUbo);
-
-        this.modelUboInfo = twgl.createUniformBlockInfo(device.gl, this.programInfo, "Model");
-        var m4 = twgl.m4
-        const world = m4.translation([0, 0, 0]);
-        //m4.setTranslation())
-        twgl.setBlockUniforms(this.modelUboInfo, {
-            u_world: world,
-            u_worldInverseTranspose: m4.transpose(m4.inverse(world)),
-        });
-        twgl.setUniformBlock(device.gl, this.programInfo, this.modelUboInfo);
+  programInfo: twgl.ProgramInfo
+  viewUboInfo: twgl.UniformBlockInfo
+  lightUboInfo: twgl.UniformBlockInfo
+  materialUboInfo: twgl.UniformBlockInfo
+  modelUboInfo: twgl.UniformBlockInfo
+  diffuseTexture: Texture
+  lightingAmount = 1;
+  tmpMat = new Matrix4()
+  constructor(public device: GPUDevice) {
+    if (!BasicMaterial._defaultTexture) {
+      BasicMaterial._defaultTexture = Texture.createFromeSource(device, [
+        0, 192, 0, 255,
+        192, 0, 0, 255,
+        0, 0, 192, 255,
+        192, 192, 192, 255,
+      ])
     }
+    this.diffuseTexture = BasicMaterial._defaultTexture
+    this.programInfo = twgl.createProgramInfo(device.gl, [BasicMaterial.vertShader.str, BasicMaterial.fragShader.str])
 
-    load() {
-        this.device.gl.useProgram(this.programInfo.program);
+    this.lightUboInfo = twgl.createUniformBlockInfo(device.gl, this.programInfo, "Lights[0]");
+    this.viewUboInfo = twgl.createUniformBlockInfo(device.gl, this.programInfo, "View");
+
+    this.materialUboInfo = twgl.createUniformBlockInfo(device.gl, this.programInfo, "Material");
+    twgl.setBlockUniforms(this.materialUboInfo, {
+      u_ambient: [0, 0, 0, 1],
+      u_specular: [1, 1, 1, 1],
+      u_shininess: 100,
+      u_specularFactor: 0.8,
+    });
+    twgl.setUniformBlock(device.gl, this.programInfo, this.materialUboInfo);
+    //materialUboInfos.push(materialUbo);
+
+    this.modelUboInfo = twgl.createUniformBlockInfo(device.gl, this.programInfo, "Model");
+    var m4 = twgl.m4
+    const world = m4.translation([0, 0, 0]);
+    //m4.setTranslation())
+    twgl.setBlockUniforms(this.modelUboInfo, {
+      u_world: world,
+      u_worldInverseTranspose: m4.transpose(m4.inverse(world)),
+    });
+    twgl.setUniformBlock(device.gl, this.programInfo, this.modelUboInfo);
+  }
+
+  load() {
+    this.device.gl.useProgram(this.programInfo.program);
+  }
+  updateFromCamera(cameras: Array<CameraObject>) {
+    cameras[0].camera.projection.multiplyToRef(cameras[0].camera.view, this.tmpMat)
+    this.tmpMat.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewProjectionL)
+
+    cameras[1].camera.projection.multiplyToRef(cameras[1].camera.view, this.tmpMat)
+    this.tmpMat.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewProjectionR)
+
+
+    // camera.viewInverse.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewInverseL)
+    // camera.viewProjection.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewProjectionL)
+    // camera.viewInverse.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewInverseR)
+    // camera.viewProjectionR.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewProjectionR)
+    twgl.setUniformBlock(this.device.gl, this.programInfo, this.viewUboInfo);
+  }
+  updateForLights(lights: Array<LightObject>) {
+    // TODO fix all this
+    var light = lights[0].light.lightSpec as PointLight
+    var tmp = new Vector3()
+    lights[0].transform.worldMatrix.decompose(tmp)
+    //debugger
+    twgl.setBlockUniforms(this.lightUboInfo, {
+      u_lightColor: [light.color.v[0], light.color.v[1], light.color.v[2], 1],
+      u_lightWorldPos: [tmp.x, tmp.y, tmp.z],
+    });
+    twgl.setUniformBlock(this.device.gl, this.programInfo, this.lightUboInfo);
+  }
+  updateUniforms() {
+    this.setTextures({
+      u_diffuse: this.diffuseTexture!,
+    })
+
+    twgl.setBlockUniforms(this.materialUboInfo, {
+      u_ambient: [0, 0, 0, 1],
+      u_specular: [0.2, 0.2, 0.2, 1],
+      u_shininess: 100,
+      u_specularFactor: 0.8,
+    });
+    twgl.setUniformBlock(this.device.gl, this.programInfo, this.materialUboInfo);
+  }
+  setTextures(textures: { [key: string]: Texture }) {
+    var u: any = {}
+    for (var key in textures) {
+      u[key] = textures[key].glTexture
     }
-    updateFromCamera(cameras: Array<CameraObject>) {
-        cameras[0].camera.projection.multiplyToRef(cameras[0].camera.view, this.tmpMat)
-        this.tmpMat.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewProjectionL)
+    twgl.setUniforms(this.programInfo, u);
+  }
+  updateAndDrawForMesh(mesh: MeshComponent) {
+    //this.device.gl.cullFace(this.device.gl.FRONT_FACE)
 
-        cameras[1].camera.projection.multiplyToRef(cameras[1].camera.view, this.tmpMat)
-        this.tmpMat.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewProjectionR)
+    twgl.setBuffersAndAttributes(this.device.gl, this.programInfo, mesh.vertData.gpuBufferInfo); // Set object vert data
 
+    // Set world matrix and inverse transpose
+    mesh.object.transform.worldMatrix.copyToArrayBufferView(this.modelUboInfo.uniforms.u_world)
+    mesh.object.transform.worldMatrix.inverseToRef(this.tmpMat)
+    this.tmpMat.transposeToRef(this.tmpMat)
+    this.tmpMat.copyToArrayBufferView(this.modelUboInfo.uniforms.u_worldInverseTranspose)
+    twgl.setUniformBlock(this.device.gl, this.programInfo, this.modelUboInfo);
 
-        // camera.viewInverse.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewInverseL)
-        // camera.viewProjection.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewProjectionL)
-        // camera.viewInverse.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewInverseR)
-        // camera.viewProjectionR.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewProjectionR)
-        twgl.setUniformBlock(this.device.gl, this.programInfo, this.viewUboInfo);
-    }
-    updateForLights(lights: Array<LightObject>) {
-        // TODO fix all this
-        var light = lights[0].light.lightSpec as PointLight
-        var tmp = new Vector3()
-        lights[0].transform.worldMatrix.decompose(tmp)
-        //debugger
-        twgl.setBlockUniforms(this.lightUboInfo, {
-            u_lightColor: [light.color.v[0], light.color.v[1], light.color.v[2], 1],
-            u_lightWorldPos: [tmp.x, tmp.y, tmp.z],
-        });
-        twgl.setUniformBlock(this.device.gl, this.programInfo, this.lightUboInfo);
-    }
-    updateUniforms() {
-        this.setTextures({
-            u_diffuse: this.diffuseTexture!,
-        })
-
-        twgl.setBlockUniforms(this.materialUboInfo, {
-            u_ambient: [0, 0, 0, 1],
-            u_specular: [0.2, 0.2, 0.2, 1],
-            u_shininess: 100,
-            u_specularFactor: 0.8,
-        });
-        twgl.setUniformBlock(this.device.gl, this.programInfo, this.materialUboInfo);
-    }
-    setTextures(textures: { [key: string]: Texture }) {
-        var u: any = {}
-        for (var key in textures) {
-            u[key] = textures[key].glTexture
-        }
-        twgl.setUniforms(this.programInfo, u);
-    }
-    updateAndDrawForMesh(mesh: MeshComponent) {
-        //this.device.gl.cullFace(this.device.gl.FRONT_FACE)
-
-        twgl.setBuffersAndAttributes(this.device.gl, this.programInfo, mesh.vertData.gpuBufferInfo); // Set object vert data
-
-        // Set world matrix and inverse transpose
-        mesh.object.transform.worldMatrix.copyToArrayBufferView(this.modelUboInfo.uniforms.u_world)
-        mesh.object.transform.worldMatrix.inverseToRef(this.tmpMat)
-        this.tmpMat.transposeToRef(this.tmpMat)
-        this.tmpMat.copyToArrayBufferView(this.modelUboInfo.uniforms.u_worldInverseTranspose)
-        twgl.setUniformBlock(this.device.gl, this.programInfo, this.modelUboInfo);
-
-        twgl.bindUniformBlock(this.device.gl, this.programInfo, this.modelUboInfo);  // model position
-        twgl.drawBufferInfo(this.device.gl, mesh.vertData.gpuBufferInfo);
-    }
+    twgl.bindUniformBlock(this.device.gl, this.programInfo, this.modelUboInfo);  // model position
+    twgl.drawBufferInfo(this.device.gl, mesh.vertData.gpuBufferInfo);
+  }
 
 
-    static vertShader = new Shader(`
+  static vertShader = new Shader(`
     #version 300 es
       #extension GL_OVR_multiview2 : require
       layout (num_views = 2) in;
@@ -170,7 +181,7 @@ export class BasicMaterial implements Material {
           
       `)
 
-    static fragShader = new Shader(`
+  static fragShader = new Shader(`
       #version 300 es
       precision mediump float;
       

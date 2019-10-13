@@ -5,22 +5,20 @@ import { DefaultVertexData } from "../../extensions/defaultVertexData"
 import { BasicMaterial } from "../components/material/basicMaterial"
 import { GPUDevice } from "../../gpu/gpuDevice"
 import { Texture } from "../../gpu/texture"
+import { Material } from "../components/material/material"
 
 export class MeshObject extends TransformObject {
     material: MaterialComponent
     mesh: MeshComponent
-    constructor(device: GPUDevice) {
-        super()
-        var mat = new BasicMaterial(device)
-        this.material = new MaterialComponent(mat)
-        mat.diffuseTexture =
-            Texture.createFromeSource(device, [
-                0, 192, 0, 255,
-                192, 0, 0, 255,
-                0, 0, 192, 255,
-                192, 192, 192, 255,
-            ])
 
+    /**
+     * Creats a mesh object with a given material
+     * @param device device to use for allocation
+     * @param material material (default: new BasicMaterial)
+     */
+    constructor(device: GPUDevice, material: Material = new BasicMaterial(device)) {
+        super()
+        this.material = new MaterialComponent(material)
         this.mesh = new MeshComponent(DefaultVertexData.createCubeVertexData(device))
 
         this.addComponent(this.material)
