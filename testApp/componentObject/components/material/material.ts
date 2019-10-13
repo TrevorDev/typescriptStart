@@ -1,10 +1,10 @@
-import { XRCamera } from "../../../extensions/xr/xrCamera";
 import { MeshComponent } from "../mesh/meshComponent";
 import { LightObject } from "../../baseObjects/lightObject";
+import { CameraObject } from "../../baseObjects/cameraObject";
 
 export interface Material {
     load(): void
-    updateFromCamera(camera: XRCamera): void
+    updateFromCamera(cameras: Array<CameraObject>): void
     updateForLights(lights: Array<LightObject>): void
     updateUniforms(): void
     updateAndDrawForMesh(mesh: MeshComponent): void

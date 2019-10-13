@@ -2,18 +2,18 @@ import { GPUDevice } from "../gpu/gpuDevice";
 import { MeshComponent } from "../componentObject/components/mesh/meshComponent";
 import { Texture } from "../gpu/texture";
 import { MultiviewTexture } from "../gpu/multiviewTexture";
-import { XRCamera } from "../extensions/xr/xrCamera";
 import { TransformObject } from "../componentObject/baseObjects/transformObject";
 import { TransformComponent } from "../componentObject/components/transform/transformComponent";
 import { MaterialComponent } from "../componentObject/components/material/materialComponent";
 import { LightObject } from "../componentObject/baseObjects/lightObject";
+import { XRHead } from "./xr/xrHead";
 
 export class Renderer {
     constructor(public device: GPUDevice) {
 
     }
-    renderScene(camera: XRCamera, nodes: Array<TransformObject>, lights: Array<LightObject>) {
-        camera.computeWorldMatrix()
+    renderScene(camera: XRHead, nodes: Array<TransformObject>, lights: Array<LightObject>) {
+        camera.transform.computeWorldMatrix()
 
 
         lights.forEach((l) => {
@@ -31,7 +31,7 @@ export class Renderer {
 
                     // Load material program
                     material.material.load()
-                    material.material.updateFromCamera(camera)
+                    material.material.updateFromCamera(camera.cameras)
                     material.material.updateForLights(lights)
 
                     // Load material instance specific data

@@ -1,4 +1,3 @@
-import { TransformNode } from "../../sceneGraph/transformNode";
 import { Component } from "../components/component";
 import { TransformObject } from "./transformObject";
 

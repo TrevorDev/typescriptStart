@@ -1,5 +1,5 @@
 import { Component } from "../component";
-import { XRCamera } from "../../../extensions/xr/xrCamera";
+import { Matrix4 } from "../../../math/matrix4";
 
 export class CameraComponent extends Component {
     static type = Component._TYPE_COUNTER++;
@@ -7,7 +7,10 @@ export class CameraComponent extends Component {
         return CameraComponent.type
     }
 
-    constructor(public xrCamera: XRCamera) {
+    projection = new Matrix4()
+    view = new Matrix4()
+
+    constructor() {
         super()
     }
 }

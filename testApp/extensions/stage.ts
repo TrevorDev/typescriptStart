@@ -1,7 +1,7 @@
 import { RenderWindow } from "../gpu/renderWindow";
 import { GPUDevice } from "../gpu/gpuDevice";
 import { DefaultVertexData } from "./defaultVertexData";
-import { Renderer } from "../sceneGraph/renderer";
+import { Renderer } from "./renderer";
 import { CustomProgram } from "../gpu/customProgram";
 import { XR, XRState } from "./xr/xr";
 import { Loop } from "./loop";
@@ -9,6 +9,7 @@ import { DefaultShaders } from "./defaultShaders";
 import { TransformObject } from "../componentObject/baseObjects/transformObject";
 import { CameraObject } from "../componentObject/baseObjects/cameraObject";
 import { LightObject } from "../componentObject/baseObjects/lightObject";
+import { XRHead } from "./xr/xrHead";
 
 export class Stage {
     // Debug flags
@@ -19,7 +20,7 @@ export class Stage {
     xr: XR
     window: RenderWindow
     renderer: Renderer
-    camera: CameraObject
+    xrHead: XRHead
     lights = new Array<LightObject>()
     private nodes = new Array<TransformObject>()
     renderLoop: ((deltaTime: number, curTime: number) => void) | null = null
@@ -43,7 +44,7 @@ export class Stage {
         this.renderer = new Renderer(this.device)
 
         // Lights and camera
-        this.camera = new CameraObject()
+        this.xrHead = new XRHead()
 
 
         this.lights.push(new LightObject())
@@ -66,7 +67,7 @@ export class Stage {
 
             // Update camera
             if (this.xr.state == XRState.IN_XR && this.xr.display.getFrameData(this.xr.frameData)) {
-                this.camera.camera.xrCamera.updateFromFrameData(this.xr.frameData)
+                this.xrHead.updateFromFrameData(this.xr.frameData)
             }
 
             if (this.renderLoop) {
@@ -89,7 +90,7 @@ export class Stage {
             this.renderer.clear()
 
             // Render scene
-            this.renderer.renderScene(this.camera.camera.xrCamera, this.nodes, this.lights)
+            this.renderer.renderScene(this.xrHead, this.nodes, this.lights)
             gl.invalidateFramebuffer(gl.FRAMEBUFFER, [gl.DEPTH_ATTACHMENT]);
             gl.disable(gl.SCISSOR_TEST);
             // Blit back to screen

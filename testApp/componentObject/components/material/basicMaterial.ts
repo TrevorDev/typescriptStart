@@ -7,9 +7,9 @@ import { Texture } from "../../../gpu/texture";
 import { PointLight } from "../light/pointLight";
 import { Vector3 } from "../../../math/vector3";
 import { Matrix4 } from "../../../math/matrix4";
-import { XRCamera } from "../../../extensions/xr/xrCamera";
 import { MeshComponent } from "../mesh/meshComponent";
 import { LightObject } from "../../baseObjects/lightObject";
+import { CameraObject } from "../../baseObjects/cameraObject";
 
 // export class StandardMaterialFactory {
 //     createInstance(){
@@ -56,11 +56,11 @@ export class BasicMaterial implements Material {
     load() {
         this.device.gl.useProgram(this.programInfo.program);
     }
-    updateFromCamera(camera: XRCamera) {
-        camera.leftEye.projection.multiplyToRef(camera.leftEye.view, this.tmpMat)
+    updateFromCamera(cameras: Array<CameraObject>) {
+        cameras[0].camera.projection.multiplyToRef(cameras[0].camera.view, this.tmpMat)
         this.tmpMat.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewProjectionL)
 
-        camera.rightEye.projection.multiplyToRef(camera.rightEye.view, this.tmpMat)
+        cameras[1].camera.projection.multiplyToRef(cameras[1].camera.view, this.tmpMat)
         this.tmpMat.copyToArrayBufferView(this.viewUboInfo.uniforms.u_viewProjectionR)
 
 
