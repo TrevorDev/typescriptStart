@@ -42,7 +42,7 @@ export class XRHead extends TransformObject {
 
         // compute eye relative to head
         this.transform.localMatrix.inverseToRef(this.tmpMatB)
-        this.tmpMat.multiplyToRef(this.tmpMatB, this.tmpMatB)
+        this.tmpMatB.multiplyToRef(this.tmpMat, this.tmpMatB)
 
         // Set view
         this.leftEye.transform.localMatrix.copyFrom(this.tmpMatB)
@@ -57,7 +57,7 @@ export class XRHead extends TransformObject {
 
         // compute eye relative to head
         this.transform.localMatrix.inverseToRef(this.tmpMatB)
-        this.tmpMat.multiplyToRef(this.tmpMatB, this.tmpMatB)
+        this.tmpMatB.multiplyToRef(this.tmpMat, this.tmpMatB)
 
         // Set view
         this.rightEye.transform.localMatrix.copyFrom(this.tmpMatB)
