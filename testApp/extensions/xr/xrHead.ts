@@ -35,7 +35,7 @@ export class XRHead extends TransformObject {
         this.leftEye.camera.projection.copyFromArrayBufferView(data.leftProjectionMatrix)
         this.rightEye.camera.projection.copyFromArrayBufferView(data.rightProjectionMatrix)
 
-
+        // LEFT EYE ------------------------------------------------------------------------------------------------------------
         // compute device space matrix of eye
         this.tmpMat.copyFromArrayBufferView(data.leftViewMatrix)
         this.tmpMat.inverseToRef(this.tmpMat)
@@ -46,10 +46,11 @@ export class XRHead extends TransformObject {
 
         // Set view
         this.leftEye.transform.localMatrix.copyFrom(this.tmpMatB)
+        this.leftEye.transform.localMatrix.decompose(this.leftEye.transform.position, this.leftEye.transform.rotation, this.leftEye.transform.scale)
         this.leftEye.transform.computeWorldMatrix()
         this.leftEye.transform.worldMatrix.inverseToRef(this.leftEye.camera.view)
 
-
+        // RIGHT EYE ------------------------------------------------------------------------------------------------------------
         // compute device space matrix of eye
         this.tmpMat.copyFromArrayBufferView(data.rightViewMatrix)
         this.tmpMat.inverseToRef(this.tmpMat)
@@ -60,6 +61,7 @@ export class XRHead extends TransformObject {
 
         // Set view
         this.rightEye.transform.localMatrix.copyFrom(this.tmpMatB)
+        this.rightEye.transform.localMatrix.decompose(this.rightEye.transform.position, this.rightEye.transform.rotation, this.rightEye.transform.scale)
         this.rightEye.transform.computeWorldMatrix()
         this.rightEye.transform.worldMatrix.inverseToRef(this.rightEye.camera.view)
     }
