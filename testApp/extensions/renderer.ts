@@ -12,9 +12,8 @@ export class Renderer {
     constructor(public device: GPUDevice) {
 
     }
-    renderScene(camera: XRHead, nodes: Array<TransformObject>, lights: Array<LightObject>) {
-        camera.transform.computeWorldMatrix()
-
+    renderScene(head: XRHead, nodes: Array<TransformObject>, lights: Array<LightObject>) {
+        head.updateViewMatrixForCameras()
 
         lights.forEach((l) => {
             l.transform.computeWorldMatrix()
@@ -31,7 +30,7 @@ export class Renderer {
 
                     // Load material program
                     material.material.load()
-                    material.material.updateFromCamera(camera.cameras)
+                    material.material.updateFromCamera(head.cameras)
                     material.material.updateForLights(lights)
 
                     // Load material instance specific data

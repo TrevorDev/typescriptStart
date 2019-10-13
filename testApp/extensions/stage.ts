@@ -21,6 +21,7 @@ export class Stage {
     xr: XR
     window: RenderWindow
     renderer: Renderer
+    xrStage: TransformObject
     xrHead: XRHead
     lights = new Array<LightObject>()
     private nodes = new Array<TransformObject>()
@@ -45,7 +46,14 @@ export class Stage {
         this.renderer = new Renderer(this.device)
 
         // Lights and camera
+        this.xrStage = new TransformObject();
+        this.addNode(this.xrStage)
+
         this.xrHead = new XRHead()
+        this.xrStage.transform.addChild(this.xrHead.transform)
+        this.xrStage.transform.position.y = 1.6
+        this.xrStage.transform.computeWorldMatrix()
+
 
 
         this.lights.push(new LightObject())
@@ -143,6 +151,9 @@ export class Stage {
                     // WebVR produces have a well scaled depth buffer.
                     this.xr.display.depthNear = 0.1;
                     this.xr.display.depthFar = 1024.0;
+
+                    this.xrStage.transform.localMatrix.copyFrom(this.xr.standingTrasform)
+
                     currentLoop = new Loop((x: any) => { this.xr.display.requestAnimationFrame(x) }, gameLoop)
                 }
             }

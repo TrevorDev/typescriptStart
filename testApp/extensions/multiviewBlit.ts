@@ -1,7 +1,6 @@
 import { DefaultVertexData } from "./defaultVertexData"
 import { GPUDevice } from "../gpu/gpuDevice"
 import { CustomProgram } from "../gpu/customProgram"
-import { DefaultShaders } from "./defaultShaders"
 import { VertexData } from "../gpu/vertexData"
 import { MultiviewTexture } from "./multiviewTexture"
 import { Shader } from "../gpu/shader"

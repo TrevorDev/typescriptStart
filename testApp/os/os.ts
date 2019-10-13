@@ -6,6 +6,7 @@ import { GPUDevice } from "../gpu/gpuDevice";
 import { AppContainer } from "./app/appContainer";
 import { Launcher } from "./homeEnv/launcher";
 import { AppSpec } from "./app/appSpec";
+import { DefaultMesh } from "../extensions/defaultMesh";
 
 export class OS {
     /**
@@ -98,6 +99,10 @@ export class OS {
             this.appManager.update(delta, curTime)
         })
 
+        var floor = DefaultMesh.createMesh(this.device)
+        floor.transform.scale.set(100, 0.1, 100)
+        floor.transform.position.y -= 0.2
+        this.globalStage.addNode(floor)
         // var floor = new MeshObject(this.globalStage.device)
         // floor.mesh = new Mesh(DefaultVertexData.createPlaneVertexData(this.globalStage.device))
         // floor.material = new Material()

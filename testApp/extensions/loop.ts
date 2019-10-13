@@ -1,19 +1,19 @@
 export class Loop {
     private running = true
-    private stopResolve:Function
-    constructor(repeater:Function, fn:Function){
+    private stopResolve: Function
+    constructor(repeater: Function, fn: Function) {
         var loop = () => {
-            if(this.running){
+            if (this.running) {
                 repeater(loop)
-            }else{
+            } else {
                 this.stopResolve()
             }
             fn()
         }
         repeater(loop)
     }
-    stop(){
-        return new Promise((res)=>{
+    stop() {
+        return new Promise((res) => {
             this.stopResolve = res
             this.running = false;
         })

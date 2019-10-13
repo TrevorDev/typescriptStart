@@ -1,6 +1,8 @@
 import { GPUDevice } from "../../gpu/gpuDevice"
 import { MultiviewTexture } from "../multiviewTexture"
 import { Texture } from "../../gpu/texture"
+import { Matrix4 } from "../../math/matrix4"
+import { Vector3 } from "../../math/vector3"
 
 export enum XRState {
     IN_XR,
@@ -15,6 +17,9 @@ export class XR {
     frameData: VRFrameData
     leftControllerIndex: number | null = null
     rightControllerIndex: number | null = null
+
+    standingTrasform = new Matrix4()
+
     get leftController() {
         if (this.leftControllerIndex == null) {
             return null;
@@ -33,8 +38,8 @@ export class XR {
         this.textures.push(new Texture(gpuDevice))
 
         window.addEventListener('gamepadconnected', (e) => {
-            console.log("connected")
-            console.log(e)
+            // console.log("connected")
+            // console.log(e)
             var gamepad = (e as any).gamepad
             if (gamepad.hand == "right") {
                 this.rightControllerIndex = gamepad.index
@@ -44,8 +49,8 @@ export class XR {
         });
 
         window.addEventListener('gamepaddisconnected', (e) => {
-            console.log("disconnected")
-            console.log(e)
+            // console.log("disconnected")
+            // console.log(e)
             var gamepad = (e as any).gamepad
             if (gamepad.hand == "right") {
                 this.rightControllerIndex = null
@@ -73,6 +78,12 @@ export class XR {
     async start() {
         console.log("GET DISPLAY")
         this.display = (await navigator.getVRDisplays())[0]
+
+        if (this.display.stageParameters && this.display.stageParameters.sittingToStandingTransform) {
+            this.standingTrasform.copyFromArrayBufferView(this.display.stageParameters.sittingToStandingTransform)
+        }
+
+
         console.log(this.display)
 
         console.log("PRESENT")
