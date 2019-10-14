@@ -20,7 +20,7 @@ export class AppContainer {
         this.containerSpace.transform.addChild(appSpace.transform)
 
         this.taskBar = new MeshObject(globalStage.device)//DefaultMesh.createCube(globalStage.device)
-        this.taskBar.addComponent(new DragComponent())
+        this.taskBar.addComponent(new DragComponent(this.containerSpace))
         var taskBarSize = 0.1
         this.taskBar.transform.scale.setScalar(taskBarSize)
         //this.taskBar.transform.rotation.fromEuler(new Vector3(0, 0, Math.PI / 4))

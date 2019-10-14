@@ -9,10 +9,16 @@ export class DragComponent extends Component {
         return DragComponent.type
     }
     identity = new Matrix4()
+    constructor(private objectToDrag?: TransformObject) {
+        super()
+
+
+    }
 
     activeController: null | XRController = null
     node = new TransformObject()
     start(controller: XRController) {
+        this.objectToDrag = this.objectToDrag ? this.objectToDrag : this.object
         if (this.activeController) {
             return
         }
@@ -21,11 +27,11 @@ export class DragComponent extends Component {
         // Update matrix
         var m = new Matrix4()
         controller.transform.computeWorldMatrix()
-        this.object.transform.computeWorldMatrix()
+        this.objectToDrag.transform.computeWorldMatrix()
 
         // Add child but keep world matrix
         controller.transform.addChild(this.node.transform)
-        this.node.transform.setLocalMatrixFromWorldMatrix(this.object.transform.worldMatrix)
+        this.node.transform.setLocalMatrixFromWorldMatrix(this.objectToDrag.transform.worldMatrix)
     }
     update() {
         if (!this.activeController) {
@@ -34,7 +40,7 @@ export class DragComponent extends Component {
 
         this.node.transform.computeWorldMatrix()
 
-        this.object.transform.setLocalMatrixFromWorldMatrix(this.node.transform.worldMatrix)
+        this.objectToDrag!.transform.setLocalMatrixFromWorldMatrix(this.node.transform.worldMatrix)
     }
     end() {
         if (!this.activeController) {

@@ -91,6 +91,7 @@ export class TransformComponent extends Component {
             this.object.transform.computeWorldMatrix()
         } else {
             this.object.transform.localMatrix.copyFrom(worldMatrix)
+            this.object.transform.localMatrix.decompose(this.object.transform.position, this.object.transform.rotation, this.object.transform.scale)
         }
     }
 }
