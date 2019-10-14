@@ -73,7 +73,7 @@ export class XRController extends TransformObject {
             }
         }
         stage.xrStage.transform.addChild(this.transform)
-        this.mesh = new MeshObject(stage.device)//DefaultMesh.createCube(stage.device)
+        this.mesh = DefaultMesh.createMesh(stage.device, { color: Color.createFromHex("#2c3e50") })
         this.mesh.mesh.visible = false
         this.mesh.transform.scale.scaleInPlace(0.05)
         this.mesh.transform.scale.z *= 10

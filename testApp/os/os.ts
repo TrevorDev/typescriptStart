@@ -9,6 +9,8 @@ import { AppSpec } from "./app/appSpec";
 import { DefaultMesh } from "../extensions/defaultMesh";
 import { Color } from "../math/color";
 import { DragComponent } from "../componentObject/components/behavior/dragComponent";
+import { DefaultVertexData } from "../extensions/defaultVertexData";
+import { BasicMaterial } from "../componentObject/components/material/basicMaterial";
 
 export class OS {
     /**
@@ -98,17 +100,21 @@ export class OS {
                     controller.hitMesh.mesh.visible = false
                 }
 
-                if (controller.hoveredApp) {
-                    var drag = controller.hoveredApp.taskBar.getComponent<DragComponent>(DragComponent.type)!
-                    if (controller.primaryButton.justDown && isTaskBar) {
-                        console.log("PRESSSED")
-                        drag.start(controller)
+                this.appManager.appContainers.forEach((container) => {
+                    var drag = container.taskBar.getComponent<DragComponent>(DragComponent.type)!
+                    if (controller.hoveredApp == container) {
+
+                        if (controller.primaryButton.justDown && isTaskBar) {
+                            console.log("PRESSSED")
+                            drag.start(controller)
+                        }
                     }
                     drag.update()
                     if (controller.primaryButton.justUp) {
                         drag.end()
                     }
-                }
+                })
+
 
             })
 
@@ -120,6 +126,12 @@ export class OS {
         floor.transform.scale.set(100, 0.1, 100)
         floor.transform.position.y -= floor.transform.scale.y / 2
         this.globalStage.addNode(floor)
+
+        var lightSphere = DefaultMesh.createMesh(this.device, { vertexData: DefaultVertexData.createSphereVertexData(this.device), color: Color.createFromHex("#ecf0f1") });
+        (lightSphere.material.material as BasicMaterial).ambientColor.set(1, 1, 1, 1)
+        lightSphere.transform.scale.scaleInPlace(4)
+        lightSphere.transform.position.copyFrom(this.globalStage.lights[0].transform.position)
+        this.globalStage.addNode(lightSphere)
 
         // OS is done loading
         this.setGlobal()

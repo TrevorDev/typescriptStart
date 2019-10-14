@@ -4,7 +4,7 @@ import * as twgl from "twgl.js"
 export class Texture {
     public glTexture: WebGLTexture | null = null
     public frameBuffer = null
-    static createFromeSource(device: GPUDevice, src: Array<number>) {
+    static createFromeSource(device: GPUDevice, src: Array<number> | TexImageSource) {
         // TODO add constructor that sets framebuffer
         var r = new Texture(device)
         r.glTexture = twgl.createTexture(device.gl, {

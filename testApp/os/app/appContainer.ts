@@ -5,6 +5,8 @@ import { TransformObject } from "../../componentObject/baseObjects/transformObje
 import { MeshObject } from "../../componentObject/baseObjects/meshObject";
 import { DragComponent } from "../../componentObject/components/behavior/dragComponent";
 import { XRController } from "../input/xrController";
+import { DefaultMesh } from "../../extensions/defaultMesh";
+import { Color } from "../../math/color";
 export class AppContainer {
     app: App
     taskBar: MeshObject
@@ -20,7 +22,7 @@ export class AppContainer {
         this.app = new App(appSpace)
         this.containerSpace.transform.addChild(appSpace.transform)
 
-        this.taskBar = new MeshObject(globalStage.device)//DefaultMesh.createCube(globalStage.device)
+        this.taskBar = DefaultMesh.createMesh(globalStage.device, { color: Color.createFromHex("#7f8c8d") }) //new MeshObject(globalStage.device)//DefaultMesh.createCube(globalStage.device)
         this.taskBar.addComponent(new DragComponent(this.containerSpace))
         var taskBarSize = 0.1
         this.taskBar.transform.scale.setScalar(taskBarSize)

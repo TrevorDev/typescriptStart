@@ -5,6 +5,13 @@ export class Color {
         this.v = new Float32Array([r, g, b, a])
     }
 
+    set(r = 0, g = 0, b = 0, a = 1) {
+        this.r = r
+        this.g = g
+        this.b = b
+        this.a = a
+    }
+
     static createFromHex(hexString: string) {
         var r: any
         var g: any
@@ -21,9 +28,9 @@ export class Color {
             b = "0x" + hexString[5] + hexString[6];
         }
 
-        r = +(r / 255 * 100).toFixed(1);
-        g = +(g / 255 * 100).toFixed(1);
-        b = +(b / 255 * 100).toFixed(1);
+        r = +(r / 255);
+        g = +(g / 255);
+        b = +(b / 255);
 
         return new Color(r, g, b)
     }

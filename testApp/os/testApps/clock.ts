@@ -9,7 +9,7 @@ import { Vector3 } from "../../math/vector3"
 var os = OS.GetOS()
 os.registerApp({
     appName: "Clock",
-    iconImage: null,
+    iconImage: "/public/img/clock.png",
     create: (app: App) => {
         var input = os.getInputManager()
 

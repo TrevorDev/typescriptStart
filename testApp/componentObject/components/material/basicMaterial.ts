@@ -10,6 +10,7 @@ import { MeshComponent } from "../mesh/meshComponent";
 import { LightObject } from "../../baseObjects/lightObject";
 import { CameraObject } from "../../baseObjects/cameraObject";
 import { Shader } from "../../../gpu/shader";
+import { Color } from "../../../math/color";
 
 // export class StandardMaterialFactory {
 //     createInstance(){
@@ -28,6 +29,11 @@ export class BasicMaterial implements Material {
   diffuseTexture: Texture
   lightingAmount = 1;
   tmpMat = new Matrix4()
+  ambientColor = new Color(0.35, 0.35, 0.35, 1)
+  specularColor = new Color(0.2, 0.2, 0.2, 1)
+  shininess = 100
+  specularFactor = 0.8
+
   constructor(public device: GPUDevice) {
     if (!BasicMaterial._defaultTexture) {
       BasicMaterial._defaultTexture = Texture.createFromeSource(device, [
@@ -44,14 +50,6 @@ export class BasicMaterial implements Material {
     this.viewUboInfo = twgl.createUniformBlockInfo(device.gl, this.programInfo, "View");
 
     this.materialUboInfo = twgl.createUniformBlockInfo(device.gl, this.programInfo, "Material");
-    twgl.setBlockUniforms(this.materialUboInfo, {
-      u_ambient: [0, 0, 0, 1],
-      u_specular: [1, 1, 1, 1],
-      u_shininess: 100,
-      u_specularFactor: 0.8,
-    });
-    twgl.setUniformBlock(device.gl, this.programInfo, this.materialUboInfo);
-    //materialUboInfos.push(materialUbo);
 
     this.modelUboInfo = twgl.createUniformBlockInfo(device.gl, this.programInfo, "Model");
     var m4 = twgl.m4
@@ -99,10 +97,10 @@ export class BasicMaterial implements Material {
     })
 
     twgl.setBlockUniforms(this.materialUboInfo, {
-      u_ambient: [0.35, 0.35, 0.35, 1],
-      u_specular: [0.2, 0.2, 0.2, 1],
-      u_shininess: 100,
-      u_specularFactor: 0.8,
+      u_ambient: this.ambientColor.v,
+      u_specular: this.specularColor.v,
+      u_shininess: this.shininess,
+      u_specularFactor: this.specularFactor,
     });
     twgl.setUniformBlock(this.device.gl, this.programInfo, this.materialUboInfo);
   }
