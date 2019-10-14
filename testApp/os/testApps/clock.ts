@@ -30,6 +30,8 @@ os.registerApp({
         screen.transform.position.y = screen.transform.scale.z / 2 + 0.05
         app.scene.transform.addChild(screen.transform)
         var euler = new Vector3(0, 0, 0)
+        euler.x = Math.PI / 2
+        screen.transform.rotation.fromEuler(euler)
 
         var frameArray = new Array<number>()
         var frameIndex = 0

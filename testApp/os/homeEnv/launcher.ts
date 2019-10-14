@@ -71,6 +71,16 @@ export class Launcher {
 
                     app.scene.transform.addChild(appIcon.transform)
                     appIcons.push(appIcon)
+
+                    appIcons.forEach((icon, i) => {
+                        var mid = appIcons.length / 2
+                        var offset = i + 0.5 - mid
+                        icon.transform.position.x = offset * 0.4
+                    })
+
+                    // var appContainer = appManager.createApp()
+
+                    // appSpec.create(appContainer.app)
                 }
             }
         })
