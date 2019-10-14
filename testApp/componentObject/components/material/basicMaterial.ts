@@ -1,7 +1,6 @@
 
 import * as twgl from "twgl.js"
 import { Material } from "./material";
-import { DefaultShaders } from "../../../extensions/defaultShaders";
 import { GPUDevice } from "../../../gpu/gpuDevice";
 import { Texture } from "../../../gpu/texture";
 import { PointLight } from "../light/pointLight";

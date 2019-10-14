@@ -7,14 +7,17 @@ import { MeshComponent } from "../componentObject/components/mesh/meshComponent"
 
 export class HitResult {
     hitDistance: null | number
+    hitObject: null | TransformObject
     constructor() {
         this.reset()
     }
     reset() {
         this.hitDistance = null;
+        this.hitObject = null;
     }
     copyFrom(h: HitResult) {
         this.hitDistance = h.hitDistance
+        this.hitObject = h.hitObject;
     }
 }
 
@@ -122,6 +125,7 @@ export class Hit {
                 // calculate distance in world space
                 ray.origin.subtractToRef(this._tempVecA, this._tempVecA)
                 res.hitDistance = this._tempVecA.length()
+                res.hitObject = node
             }
         }
 

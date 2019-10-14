@@ -5,7 +5,6 @@ import { Renderer } from "./renderer";
 import { CustomProgram } from "../gpu/customProgram";
 import { XR, XRState } from "./xr/xr";
 import { Loop } from "./loop";
-import { DefaultShaders } from "./defaultShaders";
 import { TransformObject } from "../componentObject/baseObjects/transformObject";
 import { CameraObject } from "../componentObject/baseObjects/cameraObject";
 import { LightObject } from "../componentObject/baseObjects/lightObject";
@@ -79,7 +78,7 @@ export class Stage {
             }
 
             if (this.renderLoop) {
-                this.renderLoop(deltaTime, time)
+                this.renderLoop(deltaTime, time / 1000)
             }
 
             // Clear and set viewport

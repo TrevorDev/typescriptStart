@@ -107,7 +107,7 @@ export class OS {
             })
 
             // Run each app's render loop
-            this.appManager.update(delta, curTime)
+            this.appManager.update(delta, curTime, this.inputManager.controllers)
         })
 
         var floor = DefaultMesh.createMesh(this.device, { color: Color.createFromHex("#34495e") })
@@ -120,7 +120,7 @@ export class OS {
         console.log("NiftyOS v1.0")
 
         // Create launcher
-        var launcher = new Launcher(this)
+        var launcher = new Launcher(this, this.appManager)
 
         // Register a test app
         require("./testApps/clock")
@@ -141,8 +141,6 @@ export class OS {
         if (!this.launcherApp) {
             var container = this.appManager.createApp()
             this.launcherApp = container
-            container.containerSpace.transform.position.z = -1
-            container.containerSpace.transform.position.y = 1.5
             appSpec.create(container.app)
         } else {
             (this.launcherApp.app as any).registerApp(appSpec)

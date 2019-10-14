@@ -4,6 +4,7 @@ import { InputManager } from "../input/inputManager";
 import { TransformObject } from "../../componentObject/baseObjects/transformObject";
 import { MeshObject } from "../../componentObject/baseObjects/meshObject";
 import { DragComponent } from "../../componentObject/components/behavior/dragComponent";
+import { XRController } from "../input/xrController";
 export class AppContainer {
     app: App
     taskBar: MeshObject
@@ -32,7 +33,7 @@ export class AppContainer {
         //Dragable.MakeDragable(this.containerSpace, this.inputManager, this.taskBar)
     }
 
-    update(delta: number, curTime: number) {
-        this.app.update(delta, curTime)
+    update(delta: number, curTime: number, controllers: Array<XRController>) {
+        this.app.update(delta, curTime, controllers)
     }
 }
