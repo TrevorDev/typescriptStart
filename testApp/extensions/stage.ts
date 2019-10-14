@@ -141,10 +141,11 @@ export class Stage {
                     await currentLoop.stop()
                 }
                 currentLoop = null
-                console.log("TRYING")
+                console.log("Trying to enter XR")
                 if (await this.xr.canStart()) {
-                    console.log("STARTING")
+                    console.log("STARTING XR")
                     await this.xr.start()
+                    console.log("XR Started")
                     // It's heighly reccommended that you set the near and far planes to
                     // something appropriate for your scene so the projection matricies
                     // WebVR produces have a well scaled depth buffer.

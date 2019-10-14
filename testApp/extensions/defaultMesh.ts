@@ -21,7 +21,6 @@ export class DefaultMesh {
                 (res.material.material as BasicMaterial).diffuseTexture = options.texture
             } else if (options.color) {
                 var src = [Math.floor(255 * options.color.r), Math.floor(255 * options.color.g), Math.floor(255 * options.color.b), Math.floor(255 * options.color.a)];
-                console.log(src);
                 (res.material.material as BasicMaterial).diffuseTexture = Texture.createFromeSource(device, src)
             }
         }
