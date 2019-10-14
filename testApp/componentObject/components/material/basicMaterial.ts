@@ -99,7 +99,7 @@ export class BasicMaterial implements Material {
     })
 
     twgl.setBlockUniforms(this.materialUboInfo, {
-      u_ambient: [0, 0, 0, 1],
+      u_ambient: [0.35, 0.35, 0.35, 1],
       u_specular: [0.2, 0.2, 0.2, 1],
       u_shininess: 100,
       u_specularFactor: 0.8,
@@ -207,10 +207,7 @@ export class BasicMaterial implements Material {
       out vec4 theColor;
       
       vec4 lit(float l ,float h, float m) {
-        return vec4(1.0,
-                    max(abs(l), 0.0),
-                    (l > 0.0) ? pow(max(0.0, h), m) : 0.0,
-                    1.0);
+        return vec4(1.0, (l > 0.0) ? l : 0., (l > 0.0) ? pow(max(0.0, h), m) : 0.0, .0);
       }
       
       
