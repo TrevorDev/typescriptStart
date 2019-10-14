@@ -5,6 +5,9 @@ import { Vector3 } from "../../math/vector3";
 import { Quaternion } from "../../math/quaternion";
 import { TransformObject } from "../../componentObject/baseObjects/transformObject";
 import { MeshObject } from "../../componentObject/baseObjects/meshObject";
+import { DefaultMesh } from "../../extensions/defaultMesh";
+import { DefaultVertexData } from "../../extensions/defaultVertexData";
+import { Color } from "../../math/color";
 
 export class XRButtonState {
     private _value = 0
@@ -52,7 +55,9 @@ export class XRController extends TransformObject {
     // TODO move this class to os?
     hoveredApp: null | AppContainer = null
     hitMesh: MeshObject
-    rayMesh: MeshObject
+    mesh: MeshObject
+
+    connected = false;
 
     primaryButton = new XRButtonState()
 
@@ -68,13 +73,14 @@ export class XRController extends TransformObject {
             }
         }
         stage.xrStage.transform.addChild(this.transform)
-        var mesh = new MeshObject(stage.device)//DefaultMesh.createCube(stage.device)
-        mesh.transform.scale.scaleInPlace(0.05)
-        mesh.transform.scale.z *= 10
-        this.transform.addChild(mesh.transform)
+        this.mesh = new MeshObject(stage.device)//DefaultMesh.createCube(stage.device)
+        this.mesh.mesh.visible = false
+        this.mesh.transform.scale.scaleInPlace(0.05)
+        this.mesh.transform.scale.z *= 10
+        this.transform.addChild(this.mesh.transform)
 
-        this.hitMesh = new MeshObject(stage.device)//DefaultMesh.createSphere(stage.device)
-        this.hitMesh.transform.scale.scaleInPlace(0.05)
+        this.hitMesh = DefaultMesh.createMesh(stage.device, { vertexData: DefaultVertexData.createSphereVertexData(stage.device), color: new Color(0.9, 0.9, 0.9) })
+        this.hitMesh.transform.scale.scaleInPlace(0.02)
         stage.addNode(this.hitMesh)
 
         // this.rayMesh = DefaultMesh.createSphere(stage.device)
@@ -92,6 +98,9 @@ export class XRController extends TransformObject {
 
         var gamepad = this.getGamepad()
         if (gamepad) {
+            this.connected = true
+            this.mesh.mesh.visible = true
+
             this.primaryButton.setValue(gamepad.buttons[1].value)
             if (gamepad.pose) {
                 if (gamepad.pose.position) {
@@ -101,6 +110,10 @@ export class XRController extends TransformObject {
                     this.transform.rotation.set(gamepad.pose.orientation[0], gamepad.pose.orientation[1], gamepad.pose.orientation[2], gamepad.pose.orientation[3])
                 }
             }
+        } else {
+            this.connected = false
+            this.mesh.mesh.visible = false
+            this.hitMesh.mesh.visible = false
         }
         this.transform.computeWorldMatrix(true)
         var vec = new Vector3(0, 0, -1)

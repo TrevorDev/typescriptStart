@@ -64,6 +64,9 @@ export class OS {
              * 
              */
             this.inputManager.controllers.forEach((controller) => {
+                if (!controller.connected) {
+                    return
+                }
                 var closestHit = { distance: Infinity, obj: null }
                 var hitResult = new HitResult()
                 var isTaskBar = false
@@ -90,6 +93,9 @@ export class OS {
                     controller.hitMesh.transform.position.copyFrom(controller.ray.direction)
                     controller.hitMesh.transform.position.scaleInPlace(closestHit.distance)
                     controller.hitMesh.transform.position.addToRef(controller.ray.origin, controller.hitMesh.transform.position)
+                    controller.hitMesh.mesh.visible = true
+                } else {
+                    controller.hitMesh.mesh.visible = false
                 }
 
                 if (controller.hoveredApp) {

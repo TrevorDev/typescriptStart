@@ -6,6 +6,7 @@ export class MeshComponent extends Component {
     getType(): number {
         return MeshComponent.type
     }
+    visible = true;
     constructor(public vertData: VertexData) {
         super()
     }

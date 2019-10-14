@@ -26,7 +26,7 @@ export class Renderer {
                 // debugger
                 var material = node.object.getComponent<MaterialComponent>(MaterialComponent.type)
                 var mesh = node.object.getComponent<MeshComponent>(MeshComponent.type)
-                if (material && mesh) {
+                if (material && mesh && mesh.visible) {
 
                     // Load material program
                     material.material.load()
