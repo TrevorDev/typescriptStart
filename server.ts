@@ -2,21 +2,12 @@ import express from "express"
 import * as http from "http"
 import sio from "socket.io";
 import program from "commander"
+
 import { WebRtcPeer } from "./libs/webRTCPeer"
-//@ts-ignore
-// import * as nrtc from "wrtc"
-// import { EventEmitter } from "events";
-const RTCPeerConnection = require('wrtc').RTCPeerConnection;
-
 const { createCanvas, createImageData } = require('canvas');
-// const { hsv } = require('color-space');
-// const { performance } = require('perf_hooks');
-
 const { RTCVideoSink, RTCVideoSource, i420ToRgba, rgbaToI420 } = require('wrtc').nonstandard;
-
 const width = 640;
 const height = 480;
-//console.log(nrtc)
 
 program
   .version('0.1.0')
@@ -36,9 +27,11 @@ app.get('/', function (req, res) {
 
 var connection: WebRtcPeer
 app.get('/connections', async function (req, res) {
+  // Create a connection
   connection = new WebRtcPeer();
   var peerConnection = connection.peerConnection
 
+  // Setup rendering
   const source = new RTCVideoSource();
   const track = source.createTrack();
   const transceiver = peerConnection.addTransceiver(track);
@@ -52,9 +45,8 @@ app.get('/connections', async function (req, res) {
 
   sink.addEventListener('frame', onFrame);
 
-  // TODO(mroberts): Is pixelFormat really necessary?
   const canvas = createCanvas(width, height);
-  const context = canvas.getContext('2d', { pixelFormat: 'RGBA24' });
+  const context = canvas.getContext('2d');
   context.fillStyle = 'white';
   context.fillRect(0, 0, width, height);
 
@@ -78,7 +70,6 @@ app.get('/connections', async function (req, res) {
 
     hue = ++hue % 360;
     const [r, g, b] = [255, 0, 0];
-    //const thisTime = performance.now();
 
     context.font = '60px Sans-serif';
     context.strokeStyle = 'black';
@@ -100,54 +91,18 @@ app.get('/connections', async function (req, res) {
     };
     rgbaToI420(rgbaFrame, i420Frame);
     source.onFrame(i420Frame);
-    // console.log("onframe")
   });
 
-  // NOTE(mroberts): This is a hack so that we can get a callback when the
-  // RTCPeerConnection is closed. In the future, we can subscribe to
-  // "connectionstatechange" events.
-  const { close } = peerConnection;
-  peerConnection.close = function () {
-    clearInterval(interval);
-    sink.stop();
-    track.stop();
-    return close.apply(this, arguments);
-  };
-
-
-  console.log("Creating offer")
+  // Create offer and send info
   await connection.doOffer()
-  console.log("offer done")
-
-
-  // const offer = await peerConnection.createOffer();
-  // await peerConnection.setLocalDescription(offer);
-  // try {
-  //   //await waitUntilIceGatheringStateComplete(peerConnection, options);
-  // } catch (error) {
-  //   //this.close();
-  //   throw error;
-  // }
-
-
   res.send(connection)
 
 })
 
 app.post(`/connections/:id/remote-description`, async (req, res) => {
-  // console.log("GOT POST")
-  // console.log(req.body)
-  const { id } = req.params;
-  if (!connection) {
-    res.sendStatus(404);
-    return;
-  }
-  try {
-    await connection.applyAnswer(req.body);
-    res.send(connection.toJSON().remoteDescription);
-  } catch (error) {
-    res.sendStatus(400);
-  }
+  // Receive answer
+  await connection.applyAnswer(req.body);
+  res.send(connection.toJSON().remoteDescription);
 });
 
 var server = http.createServer(app)

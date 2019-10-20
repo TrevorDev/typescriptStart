@@ -1,9 +1,7 @@
 import $ from "jquery"
 
-console.log("hit")
-
-
 var main = async () => {
+    // Init video elements
     var localVideo = document.createElement("video")
     localVideo.autoplay = true
     localVideo.muted = true;
@@ -13,62 +11,35 @@ var main = async () => {
     remoteVideo.autoplay = true
     document.body.appendChild(remoteVideo)
 
-    const localPeerConnection = new RTCPeerConnection();
-
-
-    var resp = await $.get("/connections")
-    console.log(resp)
-
-    localPeerConnection.setRemoteDescription(resp.localDescription)
-
-
-    var stereo = false
-
+    // Record from camera to local video
     const localStream = await window.navigator.mediaDevices.getUserMedia({
         audio: true,
         video: true
     });
-
     localVideo.srcObject = localStream;
+
+    // Connect to server and get server to offer a connection
+    const localPeerConnection = new RTCPeerConnection();
+    var resp = await $.get("/connections")
+    localPeerConnection.setRemoteDescription(resp.localDescription)
+
+
+    // Set video out to be local video element and video in from server
     localStream.getTracks().forEach(track => localPeerConnection.addTrack(track, localStream));
 
     const remoteStream = new MediaStream(localPeerConnection.getReceivers().map(receiver => receiver.track));
     remoteVideo.srcObject = remoteStream;
 
-    // NOTE(mroberts): This is a hack so that we can get a callback when the
-    // RTClocalPeerConnection is closed. In the future, we can subscribe to
-    // "connectionstatechange" events.
-    const { close } = localPeerConnection;
-    localPeerConnection.close = function () {
-        console.log("closed")
-        remoteVideo.srcObject = null;
-
-        localVideo.srcObject = null;
-
-        localStream.getTracks().forEach(track => track.stop());
-
-        return close.apply(this, arguments);
-    };
-
-
+    // create answer to to server's offer
     const originalAnswer = await localPeerConnection.createAnswer();
     console.log("created answer")
     const updatedAnswer = new RTCSessionDescription({
         type: 'answer',
-        //sdp: stereo ? enableStereoOpus(originalAnswer.sdp) : originalAnswer.sdp
         sdp: originalAnswer.sdp
     });
     await localPeerConnection.setLocalDescription(updatedAnswer);
 
-    console.log("set local desc")
-
-    // await fetch(`${host}${prefix}/connections/${id}/remote-description`, {
-    //     method: 'POST',
-    //     body: JSON.stringify(localPeerConnection.localDescription),
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     }
-    // });
+    // Send answer to server to connect
     await $.ajax({
         url: `/connections/1/remote-description`,
         type: "POST",
@@ -77,31 +48,3 @@ var main = async () => {
     });
 }
 main()
-
-
-// async function beforeAnswer(peerConnection) {
-//     const localStream = await window.navigator.mediaDevices.getUserMedia({
-//       audio: true,
-//       video: true
-//     });
-
-//     localVideo.srcObject = localStream;
-//     localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
-
-//     const remoteStream = new MediaStream(peerConnection.getReceivers().map(receiver => receiver.track));
-//     remoteVideo.srcObject = remoteStream;
-
-//     // NOTE(mroberts): This is a hack so that we can get a callback when the
-//     // RTCPeerConnection is closed. In the future, we can subscribe to
-//     // "connectionstatechange" events.
-//     const { close } = peerConnection;
-//     peerConnection.close = function() {
-//       remoteVideo.srcObject = null;
-
-//       localVideo.srcObject = null;
-
-//       localStream.getTracks().forEach(track => track.stop());
-
-//       return close.apply(this, arguments);
-//     };
-//   }
