@@ -1,15 +1,22 @@
 const { desktopCapturer } = require('electron')
+import * as scli from "socket.io-client";
+import { MultiplayerSocketServer } from "../multiplayerSocketServer/multiplayerSocketServer";
+import { Message, Client } from "../multiplayerSocketServer/Message";
 
 //var vidEl = document.createElement("video")
 var main = async () => {
     // debugger
     var sources = await desktopCapturer.getSources({ types: ['window', 'screen'] })
-    var chosenSrc = null;
+    var chosenSrc: MediaStream | null = null;
     for (const source of sources) {
         if (source.name === 'Screen 1') {
             try {
                 const stream = await (navigator.mediaDevices.getUserMedia as any)({
-                    audio: false,
+                    audio: {
+                        mandatory: {
+                            chromeMediaSource: 'desktop'
+                        }
+                    },
                     video: {
                         mandatory: {
                             chromeMediaSource: 'desktop',
@@ -38,5 +45,41 @@ var main = async () => {
     document.body.appendChild(localVideo)
     localVideo.srcObject = chosenSrc
     localVideo.onloadedmetadata = (e) => localVideo.play()
+
+    // this receives a call and sends desktop screen/audio
+    var rtc = new RTCPeerConnection();
+
+
+    var client = new Client(scli.default("http://localhost:3000/multiplayerSocketServer"))
+    var data = await client.joinRoom("testRoom")
+    console.log("I joined: " + data.room)
+
+    data = await client.getUsersInRoom("testRoom")
+    console.log("Users in room:" + Object.keys(data.users).length)
+
+    client.io.on(Message.SEND_TO_USER, async (msg: any) => {
+        console.log(msg)
+        if (msg.data.action == "setRTCDesc") {
+            await rtc.setRemoteDescription(msg.data.localDescription)
+
+            var stream = chosenSrc!
+            // Set video out to be local video element and video in from server
+            stream.getTracks().forEach(track => rtc.addTrack(track, stream));
+
+            // const remoteStream = new MediaStream(rtc.getReceivers().map(receiver => receiver.track));
+            // remoteVideo.srcObject = remoteStream;
+
+            // create answer to to server's offer
+            const originalAnswer = await rtc.createAnswer();
+            console.log("created answer")
+            const updatedAnswer = new RTCSessionDescription({
+                type: 'answer',
+                sdp: originalAnswer.sdp
+            });
+            await rtc.setLocalDescription(updatedAnswer);
+
+            client.sendToUser(msg.from, { localDescription: rtc.localDescription })
+        }
+    })
 }
 main()

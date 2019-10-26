@@ -2,6 +2,7 @@ import express from "express"
 import * as http from "http"
 import sio from "socket.io";
 import program from "commander"
+import { MultiplayerSocketServer } from "./multiplayerSocketServer/multiplayerSocketServer";
 
 program
   .version('0.1.0')
@@ -9,14 +10,15 @@ program
   .parse(process.argv)
 
 var port = program.port ? program.port : 3000
-console.log("Starting on port: "+port)
+console.log("Starting on port: " + port)
 
 // Basic express webserver
 var app = express()
 app.use("/public", express.static("public"))
 app.get('/', function (req, res) {
-    res.sendFile(process.cwd() + "/public/index.html")
+  res.sendFile(process.cwd() + "/public/index.html")
 })
 var server = http.createServer(app)
 server.listen(port)
 
+var mps = new MultiplayerSocketServer(server)
