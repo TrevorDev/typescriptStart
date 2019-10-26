@@ -1,12 +1,23 @@
-const { desktopCapturer } = require('electron')
+const { desktopCapturer, ipcRenderer } = require('electron')
+var e = require('electron')
 import * as scli from "socket.io-client";
 import { MultiplayerSocketServer } from "../multiplayerSocketServer/multiplayerSocketServer";
 import { Message, Client } from "../multiplayerSocketServer/Message";
 
+// let displays = e.screen.getAllDisplays()
+// console.log(displays)
+// 
+
+// var e = require('electron')
+// let displays = e.screen.getAllDisplays()
+// console.log(displays)
 //var vidEl = document.createElement("video")
+console.log(ipcRenderer.sendSync('getScreens'))
+
 var main = async () => {
     // debugger
     var sources = await desktopCapturer.getSources({ types: ['window', 'screen'] })
+    console.log(sources)
     var chosenSrc: MediaStream | null = null;
     for (const source of sources) {
         if (source.name === 'Screen 1') {
