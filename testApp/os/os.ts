@@ -141,9 +141,11 @@ export class OS {
         var launcher = new Launcher(this, this.appManager)
 
         // Register a test app
-        require("./testApps/clock")
-        require("./testApps/blocks")
-        require("./testApps/video")
+        require("./testApps/desktop")
+        // require("./testApps/clock")
+        // require("./testApps/blocks")
+        // require("./testApps/video")
+
     }
 
     /**

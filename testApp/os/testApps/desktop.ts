@@ -1,0 +1,107 @@
+import { OS } from "../os"
+import { App } from "../app/app"
+import { CanvasTexture } from "../../extensions/canvasTexture"
+import { BasicMaterial } from "../../componentObject/components/material/basicMaterial"
+import { DefaultMesh } from "../../extensions/defaultMesh"
+import { DefaultVertexData } from "../../extensions/defaultVertexData"
+import { Vector3 } from "../../math/vector3"
+import { Texture } from "../../gpu/texture"
+import { VideoTexture } from "../../extensions/videoTexture"
+import { Client, Message } from "../../../multiplayerSocketServer/Message"
+import * as scli from "socket.io-client";
+import * as $ from 'jquery'
+
+var os = OS.GetOS()
+os.registerApp({
+    appName: "Desktop",
+    iconImage: "/public/img/video.png",
+    create: async (app: App) => {
+        let vt: any = null
+        console.log("DESKTOP!")
+        // Figure out connection to socketIO
+        var serverUrl = "http://localhost:3000"
+        var ipAddress = (await $.get(serverUrl + "/whatsMyIp")).ip;
+        var roomName = "desktopShare-" + ipAddress
+        console.log("ROOM!")
+        // Create webRTC offer
+        var rtc = new RTCPeerConnection()
+
+        var offer = await rtc.createOffer({ offerToReceiveVideo: true, offerToReceiveAudio: true });
+        await rtc.setLocalDescription(offer);
+
+        var p = new Promise((res) => {
+            rtc.addEventListener('icecandidate', (c) => {
+                if (!c.candidate) {
+                    res()
+                }
+            });
+        })
+
+        await p;
+        console.log("ICE!")
+        // Create socketIO client and join room
+        var client = new Client(scli.default("http://localhost:3000/multiplayerSocketServer"))
+        var data = await client.joinRoom(roomName)
+        console.log("I joined: " + data.room)
+
+        console.log("JOIN!")
+
+        data = await client.getUsersInRoom(roomName)
+        var users = Object.keys(data.users)
+        users = users.filter((u) => {
+            return u != client.io.id
+        })
+        var otherUser = users[0]
+        console.log("me: " + client.io.id)
+        console.log("Other user:" + otherUser)
+
+        // Start video call to get desktop
+        client.sendToUser(otherUser, {
+            action: "setRTCDesc",
+            localDescription: rtc.localDescription,
+            remoteDescription: rtc.remoteDescription,
+        })
+
+        // Receive answer to call
+        client.io.on(Message.SEND_TO_USER, async (msg: any) => {
+            console.log("msg received")
+            await rtc.setRemoteDescription(msg.data.localDescription);
+            console.log("CONNECTED!")
+
+            var localVideo = document.createElement("video")
+            localVideo.autoplay = true
+            //localVideo.muted = true;
+            document.body.appendChild(localVideo)
+            console.log(rtc.getReceivers())
+            const remoteStream = new MediaStream(rtc.getReceivers().map(receiver => receiver.track));
+            localVideo.srcObject = remoteStream
+
+
+            var screen = DefaultMesh.createMesh(os.device, { vertexData: DefaultVertexData.createPlaneVertexData(os.device) });
+            screen.transform.scale.x = 1920 / 1080
+            screen.transform.scale.scaleInPlace(0.2)
+            screen.transform.position.y = screen.transform.scale.z / 2 + 0.05
+            app.scene.transform.addChild(screen.transform)
+            var euler = new Vector3(0, 0, 0)
+            euler.x = Math.PI / 2
+            screen.transform.rotation.fromEuler(euler);
+
+            vt = new VideoTexture(os.device, "");
+            vt.videoElement = localVideo;
+            (screen.material.material as BasicMaterial).diffuseTexture = vt.texture
+
+
+            vt.videoElement.play()
+        });
+
+        app.update = (delta) => {
+            if (vt) {
+                vt.update()
+            }
+        }
+
+        app.dispose = () => {
+
+        }
+    }
+})

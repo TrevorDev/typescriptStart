@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack --watch --mode=development --info-verbosity=verbose"
+    "start": "webpack --watch --mode=development --info-verbosity=verbose",
+    "electron": "electron desktopApp/dist/main.js"
   },
   "repository": {
     "type": "git",
@@ -17,20 +18,25 @@
   },
   "homepage": "https://github.com/TrevorDev/typescriptStart#readme",
   "dependencies": {
+    "@types/electron": "^1.6.10",
     "@types/express": "^4.17.0",
+    "@types/jquery": "^3.3.31",
     "@types/socket.io": "^2.1.2",
     "@types/socket.io-client": "^1.4.32",
     "commander": "^2.20.0",
+    "electron": "^7.0.0",
     "express": "^4.17.1",
+    "jquery": "^3.4.1",
     "nodemon-webpack-plugin": "^4.0.8",
     "socket.io": "^2.2.0",
-    "tone": "^13.8.25",
+    "socket.io-client": "^2.3.0",
     "ts-loader": "^6.0.4",
-    "twgl.js": "^4.11.1",
-    "typescript": "^3.6.2",
+    "typescript": "^3.5.3",
     "webpack": "^4.37.0",
     "webpack-cli": "^3.3.6",
-    "webpack-node-externals": "^1.7.2"
+    "webpack-node-externals": "^1.7.2",
+    "tone": "^13.8.25",
+    "twgl.js": "^4.11.1"
   },
   "devDependencies": {
     "@types/tone": "git://github.com/Tonejs/TypeScript.git",

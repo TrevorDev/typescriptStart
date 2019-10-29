@@ -14,6 +14,8 @@ export class Launcher {
             appName: "Launcher",
             iconImage: null,
             create: (app: App) => {
+                var firstApp = true;
+
                 var appIcons = new Array<MeshObject>()
                 var hitRes = new HitResult()
                 // var screen = DefaultMesh.createCube(os.device)
@@ -60,6 +62,7 @@ export class Launcher {
                     var appIcon = DefaultMesh.createMesh(os.device, { texture: texture });
                     appIcon.transform.scale.scaleInPlace(0.3)
                     appIcon.transform.position.y = appIcon.transform.scale.y / 2
+                    appIcon.transform.position.z = 2
 
                     var c = new PointerEventComponent()
                     c.onClick = () => {
@@ -78,6 +81,11 @@ export class Launcher {
                         icon.transform.position.x = offset * 0.4
                     })
 
+                    if (firstApp) {
+                        console.log("launch!")
+                        c.onClick()
+                        firstApp = false;
+                    }
                     // var appContainer = appManager.createApp()
 
                     // appSpec.create(appContainer.app)
