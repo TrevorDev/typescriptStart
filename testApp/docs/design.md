@@ -13,6 +13,7 @@
  - -z is forward
  - This mirrors threeJS/opengl defaults, will make gltf easier to import because it uses the same.
  - This is also the reason why an initial object.forward is (0,0,-1) which is weird but whatever
+ - Texture coordinates have 0,0 as top left (Matching https://github.com/KhronosGroup/glTF/pull/692)
 
 ### Builds on top of lower level apis:
  - opengl

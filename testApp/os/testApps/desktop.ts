@@ -10,6 +10,7 @@ import { VideoTexture } from "../../extensions/videoTexture"
 import { Client, Message } from "../../../multiplayerSocketServer/Message"
 import * as scli from "socket.io-client";
 import * as $ from 'jquery'
+import { Hit } from "../../extensions/hit"
 
 var os = OS.GetOS()
 os.registerApp({
@@ -17,6 +18,7 @@ os.registerApp({
     iconImage: "/public/img/video.png",
     create: async (app: App) => {
         let vt: any = null
+        let screen: any = null
         console.log("DESKTOP!")
         // Figure out connection to socketIO
         var serverUrl = "http://localhost:3000"
@@ -76,28 +78,53 @@ os.registerApp({
             const remoteStream = new MediaStream(rtc.getReceivers().map(receiver => receiver.track));
             localVideo.srcObject = remoteStream
 
+            setTimeout(() => {
+                try {
+                    screen = DefaultMesh.createMesh(os.device, { vertexData: DefaultVertexData.createPlaneVertexData(os.device) });
+                    screen.transform.scale.x = 1920 / 1080
+                    screen.transform.scale.scaleInPlace(0.2)
+                    screen.transform.position.y = screen.transform.scale.z / 2 + 0.05
+                    app.scene.transform.addChild(screen.transform)
+                    var euler = new Vector3(0, 0, 0)
+                    euler.x = Math.PI / 2
+                    screen.transform.rotation.fromEuler(euler);
 
-            var screen = DefaultMesh.createMesh(os.device, { vertexData: DefaultVertexData.createPlaneVertexData(os.device) });
-            screen.transform.scale.x = 1920 / 1080
-            screen.transform.scale.scaleInPlace(0.2)
-            screen.transform.position.y = screen.transform.scale.z / 2 + 0.05
-            app.scene.transform.addChild(screen.transform)
-            var euler = new Vector3(0, 0, 0)
-            euler.x = Math.PI / 2
-            screen.transform.rotation.fromEuler(euler);
-
-            vt = new VideoTexture(os.device, "");
-            vt.videoElement = localVideo;
-            (screen.material.material as BasicMaterial).diffuseTexture = vt.texture
+                    vt = new VideoTexture(os.device, "");
+                    vt.videoElement = localVideo;
+                    (screen.material.material as BasicMaterial).diffuseTexture = vt.texture
 
 
-            vt.videoElement.play()
+                    // vt.videoElement.play()
+                    console.log("play")
+                } catch (e) {
+                    console.log(e)
+                }
+
+            }, 100);
+
         });
 
         app.update = (delta) => {
             if (vt) {
                 vt.update()
             }
+        }
+
+        app.castRay = (ray, result) => {
+            if (screen) {
+                Hit.rayIntersectsMeshes(ray, [screen], result)
+                if (result.hitDistance) {
+
+                    if (!isNaN(result.hitTexcoord.x) && !isNaN(result.hitTexcoord.y)) {
+                        console.log(result.hitTexcoord.x)
+                        console.log(result.hitTexcoord.y)
+                        console.log("\n")
+                    }
+
+
+                }
+            }
+
         }
 
         app.dispose = () => {

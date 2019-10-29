@@ -62,7 +62,7 @@ export class Launcher {
                     var appIcon = DefaultMesh.createMesh(os.device, { texture: texture });
                     appIcon.transform.scale.scaleInPlace(0.3)
                     appIcon.transform.position.y = appIcon.transform.scale.y / 2
-                    appIcon.transform.position.z = 2
+                    appIcon.transform.position.z = -2
 
                     var c = new PointerEventComponent()
                     c.onClick = () => {

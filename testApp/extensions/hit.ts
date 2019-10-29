@@ -8,6 +8,12 @@ import { MeshComponent } from "../componentObject/components/mesh/meshComponent"
 export class HitResult {
     hitDistance: null | number
     hitObject: null | TransformObject
+
+    /**
+     * For triangle A,B,C txcoord.x = %AB and txcoord.y = txcoord.x = %AC
+     * When hitting a mesh, the actual texcoord will be looked up from it's attibutes based on above
+     */
+    hitTexcoord = new Vector3() // TODO make vec2
     constructor() {
         this.reset()
     }
@@ -18,6 +24,7 @@ export class HitResult {
     copyFrom(h: HitResult) {
         this.hitDistance = h.hitDistance
         this.hitObject = h.hitObject;
+        this.hitTexcoord.copyFrom(h.hitTexcoord)
     }
 }
 
@@ -39,6 +46,7 @@ export class Hit {
         //x y z = right
 
         if (normal) {
+            // check if ray is pointing towards the normal of the triangle
             ray.direction.normalizeToRef(this._tempVecA)
             normal.normalizeToRef(normal)
             var dot = normal.dot(this._tempVecA)
@@ -47,7 +55,6 @@ export class Hit {
                 return;
             }
         }
-        //debugger
 
         var direction = ray.direction;
         var originToPlaneMainPoint = this._tempVecA
@@ -73,6 +80,12 @@ export class Hit {
             // if(infiniteLength || (x>=0&&x<=1&&y>=0&&y<=1&&z>=0&&z<=1&&(y+z)<=1)){
             if ((x >= 0 && y >= 0 && y <= 1 && z >= 0 && z <= 1 && (y + z) <= 1)) {
                 res.hitDistance = x;
+
+                /**
+                 * For triangle A,B,C txcoord.x = %AB and txcoord.y = txcoord.x = %AC
+                 */
+                res.hitTexcoord.x = y
+                res.hitTexcoord.y = z
                 return;
             }
         }
@@ -99,6 +112,7 @@ export class Hit {
             var p = mesh.vertData.getPositions()
             var ind = mesh.vertData.getIndices()
             var triCount = mesh.vertData.getIndices().length / 3;
+            var hitTri = -1
             for (var i = 0; i < triCount; i++) {
                 for (var j = 0; j < 3; j++) {
                     Hit._tempTri.points[j].x = p[(ind[(i * 3) + j] * 3) + 0]
@@ -111,6 +125,7 @@ export class Hit {
                 this.rayIntersectsTriangle(this._tempRay, Hit._tempTri, null, this._tmpHit)
                 if (this._tmpHit.hitDistance != null && (res.hitDistance == null || res.hitDistance > this._tmpHit.hitDistance)) {
                     res.copyFrom(this._tmpHit)
+                    hitTri = i;
                 }
             }
 
@@ -126,6 +141,25 @@ export class Hit {
                 ray.origin.subtractToRef(this._tempVecA, this._tempVecA)
                 res.hitDistance = this._tempVecA.length()
                 res.hitObject = node
+
+                // calculate texcoords from result of triangle hittest
+                var tx = mesh.vertData.getTexCoords()
+                Hit._tempTri.points[0].x = tx[(ind[(hitTri * 3) + 0] * 2) + 0]
+                Hit._tempTri.points[0].y = tx[(ind[(hitTri * 3) + 0] * 2) + 1]
+
+                Hit._tempTri.points[1].x = tx[(ind[(hitTri * 3) + 1] * 2) + 0]
+                Hit._tempTri.points[1].y = tx[(ind[(hitTri * 3) + 1] * 2) + 1]
+
+                Hit._tempTri.points[2].x = tx[(ind[(hitTri * 3) + 2] * 2) + 0]
+                Hit._tempTri.points[2].y = tx[(ind[(hitTri * 3) + 2] * 2) + 1]
+
+                var xx = (res.hitTexcoord.x * Hit._tempTri.points[1].x) + (res.hitTexcoord.y * Hit._tempTri.points[2].x) + ((1 - res.hitTexcoord.x - res.hitTexcoord.y) * Hit._tempTri.points[0].x)
+                var yy = (res.hitTexcoord.x * Hit._tempTri.points[1].y) + (res.hitTexcoord.y * Hit._tempTri.points[2].y) + ((1 - res.hitTexcoord.x - res.hitTexcoord.y) * Hit._tempTri.points[0].y)
+
+                res.hitTexcoord.x = xx
+                res.hitTexcoord.y = yy
+
+                // Done!
             }
         }
 
