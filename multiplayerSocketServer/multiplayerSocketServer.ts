@@ -33,13 +33,8 @@ export class MultiplayerSocketServer {
                 this.io.to(to).emit(Message.SEND_TO_USER, msg)
             })
 
-            // setTimeout(() => {
-            //     this.io.to(socket.id).emit(Message.SEND_TO_USER, { test: "terst" })
-            // }, 1000);
-
 
             socket.on('disconnect', () => {
-                console.log("dc")
                 var rooms = socket.customData.listRooms()
                 for (var room in rooms) {
                     rooms[room].removeSocket(socket)

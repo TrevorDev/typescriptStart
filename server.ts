@@ -15,6 +15,11 @@ console.log("Starting on port: " + port)
 // Basic express webserver
 var app = express()
 app.use("/public", express.static("public"))
+app.get('/whatsMyIp', function (req, res) {
+  var ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
+  console.log(ip)
+  res.send({ ip: ip })
+})
 app.get('/', function (req, res) {
   res.sendFile(process.cwd() + "/public/index.html")
 })
