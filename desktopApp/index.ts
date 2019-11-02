@@ -1,9 +1,20 @@
-import { desktopCapturer } from 'electron'
+import { desktopCapturer, ipcRenderer } from 'electron'
 import * as scli from "socket.io-client";
 import { Message, Client } from "../multiplayerSocketServer/Message";
 import * as $ from 'jquery'
+import * as Robot from 'robotjs'
 
-
+var screens = ipcRenderer.sendSync("getScreens")
+var mainScreen: any = null;
+for (var screen of screens) {
+    if (screen.workArea.x == 0 && screen.workArea.y == 0) {
+        mainScreen = screen;
+    }
+}
+if (!mainScreen) {
+    alert("could not find main screen")
+}
+console.log(mainScreen)
 
 var main = async () => {
     var c = 0;
@@ -22,8 +33,13 @@ var main = async () => {
     console.log("Users in room:" + Object.keys(data.users).length)
 
     client.io.on(Message.SEND_TO_USER, async (msg: any) => {
-        console.log(msg)
-        if (msg.data.action == "setRTCDesc") {
+        if (msg.data.action == "mouseMove") {
+            Robot.moveMouse(msg.data.x * mainScreen.size.width, msg.data.y * mainScreen.size.height)
+        } else if (msg.data.action == "mouseDown") {
+            Robot.mouseToggle("down");
+        } else if (msg.data.action == "mouseUp") {
+            Robot.mouseToggle("up");
+        } else if (msg.data.action == "setRTCDesc") {
             // Get desktop stream
             var sources = await desktopCapturer.getSources({ types: ['window', 'screen'] })
             var chosenSrc: MediaStream | null = null;

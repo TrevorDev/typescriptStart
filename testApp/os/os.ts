@@ -142,9 +142,9 @@ export class OS {
 
         // Register a test app
         require("./testApps/desktop")
-        // require("./testApps/clock")
-        // require("./testApps/blocks")
-        // require("./testApps/video")
+        require("./testApps/clock")
+        require("./testApps/blocks")
+        require("./testApps/video")
 
     }
 

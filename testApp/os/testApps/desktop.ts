@@ -10,7 +10,7 @@ import { VideoTexture } from "../../extensions/videoTexture"
 import { Client, Message } from "../../../multiplayerSocketServer/Message"
 import * as scli from "socket.io-client";
 import * as $ from 'jquery'
-import { Hit } from "../../extensions/hit"
+import { Hit, HitResult } from "../../extensions/hit"
 
 var os = OS.GetOS()
 os.registerApp({
@@ -82,7 +82,7 @@ os.registerApp({
                 try {
                     screen = DefaultMesh.createMesh(os.device, { vertexData: DefaultVertexData.createPlaneVertexData(os.device) });
                     screen.transform.scale.x = 1920 / 1080
-                    screen.transform.scale.scaleInPlace(0.2)
+                    screen.transform.scale.scaleInPlace(1)
                     screen.transform.position.y = screen.transform.scale.z / 2 + 0.05
                     app.scene.transform.addChild(screen.transform)
                     var euler = new Vector3(0, 0, 0)
@@ -104,25 +104,55 @@ os.registerApp({
 
         });
 
-        app.update = (delta) => {
+        var hitRes = new HitResult()
+        var lastSend = 0;
+        app.update = (delta, cur, controllers) => {
             if (vt) {
                 vt.update()
+
+
+                controllers.forEach((c) => {
+                    Hit.rayIntersectsMeshes(c.ray, [screen], hitRes)
+                    if (hitRes.hitDistance) {
+                        if (cur - lastSend > 0.1) {
+                            client.sendToUser(otherUser, {
+                                action: "mouseMove",
+                                x: hitRes.hitTexcoord.x,
+                                y: hitRes.hitTexcoord.y
+                            })
+                            lastSend = cur;
+                        }
+
+                        if (c.primaryButton.justDown) {
+                            client.sendToUser(otherUser, {
+                                action: "mouseDown"
+                            })
+                        }
+                        if (c.primaryButton.justUp) {
+                            client.sendToUser(otherUser, {
+                                action: "mouseUp"
+                            })
+                        }
+                    }
+
+                })
             }
         }
 
         app.castRay = (ray, result) => {
             if (screen) {
                 Hit.rayIntersectsMeshes(ray, [screen], result)
-                if (result.hitDistance) {
+                // if (result.hitDistance) {
 
-                    if (!isNaN(result.hitTexcoord.x) && !isNaN(result.hitTexcoord.y)) {
-                        console.log(result.hitTexcoord.x)
-                        console.log(result.hitTexcoord.y)
-                        console.log("\n")
-                    }
+                //     if (!isNaN(result.hitTexcoord.x) && !isNaN(result.hitTexcoord.y)) {
+                //         console.log(result.hitTexcoord.x)
+                //         console.log(result.hitTexcoord.y)
+                //         console.log("\n")
+
+                //     }
 
 
-                }
+                // }
             }
 
         }

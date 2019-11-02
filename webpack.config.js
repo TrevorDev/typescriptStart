@@ -75,5 +75,27 @@ module.exports = [
       filename: 'index.js',
       path: path.resolve(__dirname, 'desktopApp/dist')
     }
+  },
+  {
+    mode: 'development',
+    entry: "./desktopApp/main.ts",
+    devtool: "inline-source-map",
+    module: {
+      rules: [
+        {
+          test: /\.tsx?$/,
+          use: 'ts-loader',
+          exclude: /node_modules/
+        }
+      ]
+    },
+    externals: [nodeExternals()],
+    resolve: {
+      extensions: ['.tsx', '.ts', '.js']
+    },
+    output: {
+      filename: 'main.js',
+      path: path.resolve(__dirname, 'desktopApp/dist')
+    }
   }
 ]

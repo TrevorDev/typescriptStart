@@ -30,3 +30,5 @@
  - when rendering the scene it is recommended to recurse the object tree calling computeWorldMatrix(false) from parents downward to avoid recomputing world matrix
  - cameras/lights should have their world matrix's computed first so their shader uniforms can be set right away
 
+### RobotJS + Electron issues
+https://github.com/octalmage/robotjs/issues/503
