@@ -7,6 +7,7 @@ export class MeshComponent extends Component {
         return MeshComponent.type
     }
     visible = true;
+    isInstance = false;
     constructor(public vertData: VertexData) {
         super()
     }

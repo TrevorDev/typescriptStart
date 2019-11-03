@@ -10,6 +10,7 @@ import { CameraObject } from "../componentObject/baseObjects/cameraObject";
 import { LightObject } from "../componentObject/baseObjects/lightObject";
 import { XRHead } from "./xr/xrHead";
 import { MultiviewBlit } from "./multiviewBlit";
+import { InstanceGroup } from "./instanceGroup";
 
 export class Stage {
     // Debug flags
@@ -23,6 +24,7 @@ export class Stage {
     xrStage: TransformObject
     xrHead: XRHead
     lights = new Array<LightObject>()
+    instanceGroups = new Array<InstanceGroup>()
     private nodes = new Array<TransformObject>()
     renderLoop: ((deltaTime: number, curTime: number) => void) | null = null
 
@@ -97,7 +99,7 @@ export class Stage {
             this.renderer.clear()
 
             // Render scene
-            this.renderer.renderScene(this.xrHead, this.nodes, this.lights)
+            this.renderer.renderScene(this.xrHead, this.nodes, this.lights, this.instanceGroups)
             gl.invalidateFramebuffer(gl.FRAMEBUFFER, [gl.DEPTH_ATTACHMENT]);
             gl.disable(gl.SCISSOR_TEST);
             // Blit back to screen
@@ -109,6 +111,7 @@ export class Stage {
 
             // When presenting render a stereo view.
             this.renderer.setViewport(0, 0, this.device.canvasElement.width, this.device.canvasElement.height)
+            // TODO is this clear needed?
             this.device.gl.clearColor(1.0, 0.4, 0.4, 1)
             this.renderer.clear()
 

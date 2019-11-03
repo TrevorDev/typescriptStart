@@ -11,12 +11,7 @@ import { LightObject } from "../../baseObjects/lightObject";
 import { CameraObject } from "../../baseObjects/cameraObject";
 import { Shader } from "../../../gpu/shader";
 import { Color } from "../../../math/color";
-
-// export class StandardMaterialFactory {
-//     createInstance(){
-//         return new StandardMaterial()
-//     }
-// }
+import { InstanceGroup } from "../../../extensions/instanceGroup";
 
 export class BasicMaterial implements Material {
   static _defaultTexture: Texture;
@@ -127,6 +122,10 @@ export class BasicMaterial implements Material {
     twgl.drawBufferInfo(this.device.gl, mesh.vertData.gpuBufferInfo);
   }
 
+  updateAndDrawInstanced(ig: InstanceGroup) {
+    throw "not supported"
+  }
+
 
   static vertShader = new Shader(`
     #version 300 es
@@ -138,10 +137,6 @@ export class BasicMaterial implements Material {
           mat4 u_viewProjectionL;
           mat4 u_viewInverseR;
           mat4 u_viewProjectionR;
-          mat4 u_vl;
-          mat4 u_vr;
-          mat4 u_pl;
-          mat4 u_pr;
         };
         
         uniform Lights {

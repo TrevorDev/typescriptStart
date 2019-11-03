@@ -11,6 +11,8 @@ import { Color } from "../math/color";
 import { DragComponent } from "../componentObject/components/behavior/dragComponent";
 import { DefaultVertexData } from "../extensions/defaultVertexData";
 import { BasicMaterial } from "../componentObject/components/material/basicMaterial";
+import { InstanceGroup } from "../extensions/instanceGroup";
+import { MeshObject } from "../componentObject/baseObjects/meshObject";
 
 export class OS {
     /**
@@ -122,6 +124,30 @@ export class OS {
             this.appManager.update(delta, curTime, this.inputManager.controllers)
         })
 
+        // INSTANCE TEST (Currently seems like theres in a bug in occulus browser as it works in chrome/firefox)
+        // // var pObj = new MeshObject(this.device)
+        // // pObj.transform.position.set(0, 2, -10)
+        // // this.globalStage.addNode(pObj)
+
+        // var ig = new InstanceGroup(this.device, 100)
+        // for (var i = 0; i < ig.numInstances; i++) {
+        //     var obj = new MeshObject(this.device, ig.material, ig.vertexData)
+        //     obj.mesh.vertData = ig.vertexData
+        //     obj.transform.worldMatrix.m = new Float32Array(ig.instanceWorlds.buffer, i * 16 * 4, 16);
+        //     obj.transform.scale.scaleInPlace(0.1)
+        //     obj.transform.position.z = -10
+        //     obj.transform.position.x = Math.random() * 10 - 5
+        //     obj.transform.position.y = Math.random() * 10 - 5
+        //     obj.mesh.isInstance = true
+        //     obj.mesh.visible = false
+
+        //     //pObj.transform.addChild(obj.transform)
+        //     this.globalStage.addNode(obj)
+        // }
+
+        // this.globalStage.instanceGroups.push(ig)
+
+        // Render environment
         var floor = DefaultMesh.createMesh(this.device, { color: Color.createFromHex("#34495e") })
         floor.transform.scale.set(100, 0.1, 100)
         floor.transform.position.y -= floor.transform.scale.y / 2

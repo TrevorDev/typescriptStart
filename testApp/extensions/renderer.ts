@@ -7,12 +7,13 @@ import { TransformComponent } from "../componentObject/components/transform/tran
 import { MaterialComponent } from "../componentObject/components/material/materialComponent";
 import { LightObject } from "../componentObject/baseObjects/lightObject";
 import { XRHead } from "./xr/xrHead";
+import { InstanceGroup } from "./instanceGroup";
 
 export class Renderer {
     constructor(public device: GPUDevice) {
 
     }
-    renderScene(head: XRHead, nodes: Array<TransformObject>, lights: Array<LightObject>) {
+    renderScene(head: XRHead, nodes: Array<TransformObject>, lights: Array<LightObject>, instanceGroups: Array<InstanceGroup>) {
         head.updateViewMatrixForCameras()
 
         lights.forEach((l) => {
@@ -26,7 +27,7 @@ export class Renderer {
                 // debugger
                 var material = node.object.getComponent<MaterialComponent>(MaterialComponent.type)
                 var mesh = node.object.getComponent<MeshComponent>(MeshComponent.type)
-                if (material && mesh && mesh.visible) {
+                if (material && mesh && mesh.visible && !mesh.isInstance) {
 
                     // Load material program
                     material.material.load()
@@ -39,6 +40,18 @@ export class Renderer {
 
                 }
             })
+        })
+
+        // Allow instanced objectects to be added to scene to update their world matrix, then draw them all in one go here
+        instanceGroups.forEach((ig) => {
+            // Load material program
+            ig.material.load()
+            ig.material.updateFromCamera(head.cameras)
+            ig.material.updateForLights(lights)
+
+            // Load material instance specific data
+            ig.material.updateUniforms()
+            ig.material.updateAndDrawInstanced(ig)
         })
     }
 

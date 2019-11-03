@@ -16,10 +16,10 @@ export class MeshObject extends TransformObject {
      * @param device device to use for allocation
      * @param material material (default: new BasicMaterial)
      */
-    constructor(device: GPUDevice, material: Material = new BasicMaterial(device)) {
+    constructor(device: GPUDevice, material: Material = new BasicMaterial(device), vertData = DefaultVertexData.createCubeVertexData(device)) {
         super()
         this.material = new MaterialComponent(material)
-        this.mesh = new MeshComponent(DefaultVertexData.createCubeVertexData(device))
+        this.mesh = new MeshComponent(vertData)
 
         this.addComponent(this.material)
         this.addComponent(this.mesh)

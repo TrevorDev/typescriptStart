@@ -4,14 +4,19 @@ import { GPUDevice } from "../gpu/gpuDevice";
 import * as twgl from "twgl.js"
 
 export class DefaultVertexData {
-    static createCubeVertexData(device: GPUDevice) {
+    // TODO cleanup instanceData and make work on all vertexData types
+    static createCubeVertexData(device: GPUDevice, instanceData: any = {}) {
         var data = twgl.primitives.createCubeVertices(1) as any
-        return new VertexData(device, {
+        var cpuData: any = {
             a_position: data.position,
             a_normal: data.normal,
             a_texcoord: data.texcoord,
             indices: data.indices,
-        })
+        }
+        for (var key in instanceData) {
+            cpuData[key] = instanceData[key]
+        }
+        return new VertexData(device, cpuData)
     }
 
     static createSphereVertexData(device: GPUDevice) {
@@ -49,8 +54,6 @@ export class DefaultVertexData {
 
     static createFullScreenQuad(device: GPUDevice) {
         return new VertexData(device, {
-
-
             a_position: [0.0, 0.0, 0.0,
                 1.0, 0.0, 0.0,
                 0.0, 1.0, 0.0,
@@ -66,8 +69,8 @@ export class DefaultVertexData {
                 0.0, 1.0, 1.0,
                 1.0, 0.0, 1.0,
                 1.0, 1.0, 1.0,],
-            a_normal: [0, 0, 1],
-            a_texcoord: [0, 0],
+            a_normal: [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+            a_texcoord: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             indices: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
         })
     }

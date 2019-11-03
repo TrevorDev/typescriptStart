@@ -23,7 +23,7 @@ export class MultiviewTexture {
                 is_multiview = true;
             }
             else {
-                // console.log("Neither OCULUS_multiview nor OVR_multiview2 extension is NOT supported");
+                alert("Neither OCULUS_multiview nor OVR_multiview2 extension is NOT supported");
                 is_multiview = false;
             }
         }
