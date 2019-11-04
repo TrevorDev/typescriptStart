@@ -11,5 +11,7 @@ export abstract class Component {
     update() {
 
     }
+    onObjectSet() {
+    }
     abstract getType(): number;
 }

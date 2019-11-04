@@ -15,6 +15,7 @@ export class BaseObject {
             this.components[component.getType()] = []
         }
         component.object = this as any as TransformObject;
+        component.onObjectSet()
         this.components[component.getType()].push(component)
     }
 
