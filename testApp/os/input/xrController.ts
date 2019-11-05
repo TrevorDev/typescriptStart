@@ -8,6 +8,7 @@ import { MeshObject } from "../../componentObject/baseObjects/meshObject";
 import { DefaultMesh } from "../../extensions/defaultMesh";
 import { DefaultVertexData } from "../../extensions/defaultVertexData";
 import { Color } from "../../math/color";
+import { App } from "../app/app";
 
 export class XRButtonState {
     private _value = 0
@@ -54,6 +55,7 @@ export class XRController extends TransformObject {
     ray = new Ray()
     // TODO move this class to os?
     hoveredApp: null | AppContainer = null
+    hoveredTaskbar = false
     hitMesh: MeshObject
     mesh: MeshObject
 
@@ -87,6 +89,10 @@ export class XRController extends TransformObject {
         // this.rayMesh.scale.scaleInPlace(0.1)
         // this.rayMesh.scale.z *= 5
         // stage.addNode(this.rayMesh)
+    }
+
+    isHoveringApp(app: App) {
+        return this.hoveredApp && this.hoveredApp.app == app
     }
 
     getGamepad(): null | Gamepad {

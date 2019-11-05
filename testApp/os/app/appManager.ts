@@ -2,10 +2,16 @@ import { AppContainer } from "./appContainer";
 import { Stage } from "../../extensions/stage";
 import { InputManager } from "../input/inputManager";
 import { XRController } from "../input/xrController";
+import { App } from "./app";
 
 export class AppManager {
     activeApp: AppContainer | null = null;
     appContainers = new Array<AppContainer>()
+
+    isActiveForApp(app: App) {
+        return this.activeApp && this.activeApp.app == app
+    }
+
     constructor(private globalStage: Stage, private inputManager: InputManager) {
 
     }

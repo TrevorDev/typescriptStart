@@ -58,8 +58,14 @@ os.registerApp({
 
 
         app.update = (delta) => {
+            if (!os.appManager.isActiveForApp(app)) {
+                return
+            }
             world.update(delta)
             os.inputManager.controllers.forEach((c) => {
+                if (c.hoveredTaskbar) {
+                    return;
+                }
                 if (c.primaryButton.justDown) {
                     var block = createBlock()
                     var physComp = block.getComponent<OimoRigidBodyComponent>(OimoRigidBodyComponent.type)!

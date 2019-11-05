@@ -35,7 +35,7 @@ export class Launcher {
                             if (hitRes.hitObject) {
                                 console.log("HIT SPHERE")
                                 var pe = hitRes.hitObject.getComponent<PointerEventComponent>(PointerEventComponent.type)
-                                if (pe) {
+                                if (pe && !c.hoveredTaskbar && c.isHoveringApp(app)) {
                                     pe.click()
                                 }
                             }
@@ -64,13 +64,13 @@ export class Launcher {
                     appIcon.transform.position.y = appIcon.transform.scale.y / 2
                     appIcon.transform.position.z = -2
 
-                    var c = new PointerEventComponent()
-                    c.onClick = () => {
+                    var pointerComponent = new PointerEventComponent()
+                    pointerComponent.onClick = () => {
                         var appContainer = appManager.createApp()
-
                         appSpec.create(appContainer.app)
+                        os.appManager.activeApp = appContainer
                     }
-                    appIcon.addComponent(c)
+                    appIcon.addComponent(pointerComponent)
 
                     app.scene.transform.addChild(appIcon.transform)
                     appIcons.push(appIcon)
@@ -83,7 +83,7 @@ export class Launcher {
 
                     if (firstApp) {
                         console.log("launch!")
-                        c.onClick()
+                        pointerComponent.onClick()
                         firstApp = false;
                     }
                     // var appContainer = appManager.createApp()

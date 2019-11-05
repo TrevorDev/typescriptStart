@@ -106,6 +106,10 @@ export class OS {
              * Apps should only handle controller button/joystick events when they are active, 
              * and only handle select events when active or hovered
              * 
+             * When hovering the taskbar of an app the app will be considered hovered
+             * however when casting rays inside an apps update function the hoveredTaskbar 
+             * value can  tell the app if the taskbar is hit before actual app contents
+             * 
              */
             this.inputManager.controllers.forEach((controller) => {
                 if (!controller.connected) {
@@ -113,21 +117,21 @@ export class OS {
                 }
                 var closestHit = { distance: Infinity, obj: null }
                 var hitResult = new HitResult()
-                var isTaskBar = false
 
+                controller.hoveredTaskbar = false
                 // Check which app is hovered for this controller
                 this.appManager.appContainers.forEach((container) => {
                     Hit.rayIntersectsMesh(controller.ray, container.taskBar, hitResult)
 
                     if (hitResult.hitDistance && hitResult.hitDistance < closestHit.distance) {
                         closestHit.distance = hitResult.hitDistance
-                        isTaskBar = true
+                        controller.hoveredTaskbar = true
                         controller.hoveredApp = container
                     }
                     container.app.castRay(controller.ray, hitResult)
                     if (hitResult.hitDistance && hitResult.hitDistance < closestHit.distance) {
                         closestHit.distance = hitResult.hitDistance
-                        isTaskBar = false
+                        controller.hoveredTaskbar = false
                         controller.hoveredApp = container
                     }
                 })
@@ -146,8 +150,8 @@ export class OS {
                     var drag = container.taskBar.getComponent<DragComponent>(DragComponent.type)!
                     if (controller.hoveredApp == container) {
 
-                        if (controller.primaryButton.justDown && isTaskBar) {
-                            console.log("PRESSSED")
+                        if (controller.primaryButton.justDown && controller.hoveredTaskbar) {
+                            this.appManager.activeApp = container
                             drag.start(controller)
                         }
                     }
