@@ -48,6 +48,9 @@ export class DragComponent extends Component {
         }
         this.activeController = null
     }
+    isDragging() {
+        return this.activeController != null
+    }
 
 
 }

@@ -63,6 +63,8 @@ export class XRController extends TransformObject {
 
     primaryButton = new XRButtonState()
 
+    backButton = new XRButtonState()
+
     constructor(stage: Stage, hand: string) {
         super()
         if (hand == "left") {
@@ -101,6 +103,7 @@ export class XRController extends TransformObject {
 
     update() {
         this.primaryButton.update()
+        this.backButton.update()
 
         var gamepad = this.getGamepad()
         if (gamepad) {
@@ -108,6 +111,7 @@ export class XRController extends TransformObject {
             this.mesh.mesh.visible = true
 
             this.primaryButton.setValue(gamepad.buttons[1].value)
+            this.backButton.setValue(gamepad.buttons[4].value)
             if (gamepad.pose) {
                 if (gamepad.pose.position) {
                     this.transform.position.set(gamepad.pose.position[0], gamepad.pose.position[1], gamepad.pose.position[2])

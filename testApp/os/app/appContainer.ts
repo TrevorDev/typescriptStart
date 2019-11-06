@@ -38,4 +38,9 @@ export class AppContainer {
     update(delta: number, curTime: number, controllers: Array<XRController>) {
         this.app.update(delta, curTime, controllers)
     }
+
+    dispose() {
+        this.globalStage.removeNode(this.containerSpace)
+        this.app.dispose()
+    }
 }

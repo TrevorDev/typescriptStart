@@ -146,22 +146,27 @@ export class OS {
                     controller.hitMesh.mesh.visible = false
                 }
 
+                var shouldDelete: null | AppContainer = null
                 this.appManager.appContainers.forEach((container) => {
                     var drag = container.taskBar.getComponent<DragComponent>(DragComponent.type)!
                     if (controller.hoveredApp == container) {
-
                         if (controller.primaryButton.justDown && controller.hoveredTaskbar) {
                             this.appManager.activeApp = container
                             drag.start(controller)
                         }
                     }
                     drag.update()
-                    if (controller.primaryButton.justUp) {
+                    if (drag.isDragging() && (controller.primaryButton.justUp || controller.backButton.justDown)) {
                         drag.end()
+
+                        if (controller.backButton.justDown) {
+                            shouldDelete = container
+                        }
                     }
                 })
-
-
+                if (shouldDelete) {
+                    this.appManager.disposeApp(shouldDelete)
+                }
             })
 
             // Run each app's render loop

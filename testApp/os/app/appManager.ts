@@ -21,6 +21,14 @@ export class AppManager {
         })
     }
 
+    disposeApp(container: AppContainer) {
+        var ind = this.appContainers.indexOf(container)
+        if (ind > -1) {
+            this.appContainers.splice(ind, 1)
+        }
+        container.dispose()
+    }
+
     createApp() {
         var appContainer = new AppContainer(this.globalStage, this.inputManager);
         this.appContainers.push(appContainer)
