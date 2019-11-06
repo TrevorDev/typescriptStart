@@ -80,7 +80,7 @@ export class XRController extends TransformObject {
         this.mesh = DefaultMesh.createMesh(stage.device, { color: Color.createFromHex("#2c3e50") })
         this.mesh.mesh.visible = false
         this.mesh.transform.scale.scaleInPlace(0.05)
-        this.mesh.transform.scale.z *= 10
+        this.mesh.transform.scale.z *= 3
         this.transform.addChild(this.mesh.transform)
 
         this.hitMesh = DefaultMesh.createMesh(stage.device, { vertexData: DefaultVertexData.createSphereVertexData(stage.device), color: new Color(0.9, 0.9, 0.9) })

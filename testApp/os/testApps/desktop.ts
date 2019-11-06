@@ -15,7 +15,7 @@ import { Hit, HitResult } from "../../extensions/hit"
 var os = OS.GetOS()
 os.registerApp({
     appName: "Desktop",
-    iconImage: "/public/img/video.png",
+    iconImage: "/public/img/desktop.png",
     create: async (app: App) => {
         let vt: any = null
         let screen: any = null

@@ -16,7 +16,7 @@ os.registerApp({
 
         var screen = DefaultMesh.createMesh(os.device, { vertexData: DefaultVertexData.createPlaneVertexData(os.device) });
         screen.transform.scale.x = 1920 / 1080
-        screen.transform.scale.scaleInPlace(0.2)
+        screen.transform.scale.scaleInPlace(0.5)
         screen.transform.position.y = screen.transform.scale.z / 2 + 0.05
         app.scene.transform.addChild(screen.transform)
         var euler = new Vector3(0, 0, 0)

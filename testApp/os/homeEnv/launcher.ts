@@ -81,14 +81,11 @@ export class Launcher {
                         icon.transform.position.x = offset * 0.4
                     })
 
-                    if (firstApp) {
-                        console.log("launch!")
-                        pointerComponent.onClick()
-                        firstApp = false;
-                    }
-                    // var appContainer = appManager.createApp()
-
-                    // appSpec.create(appContainer.app)
+                    // if (firstApp) {
+                    //     console.log("launch!")
+                    //     pointerComponent.onClick()
+                    //     firstApp = false;
+                    // }
                 }
             }
         })

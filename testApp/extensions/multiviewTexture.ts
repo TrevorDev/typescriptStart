@@ -10,6 +10,7 @@ export class MultiviewTexture {
         // console.log("samples: " + samples)
         var is_multiview, is_multisampled = false;
         var ext = device.gl.getExtension('OCULUS_multiview');
+        useM = true
         if (useM && ext) {
             // console.log("OCULUS_multiview extension is supported");
             is_multiview = true;
