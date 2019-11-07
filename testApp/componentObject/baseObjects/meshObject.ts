@@ -24,4 +24,6 @@ export class MeshObject extends TransformObject {
         this.addComponent(this.material)
         this.addComponent(this.mesh)
     }
+
+    dispose() { }
 }

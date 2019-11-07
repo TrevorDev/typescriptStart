@@ -22,4 +22,12 @@ export class VideoTexture {
                 this.device.gl.RGBA, this.device.gl.UNSIGNED_BYTE, this.videoElement)
         }
     }
+
+    dispose() {
+        this.texture.dispose()
+        this.videoElement.pause();
+        this.videoElement.removeAttribute('src')
+        this.videoElement.load();
+        (this.videoElement as any) = null;
+    }
 }

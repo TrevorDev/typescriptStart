@@ -60,4 +60,5 @@ export class MultiviewTexture {
         }
 
     }
+    dispose() { }
 }

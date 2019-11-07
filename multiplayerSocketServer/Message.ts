@@ -37,4 +37,8 @@ export class Client {
     sendToUser(user: string, data: {}) {
         this.io.emit(Message.SEND_TO_USER, { to: user, data: data })
     }
+
+    dispose() {
+        this.io.disconnect()
+    }
 }

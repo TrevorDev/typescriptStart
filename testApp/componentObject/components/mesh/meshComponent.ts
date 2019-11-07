@@ -11,4 +11,5 @@ export class MeshComponent extends Component {
     constructor(public vertData: VertexData) {
         super()
     }
+    dispose() { }
 }

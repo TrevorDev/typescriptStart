@@ -32,6 +32,12 @@ var main = async () => {
     data = await client.getUsersInRoom(roomName)
     console.log("Users in room:" + Object.keys(data.users).length)
 
+    // TODO this is needed because for some reason io.on(msg) doesnt get fired until the mouse is moved
+    // this seems to happen sometimes after  Robot.mouseToggle("down") is called. I am not exactly sure why
+    // either fix it or move this to occur a couple seconds after no events occur for a while 
+    setInterval(() => { Robot.mouseToggle("up"); console.log("ping") }, 1000)
+
+
     client.io.on(Message.SEND_TO_USER, async (msg: any) => {
         if (msg.data.action == "mouseMove") {
             Robot.moveMouse(msg.data.x * mainScreen.size.width, msg.data.y * mainScreen.size.height)

@@ -11,14 +11,15 @@ import { Client, Message } from "../../../multiplayerSocketServer/Message"
 import * as scli from "socket.io-client";
 import * as $ from 'jquery'
 import { Hit, HitResult } from "../../extensions/hit"
+import { MeshObject } from "../../componentObject/baseObjects/meshObject"
 
 var os = OS.GetOS()
 os.registerApp({
     appName: "Desktop",
     iconImage: "/public/img/desktop.png",
     create: async (app: App) => {
-        let vt: any = null
-        let screen: any = null
+        let videoTexture: null | VideoTexture = null
+        let screen: null | MeshObject = null
         console.log("DESKTOP!")
         // Figure out connection to socketIO
         var serverUrl = "http://localhost:3000"
@@ -31,15 +32,13 @@ os.registerApp({
         var offer = await rtc.createOffer({ offerToReceiveVideo: true, offerToReceiveAudio: true });
         await rtc.setLocalDescription(offer);
 
-        var p = new Promise((res) => {
+        await new Promise((res) => {
             rtc.addEventListener('icecandidate', (c) => {
                 if (!c.candidate) {
                     res()
                 }
             });
         })
-
-        await p;
         console.log("ICE!")
         // Create socketIO client and join room
         var client = new Client(scli.default("http://localhost:3000/multiplayerSocketServer"))
@@ -78,6 +77,7 @@ os.registerApp({
             const remoteStream = new MediaStream(rtc.getReceivers().map(receiver => receiver.track));
             localVideo.srcObject = remoteStream
 
+            // TODO is timeout needed?
             setTimeout(() => {
                 try {
                     screen = DefaultMesh.createMesh(os.device, { vertexData: DefaultVertexData.createPlaneVertexData(os.device) });
@@ -89,9 +89,9 @@ os.registerApp({
                     euler.x = Math.PI / 2
                     screen.transform.rotation.fromEuler(euler);
 
-                    vt = new VideoTexture(os.device, "");
-                    vt.videoElement = localVideo;
-                    (screen.material.material as BasicMaterial).diffuseTexture = vt.texture
+                    videoTexture = new VideoTexture(os.device, "");
+                    videoTexture.videoElement = localVideo;
+                    (screen.material.material as BasicMaterial).diffuseTexture = videoTexture.texture
 
 
                     // vt.videoElement.play()
@@ -106,32 +106,48 @@ os.registerApp({
 
         var hitRes = new HitResult()
         var lastSend = 0;
+
+        // mousedown/up bools are to not fire events too quickly
+        // TODO is this needed?
+        var mouseDown = false
+        var mouseUp = false
         app.update = (delta, cur, controllers) => {
-            if (vt) {
-                vt.update()
+            if (videoTexture) {
+                videoTexture.update()
 
 
                 controllers.forEach((c) => {
-                    Hit.rayIntersectsMeshes(c.ray, [screen], hitRes)
+                    Hit.rayIntersectsMeshes(c.ray, [screen!], hitRes)
                     if (hitRes.hitDistance) {
                         if (cur - lastSend > 0.1) {
-                            client.sendToUser(otherUser, {
-                                action: "mouseMove",
-                                x: hitRes.hitTexcoord.x,
-                                y: hitRes.hitTexcoord.y
-                            })
+                            if (mouseDown) {
+                                mouseDown = false
+                                client.sendToUser(otherUser, {
+                                    action: "mouseDown"
+                                })
+                            } else if (mouseUp) {
+                                mouseUp = false
+                                client.sendToUser(otherUser, {
+                                    action: "mouseUp"
+                                })
+                            } else {
+                                client.sendToUser(otherUser, {
+                                    action: "mouseMove",
+                                    x: hitRes.hitTexcoord.x,
+                                    y: hitRes.hitTexcoord.y
+                                })
+                            }
+
                             lastSend = cur;
                         }
 
                         if (c.primaryButton.justDown) {
-                            client.sendToUser(otherUser, {
-                                action: "mouseDown"
-                            })
+                            if (!mouseUp) {
+                                mouseDown = true
+                            }
                         }
                         if (c.primaryButton.justUp) {
-                            client.sendToUser(otherUser, {
-                                action: "mouseUp"
-                            })
+                            mouseUp = true
                         }
                     }
 
@@ -142,23 +158,20 @@ os.registerApp({
         app.castRay = (ray, result) => {
             if (screen) {
                 Hit.rayIntersectsMeshes(ray, [screen], result)
-                // if (result.hitDistance) {
-
-                //     if (!isNaN(result.hitTexcoord.x) && !isNaN(result.hitTexcoord.y)) {
-                //         console.log(result.hitTexcoord.x)
-                //         console.log(result.hitTexcoord.y)
-                //         console.log("\n")
-
-                //     }
-
-
-                // }
             }
-
         }
 
         app.dispose = () => {
+            if (videoTexture) {
+                videoTexture.dispose()
+            }
+            if (screen) {
+                screen.dispose()
+            }
+            rtc.close();
+            (rtc as any) = null
 
+            client.dispose()
         }
     }
 })
