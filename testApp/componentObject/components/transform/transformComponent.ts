@@ -94,4 +94,16 @@ export class TransformComponent extends Component {
             this.object.transform.localMatrix.decompose(this.object.transform.position, this.object.transform.rotation, this.object.transform.scale)
         }
     }
+
+    /**
+     * Sets the local matrix of the transform and then decomposes it into pos, rot and scale
+     * @param matrix matrix to set as local matrix, if not set the current local matrix is used
+     */
+    setLocalMatrix(matrix?: Matrix4) {
+        if (matrix) {
+            this.object.transform.localMatrix.copyFrom(matrix)
+        }
+
+        this.object.transform.localMatrix.decompose(this.object.transform.position, this.object.transform.rotation, this.object.transform.scale)
+    }
 }

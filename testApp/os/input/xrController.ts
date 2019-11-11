@@ -10,6 +10,11 @@ import { DefaultVertexData } from "../../extensions/defaultVertexData";
 import { Color } from "../../math/color";
 import { App } from "../app/app";
 
+
+export class XRJoystickState {
+    public x = 0;
+    public y = 0;
+}
 export class XRButtonState {
     private _value = 0
     private _downThreshold = 0.8
@@ -65,7 +70,9 @@ export class XRController extends TransformObject {
 
     backButton = new XRButtonState()
 
-    constructor(stage: Stage, hand: string) {
+    primaryJoystick = new XRJoystickState()
+
+    constructor(stage: Stage, public hand: string) {
         super()
         if (hand == "left") {
             this.getGamepad = () => {
@@ -110,6 +117,8 @@ export class XRController extends TransformObject {
             this.connected = true
             this.mesh.mesh.visible = true
 
+            this.primaryJoystick.x = gamepad.axes[0]
+            this.primaryJoystick.y = gamepad.axes[1]
             this.primaryButton.setValue(gamepad.buttons[1].value)
             this.backButton.setValue(gamepad.buttons[4].value)
             if (gamepad.pose) {
