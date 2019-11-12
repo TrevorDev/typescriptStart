@@ -181,7 +181,8 @@ export class OS {
         var launcher = new Launcher(this, this.appManager)
 
         // Register a test app
-        require("./testApps/flight")
+        require("./testApps/voxelEditor")
+        //require("./testApps/flight")
         // require("./testApps/desktop")
         // require("./testApps/clock")
         // require("./testApps/blocks")
