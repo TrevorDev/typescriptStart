@@ -155,9 +155,9 @@ os.registerApp({
             }
         }
 
-        app.castRay = (ray, result) => {
+        app.castRay = (controller, result) => {
             if (screen) {
-                Hit.rayIntersectsMeshes(ray, [screen], result)
+                Hit.rayIntersectsMeshes(controller.ray, [screen], result)
             }
         }
 

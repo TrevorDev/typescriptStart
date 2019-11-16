@@ -52,6 +52,34 @@ export class DefaultVertexData {
         });
     }
 
+    static createVerticlePlaneVertexData(device: GPUDevice) {
+        var data = twgl.primitives.createPlaneVertices(1, 1) as any
+        // Rotate the plane so it faces forward instead of up
+        for (var i = 0; i < data.position.length; i += 3) {
+            data.position[i + 1] = data.position[i + 2]
+            data.position[i + 2] = 0
+        }
+        for (var i = 0; i < data.normal.length; i += 3) {
+            data.normal[i + 0] = 0
+            data.normal[i + 1] = 0
+            data.normal[i + 2] = -1
+        }
+        data.texcoord[0] = 1
+        data.texcoord[1] = 1
+        data.texcoord[2] = 0
+        data.texcoord[3] = 1
+        data.texcoord[4] = 1
+        data.texcoord[5] = 0
+        data.texcoord[6] = 0
+        data.texcoord[7] = 0
+        return new VertexData(device, {
+            a_position: data.position,
+            a_normal: data.normal,
+            a_texcoord: data.texcoord,
+            indices: data.indices,
+        });
+    }
+
     static createFullScreenQuad(device: GPUDevice) {
         return new VertexData(device, {
             a_position: [0.0, 0.0, 0.0,

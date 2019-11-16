@@ -128,7 +128,7 @@ export class OS {
                         controller.hoveredTaskbar = true
                         controller.hoveredApp = container
                     }
-                    container.app.castRay(controller.ray, hitResult)
+                    container.app.castRay(controller, hitResult)
                     if (hitResult.hitDistance && hitResult.hitDistance < closestHit.distance) {
                         closestHit.distance = hitResult.hitDistance
                         controller.hoveredTaskbar = false
