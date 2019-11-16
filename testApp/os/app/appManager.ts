@@ -17,7 +17,7 @@ export class AppManager {
     }
     update(delta: number, curTime: number, controllers: Array<XRController>) {
         this.appContainers.forEach((c) => {
-            c.update(delta, curTime, controllers)
+            c.update(delta, curTime)
         })
     }
 

@@ -11,8 +11,6 @@ os.registerApp({
     appName: "Clock",
     iconImage: "/public/img/clock.png",
     create: (app: App) => {
-        var input = os.getInputManager()
-
         // Create canvas element to draw text to
         var canEl = document.createElement('canvas')
         canEl.width = 512 * 2

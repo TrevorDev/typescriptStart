@@ -35,8 +35,8 @@ export class AppContainer {
         //Dragable.MakeDragable(this.containerSpace, this.inputManager, this.taskBar)
     }
 
-    update(delta: number, curTime: number, controllers: Array<XRController>) {
-        this.app.update(delta, curTime, controllers)
+    update(delta: number, curTime: number) {
+        this.app.update(delta, curTime)
     }
 
     dispose() {

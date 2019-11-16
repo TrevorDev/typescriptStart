@@ -211,8 +211,4 @@ export class OS {
             (this.launcherApp.app as any).registerApp(appSpec)
         }
     }
-
-    getInputManager() {
-        return this.inputManager
-    }
 }

@@ -42,7 +42,7 @@ export class Launcher {
                 }
 
 
-                app.update = (delta, cur, controllers) => {
+                app.update = (delta, cur) => {
                     controllerRaySystem.update(os.inputManager.controllers)
                 }
 

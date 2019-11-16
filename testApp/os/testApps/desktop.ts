@@ -111,7 +111,8 @@ os.registerApp({
         // TODO is this needed?
         var mouseDown = false
         var mouseUp = false
-        app.update = (delta, cur, controllers) => {
+        app.update = (delta, cur) => {
+            var controllers = os.inputManager.controllers
             if (videoTexture) {
                 videoTexture.update()
 
