@@ -17,6 +17,7 @@ import { CannonPhysicsWorld } from "../extensions/physics/cannonPhyscisWorld";
 import { CannonRigidBodyComponent } from "../extensions/physics/cannonRigidBodyComponent";
 import * as CANNON from "cannon"
 import { Vector3 } from "../math/vector3";
+import { Filesystem } from "./filesystem/filesystem";
 
 export class OS {
     /**
@@ -35,6 +36,7 @@ export class OS {
     public inputManager: InputManager;
     public appManager: AppManager
     public launcherApp: null | AppContainer = null
+    public filesystem = new Filesystem()
 
     /**
      * Creates a multitasking OS
@@ -182,7 +184,7 @@ export class OS {
 
         // Register a test app
         require("./testApps/voxelEditor")
-        //require("./testApps/flight")
+        require("./testApps/flight")
         // require("./testApps/desktop")
         // require("./testApps/clock")
         // require("./testApps/blocks")

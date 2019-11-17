@@ -8,13 +8,18 @@ import { Matrix4 } from "../../math/matrix4"
 import * as oimo from "oimo"
 import { Quaternion } from "../../math/quaternion"
 import { Vector3 } from "../../math/vector3"
+import { TransformObject } from "../../componentObject/baseObjects/transformObject"
+import { BasicMaterial } from "../../componentObject/components/material/basicMaterial"
+import { Texture } from "../../gpu/texture"
+import { Color } from "../../math/color"
 
 var os = OS.GetOS()
 os.registerApp({
     appName: "Flight",
     iconImage: "/public/img/flight.png",
     create: (app: App) => {
-
+        var file = os.filesystem.getVoxelFile()
+        console.log(file)
 
         var tmpMatrix = new Matrix4()
         var tmpMatrixB = new Matrix4()
@@ -22,11 +27,27 @@ os.registerApp({
         var tmpQuaterion = new Quaternion()
         var world = new OimoPhysicsWorld();
 
-        var plane = new MeshObject(os.device)
+        var plane = new TransformObject()
         plane.transform.position.y = 0.2
-        plane.transform.scale.set(0.1, 0.1, 0.3)
         app.scene.transform.addChild(plane.transform)
-        plane.addComponent(new OimoRigidBodyComponent(world, { type: 'box', size: [plane.transform.scale.x, plane.transform.scale.y, plane.transform.scale.z], friction: 0.4, restitution: 0.1, move: true, density: 1 }))
+
+
+        if (file) {
+            file.voxels.forEach((v) => {
+                var mat = new BasicMaterial(os.device)
+                mat.diffuseTexture = Texture.createFromColor(os.device, v.color)
+                var voxel = new MeshObject(os.device, mat)
+                voxel.transform.position.copyFrom(v.position)
+                voxel.transform.scale.scaleInPlace(file!.size)
+                plane.transform.addChild(voxel.transform)
+            })
+            plane.addComponent(new OimoRigidBodyComponent(world, { type: 'box', size: [0.1, 0.1, 0.3], friction: 0.4, restitution: 0.1, move: true, density: 1 }))
+        } else {
+            var planeMesh = new MeshObject(os.device)
+            planeMesh.transform.scale.set(0.1, 0.1, 0.3)
+            plane.transform.addChild(planeMesh.transform)
+            plane.addComponent(new OimoRigidBodyComponent(world, { type: 'box', size: [planeMesh.transform.scale.x, planeMesh.transform.scale.y, planeMesh.transform.scale.z], friction: 0.4, restitution: 0.1, move: true, density: 1 }))
+        }
 
         var floor = new MeshObject(os.device)
         floor.transform.scale.set(1, 0.1, 1)

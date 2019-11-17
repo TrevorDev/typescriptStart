@@ -106,5 +106,9 @@ export class Vector3 {
     dot(v: Vector3) {
         return this.x * v.x + this.y * v.y + this.z * v.z;
     }
+
+    toJSON() {
+        return { x: this.x, y: this.y, z: this.z }
+    }
 }
 

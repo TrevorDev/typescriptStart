@@ -100,6 +100,10 @@ export class XRController extends TransformObject {
         // stage.addNode(this.rayMesh)
     }
 
+    /**
+     * Check if the app is the last hovered app
+     * @param app to check
+     */
     isHoveringApp(app: App) {
         return this.hoveredApp && this.hoveredApp.app == app
     }

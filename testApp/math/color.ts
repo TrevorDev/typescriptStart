@@ -60,4 +60,7 @@ export class Color {
     get a() {
         return this.v[3];
     }
+    toJSON() {
+        return { r: this.r, g: this.g, b: this.b, a: this.a }
+    }
 }

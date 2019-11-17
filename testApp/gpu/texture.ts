@@ -1,9 +1,14 @@
 import { GPUDevice } from "./gpuDevice";
 import * as twgl from "twgl.js"
+import { Color } from "../math/color";
 
 export class Texture {
     public glTexture: WebGLTexture | null = null
     public frameBuffer = null
+
+    static createFromColor(device: GPUDevice, color: Color) {
+        return Texture.createFromeSource(device, [Math.floor(255 * color.r), Math.floor(255 * color.g), Math.floor(255 * color.b), Math.floor(255 * color.a)]);
+    }
     static createFromeSource(device: GPUDevice, src: Array<number> | TexImageSource) {
         // TODO add constructor that sets framebuffer
         var r = new Texture(device)

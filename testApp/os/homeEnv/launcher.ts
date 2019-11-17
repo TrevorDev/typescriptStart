@@ -20,21 +20,6 @@ export class Launcher {
 
                 var controllerRaySystem = new ControllerRaySystem(app)
 
-                var saveButton = new Button(os.device, "Save")
-                saveButton.pointerEvent.onClick = () => { console.log("save") }
-                app.scene.transform.addChild(saveButton.mesh.transform)
-                saveButton.mesh.transform.position.y += 0.13
-
-                var clearButton = new Button(os.device, "Clear")
-                clearButton.pointerEvent.onClick = () => { console.log("clear") }
-                app.scene.transform.addChild(clearButton.mesh.transform)
-
-                controllerRaySystem.hitable.push(saveButton.mesh)
-                controllerRaySystem.hitable.push(clearButton.mesh)
-
-
-
-
                 var appIcons = new Array<MeshObject>()
 
                 app.castRay = (controller, result) => {

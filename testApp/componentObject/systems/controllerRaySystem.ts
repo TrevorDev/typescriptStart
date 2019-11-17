@@ -15,6 +15,7 @@ export class ControllerRaySystem {
         if (!this.castResults[controller.hand]) {
             this.castResults[controller.hand] = new HitResult()
         }
+        this.castResults[controller.hand].reset()
         Hit.rayIntersectsMeshes(controller.ray, this.hitable, this.castResults[controller.hand])
         result.copyFrom(this.castResults[controller.hand])
     }
