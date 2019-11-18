@@ -1,15 +1,66 @@
 import * as twgl from "twgl.js"
+
+/**
+ * RGBA Color values between 0-1
+ */
 export class Color {
     v: Float32Array
+    /**
+     * Creates a color with RGBA values between 0-1
+     * @param r 
+     * @param g 
+     * @param b 
+     * @param a 
+     */
     constructor(r = 0, g = 0, b = 0, a = 1) {
         this.v = new Float32Array([r, g, b, a])
     }
 
+    /**
+     * save RGBA Color values between 0-1
+     */
     set(r = 0, g = 0, b = 0, a = 1) {
         this.r = r
         this.g = g
         this.b = b
         this.a = a
+    }
+
+    copyFrom(from: Color) {
+        this.set(from.r, from.g, from.b, from.a)
+    }
+
+    toHex() {
+        var colors = [this.r, this.g, this.b]
+        return colors.map((c) => {
+            var hex = Math.floor(Math.abs(c) * 255).toString(16)
+            if (hex.length < 2) {
+                hex = "0" + hex
+            }
+            return hex
+        }).reduce((prev, cur) => {
+            return prev + cur
+        }, "#")
+    }
+
+    clone() {
+        return new Color(this.r, this.g, this.b, this.a)
+    }
+
+    /**
+     * Adds a value to rgb
+     * @param value to add
+     */
+    AddInplace(value: number) {
+        this.r += value
+        this.g += value
+        this.b += value
+    }
+
+    scaleInPlace(value: number) {
+        this.r *= value
+        this.g *= value
+        this.b *= value
     }
 
     static createFromHex(hexString: string) {

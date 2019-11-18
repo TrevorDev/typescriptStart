@@ -5,12 +5,15 @@ import { MeshObject } from "../../componentObject/baseObjects/meshObject";
 import { DefaultVertexData } from "../defaultVertexData";
 import { Vector3 } from "../../math/vector3";
 import { PointerEventComponent } from "../../componentObject/components/behavior/pointerEventComponent";
+import { Color } from "../../math/color";
 
 export class Button {
     mesh: MeshObject
     canvasTexture: CanvasTexture
-    // TODO change to color type
-    backgroundColor = "#2c3e50"
+    backgroundColor = new Color(0.1, 0.13, 0.2)
+    hoveredBackgroundColor = new Color(0.1 / 2, 0.13 / 2, 0.2 / 2)
+
+    private isHovered = false;
     pointerEvent = new PointerEventComponent()
     constructor(device: GPUDevice, public text = "") {
         var canEl = document.createElement('canvas')
@@ -27,7 +30,7 @@ export class Button {
         this.mesh.addComponent(this.pointerEvent)
 
         this.pointerEvent.onHoverChanged = (isHovered) => {
-            this.backgroundColor = isHovered ? "#FF3e50" : "#2c3e50";
+            this.isHovered = isHovered
             this.update()
         }
 
@@ -41,7 +44,7 @@ export class Button {
     update() {
         var size = 50 * 2
         var ctx = this.canvasTexture.canvas.getContext("2d")!
-        ctx.fillStyle = this.backgroundColor;
+        ctx.fillStyle = (!this.isHovered ? this.backgroundColor : this.hoveredBackgroundColor).toHex();
         ctx.fillRect(0, 0, this.canvasTexture.canvas.width, this.canvasTexture.canvas.height)
         ctx.fillStyle = '#ecf0f1';
         ctx.font = size + 'px serif';

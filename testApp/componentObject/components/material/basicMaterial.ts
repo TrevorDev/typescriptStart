@@ -24,6 +24,8 @@ export class BasicMaterial implements Material {
   diffuseTexture: Texture
   lightingAmount = 1;
   tmpMat = new Matrix4()
+  // TODO make this override diffuseTexture when set
+  diffuseColor: null | Color = null;
   ambientColor = new Color(0.35, 0.35, 0.35, 1)
   specularColor = new Color(0.2, 0.2, 0.2, 1)
   shininess = 100

@@ -207,6 +207,7 @@ export class OS {
     registerApp(appSpec: AppSpec) {
         if (!this.launcherApp) {
             var container = this.appManager.createApp()
+            container.containerSpace.transform.position.y -= 0.3
             this.launcherApp = container
             appSpec.create(container.app)
         } else {
